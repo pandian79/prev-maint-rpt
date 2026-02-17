@@ -1,0 +1,98 @@
+[
+  {
+    "measurement": "Transaction availability",
+    "description": "Indicates whether or not this transaction is completed successfully.",
+    "unit": "Percent",
+    "interpretation": "A value of 100 indicates that the transaction was completed successfully, whereas 0 indicates that the transaction failed. When this measure reports 0 for a transaction, no other measures will be reported for that transaction. Detailed diagnosis can be used to view the simulation script output and quickly isolate where and why the transaction failed.",
+    "troubleshootingSteps": [
+      "If transaction availability is 0, open the detailed diagnosis to review the full simulation script output and locate the exact failure step.",
+      "Check application logs, backend errors, and dependency health (database, external services) around the timestamp of failed simulations.",
+      "Verify that the scripted steps (URLs, selectors, input data) are still valid and have not changed due to UI or API updates.",
+      "If availability intermittently drops, compare failures across locations and agents to determine whether issues are regional, network‑related, or application‑wide."
+    ]
+  },
+  {
+    "measurement": "Transaction processing time",
+    "description": "Indicates the time taken by this transaction for execution.",
+    "unit": "Secs",
+    "interpretation": "This represents how long the end‑to‑end synthetic transaction takes to complete. Comparing values across different transactions helps identify which business flows are taking disproportionately long to execute.",
+    "troubleshootingSteps": [
+      "Compare processing time across all monitored transactions to identify the slowest business flows.",
+      "Drill into slow transactions to see per‑step timings and determine whether delays occur at login, navigation, or specific actions.",
+      "Correlate transaction processing time with backend metrics (server response, database queries, external calls) to locate bottlenecks.",
+      "If processing time recently increased, review recent application releases or configuration changes affecting this transaction."
+    ]
+  },
+  {
+    "measurement": "Total activities",
+    "description": "Indicates the total number of activities performed by this transaction.",
+    "unit": "Number",
+    "interpretation": "This shows how many scripted steps or actions the transaction attempts to execute from start to finish. It provides context for understanding success and failure counts and whether the script structure has changed over time.",
+    "troubleshootingSteps": [
+      "Confirm that the total activities count matches the expected number of steps defined in the script; unexpected changes may indicate script drift.",
+      "If total activities suddenly drop, check whether the script aborted early due to failures or timeouts.",
+      "Use this metric in combination with Successful and Failed activities to compute effective completion ratios per transaction.",
+      "When adding new steps to a transaction, monitor Total activities across runs to ensure the updated script executes all intended actions."
+    ]
+  },
+  {
+    "measurement": "Successful activities",
+    "description": "Indicates the number of activities that were successfully performed by this transaction.",
+    "unit": "Number",
+    "interpretation": "This reflects how many scripted steps completed without errors. Comparing Successful activities across transactions helps identify flows where fewer steps complete successfully, suggesting instability or frequent failures along the path.",
+    "troubleshootingSteps": [
+      "Compare the count of Successful activities with Total activities to estimate how much of the transaction completes before issues occur.",
+      "For transactions with significantly fewer successful activities, inspect detailed step‑by‑step logs or screenshots to find the first failing step.",
+      "Check for front‑end changes (element IDs, page structure) that might break scripted interactions on specific steps.",
+      "Correlate drops in successful activities with application releases or environmental changes to pinpoint when regressions were introduced."
+    ]
+  },
+  {
+    "measurement": "Failed activities",
+    "description": "Indicates the number of activities that failed for this transaction.",
+    "unit": "Number",
+    "interpretation": "This reveals how many steps within the transaction could not be completed successfully. Transactions with a high number of failed activities are more error‑prone and likely to represent broken or unstable user journeys.",
+    "troubleshootingSteps": [
+      "Compare Failed activities across transactions to identify which flows encounter the most step‑level failures.",
+      "Review failure details (error messages, HTTP status codes, screenshots) for the earliest failing activity in each run.",
+      "Validate that the test data, credentials, and environment configuration used by the script are still correct.",
+      "If failures cluster on particular pages or actions, focus remediation on those components and re‑run the transaction to confirm improvement."
+    ]
+  },
+  {
+    "measurement": "Activities successfully completed",
+    "description": "Indicates the percentage of activities successfully completed for this transaction.",
+    "unit": "Percent",
+    "interpretation": "A value of 100 indicates all activities in the transaction completed successfully; a value of 0 indicates that none completed. Comparing this percentage across transactions highlights which flows have the poorest step‑level completion rates.",
+    "troubleshootingSteps": [
+      "Identify transactions with low completion percentages and prioritize them for detailed review and remediation.",
+      "Combine this percentage with Failed activities to understand whether failures occur early (very low percentage) or late in the flow.",
+      "Check for intermittent network or application issues that might cause partial completion in some runs but not others.",
+      "After fixing issues, monitor the Activities successfully completed percentage to verify that it trends toward 100 for critical transactions."
+    ]
+  },
+  {
+    "measurement": "Total simulation time",
+    "description": "Indicates the total time taken to simulate this transaction.",
+    "unit": "Secs",
+    "interpretation": "This overall duration covers the full synthetic run for the transaction and is applicable only for the Total descriptor. Abnormally high values may point to logon or initialization slowness, especially when compared with per‑step processing times.",
+    "troubleshootingSteps": [
+      "Use this metric in conjunction with Transaction processing time and step‑level timings to locate where within the simulation time is being spent.",
+      "If Total simulation time rises mainly due to login or initial navigation, investigate authentication, redirects, and session initialization.",
+      "Compare Total simulation time across monitoring locations to detect region‑specific latency or connectivity issues.",
+      "Review recent changes to login flows or pre‑transaction checks if this metric increases without corresponding changes in business logic."
+    ]
+  },
+  {
+    "measurement": "Is script running?",
+    "description": "Indicates whether or not the script specified against the Script Name parameter is currently running.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "This measure is applicable only for the Total descriptor and reports ‘Yes’ when the script is actively running and ‘No’ otherwise. Internally, the graph uses numeric equivalents: 1 for Yes and 0 for No. Persistent ‘No’ when execution is expected may indicate scheduling, agent, or configuration problems preventing the script from running.",
+    "troubleshootingSteps": [
+      "If the measure reports ‘No’ during times when runs are expected, verify the schedule configuration and ensure the transaction is enabled.",
+      "Check the synthetic agent host for issues such as service stoppage, resource exhaustion, or connectivity problems.",
+      "Confirm that the script file exists in the expected location and that permissions allow the monitoring agent to execute it.",
+      "Use the numeric representation (0/1) in trend graphs to quickly spot periods when the script stopped running and correlate them with maintenance or failures."
+    ]
+  }
+]

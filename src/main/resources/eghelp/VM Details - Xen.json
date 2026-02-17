@@ -1,0 +1,338 @@
+[
+  {
+    "measurement": "Is VM powered on?",
+    "description": "Indicates whether the virtual machine is currently running on the XenServer host or not.[file:23]",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0[file:23]",
+    "interpretation": "For VMs that are not available, only the powered-on status is reported. A value of Yes (1) indicates the guest is up and running, whereas No (0) may mean the guest has been powered off or that XenMotion has moved it to a different server. Graphs use the numeric values 0 and 1 to display VM status over time.[file:23]",
+    "troubleshootingSteps": [
+      "When the value is No, check whether the VM was intentionally powered off (e.g., maintenance) or migrated to another host via XenMotion.[file:23]",
+      "Correlate VM power state changes with host events, maintenance logs, and XenCenter/XenServer operations history.",
+      "If the VM shows No unexpectedly, verify HA and restart policies and check for host failures that could have impacted the VM.",
+      "Use historical graphs of this measure to identify patterns of frequent power cycles that may indicate instability or misconfiguration."
+    ]
+  },
+  {
+    "measurement": "Physical CPU usage",
+    "description": "Indicates the percentage of physical CPU used by the guest.[file:23]",
+    "unit": "Percent[file:23]",
+    "interpretation": "A high value indicates that the VM is consuming a significant share of the host’s physical CPU, possibly because one or more processes on the VM are CPU‑intensive.[file:23]",
+    "troubleshootingSteps": [
+      "Identify processes inside the guest that are consuming high CPU and determine whether their behavior is expected.",
+      "Compare physical CPU usage across VMs on the same host to detect guests that dominate CPU resources.",
+      "Check host CPU saturation; if many VMs show high CPU, consider load balancing or adding CPU capacity.",
+      "Adjust vCPU allocation or resource limits/shares for VMs that consistently overuse CPU relative to their importance."
+    ]
+  },
+  {
+    "measurement": "Free physical memory",
+    "description": "Indicates the amount of memory available for use with the guest.[file:23]",
+    "unit": "MB[file:23]",
+    "interpretation": "Ideally this value should be high. A low or steadily decreasing value indicates that applications on the guest are consuming memory aggressively. The text notes that XenServer supports up to 32 GB per Linux/Windows VM and uses a balloon driver to dynamically adjust memory allocation at page granularity.[file:23]",
+    "troubleshootingSteps": [
+      "Monitor free memory trends to spot gradual depletion that may lead to swapping or performance degradation.",
+      "Inspect guest processes for memory leaks or misconfigured applications that consume excessive RAM.",
+      "Consider increasing the memory allocated to the VM or enabling/adjusting ballooning policies where appropriate.[file:23]",
+      "Balance memory allocations across VMs on the host to prevent over‑commitment that would starve critical guests."
+    ]
+  },
+  {
+    "measurement": "Total physical memory allocated",
+    "description": "Indicates the amount of physical memory currently allocated to the guest.[file:23]",
+    "unit": "MB[file:23]",
+    "interpretation": "This shows the VM’s current physical memory allocation and provides context for free and used memory measures. Changes in this value over time may reflect dynamic ballooning or manual reconfiguration.[file:23]",
+    "troubleshootingSteps": [
+      "Correlate this measure with free and used memory to determine whether the VM is under‑ or over‑allocated.",
+      "When memory pressure is high, consider increasing allocation up to platform limits or reducing load on the VM.",
+      "Track changes to this measure after memory reconfiguration or policy changes (e.g., balloon driver settings).",
+      "Compare allocations across similar VMs to ensure consistent sizing relative to workload."
+    ]
+  },
+  {
+    "measurement": "Used physical memory",
+    "description": "Indicates the amount of memory used by the guest.[file:23]",
+    "unit": "MB[file:23]",
+    "interpretation": "This indicates how much of the allocated physical memory is actually in use by the VM. High values relative to allocation suggest the VM is close to exhausting its RAM, which can lead to paging and slower performance.[file:23]",
+    "troubleshootingSteps": [
+      "Compare used memory with total allocated memory and free memory to estimate headroom inside the guest.",
+      "Investigate applications or services responsible for high memory use and optimize or right‑size them.",
+      "If usage is persistently near allocation limits, consider increasing memory for the VM or scaling out the workload.",
+      "Monitor used memory patterns over time to differentiate normal peaks from abnormal growth (possible leaks)."
+    ]
+  },
+  {
+    "measurement": "Usage of allocated memory",
+    "description": "Indicates the percentage of allocated memory that is being used by the guest.[file:23]",
+    "unit": "Percent[file:23]",
+    "interpretation": "High memory consumption over long periods can deplete free memory and cause prolonged delays in executing applications hosted by the guest.[file:23]",
+    "troubleshootingSteps": [
+      "Set thresholds on this percentage to trigger alerts when usage remains high for extended intervals.",
+      "Identify workloads that cause sustained high memory usage and evaluate whether they should be moved or scaled.",
+      "Optimize application memory usage (caching, pooling, configuration) to reduce pressure on the VM.",
+      "Use this measure with free memory to decide when to adjust ballooning or memory allocation policies."
+    ]
+  },
+  {
+    "measurement": "Disk capacity",
+    "description": "Indicates the total allocated disk space of the guest.[file:23]",
+    "unit": "MB[file:23]",
+    "interpretation": "This represents the size of the virtual disk(s) provisioned for the VM and provides a baseline for assessing disk utilization. It has no direct performance semantics by itself.[file:23]",
+    "troubleshootingSteps": [
+      "Compare disk capacity with actual disk usage at the guest level to monitor remaining free space.",
+      "Plan disk expansion or cleanup activities when usage approaches capacity thresholds.",
+      "Ensure capacity is appropriate for the VM’s role (e.g., database vs. lightweight service).",
+      "Track capacity changes following storage reconfiguration or VM resizing operations."
+    ]
+  },
+  {
+    "measurement": "Disk read rate",
+    "description": "Indicates the rate at which the guest read from the disk.[file:23]",
+    "unit": "Kbytes/Sec[file:23]",
+    "interpretation": "This shows how quickly the VM reads data from its disks. Elevated read rates may be normal for read‑intensive workloads, but unexpected spikes can indicate scanning, backup, or misbehaving processes.[file:23]",
+    "troubleshootingSteps": [
+      "Monitor disk read rate over time and correlate peaks with scheduled jobs such as backups or antivirus scans.",
+      "If high read activity impacts performance, identify processes inside the VM responsible for intensive reads.",
+      "Compare read rates across VMs sharing the same storage to detect guests that dominate shared I/O.",
+      "Adjust scheduling or throttle long‑running read‑heavy jobs to avoid contention during peak hours."
+    ]
+  },
+  {
+    "measurement": "Disk write rate",
+    "description": "Indicates the rate at which the guest wrote data to the disk.[file:23]",
+    "unit": "Kbytes/Sec[file:23]",
+    "interpretation": "This indicates how quickly the VM writes data to disk. High or increasing write rates may reflect logging, batch processing, or intensive transactional activity that can stress underlying storage.[file:23]",
+    "troubleshootingSteps": [
+      "Correlate spikes in write rate with application events such as log bursts, batch jobs, or data loads.",
+      "Investigate whether high write activity is causing increased disk latency for this or other VMs.",
+      "Tune application logging levels and batching strategies to reduce unnecessary write pressure.",
+      "Consider migrating write‑intensive workloads to faster storage tiers if persistent bottlenecks occur."
+    ]
+  },
+  {
+    "measurement": "Network data received",
+    "description": "Indicates the network I/O reads performed by the guest.[file:23]",
+    "unit": "Mbps[file:23]",
+    "interpretation": "This reflects inbound network throughput to the VM. High values may indicate heavy client traffic, data ingestion, or potentially abnormal incoming flows.[file:23]",
+    "troubleshootingSteps": [
+      "Compare inbound traffic with expected application usage patterns to validate whether high volumes are normal.",
+      "If the VM experiences performance issues, check whether high inbound traffic is saturating network interfaces.",
+      "Use flow or packet analysis to identify top talkers and protocols contributing to high data reception.",
+      "Apply rate limiting, load balancing, or scaling if a single VM receives more traffic than it can handle."
+    ]
+  },
+  {
+    "measurement": "Network data transmitted",
+    "description": "Indicates the network I/O writes performed by the guest.[file:23]",
+    "unit": "Mbps[file:23]",
+    "interpretation": "This represents outbound network throughput from the VM. Sustained high values may correspond to data exports, responses to many clients, or potential data exfiltration in suspicious scenarios.[file:23]",
+    "troubleshootingSteps": [
+      "Analyze which services or applications generate high outbound traffic and whether this aligns with business needs.",
+      "Ensure outbound bandwidth is sufficient and that high transmission does not saturate shared links.",
+      "Monitor for unusual or unplanned outbound patterns that might suggest security incidents.",
+      "Distribute outbound‑heavy workloads across multiple VMs or interfaces if a single VM becomes a bottleneck."
+    ]
+  },
+  {
+    "measurement": "Virtual CPU utilization",
+    "description": "Indicates the percentage of allocated CPU resources that this VM is currently using.[file:23]",
+    "unit": "Percent[file:23]",
+    "interpretation": "Comparing this metric across VMs helps identify guests running CPU‑intensive applications relative to their allocated vCPU resources.[file:23]",
+    "troubleshootingSteps": [
+      "Rank VMs by virtual CPU utilization to find those that consistently consume the most CPU.",
+      "Relate this measure to physical CPU usage to see if high vCPU usage translates into host‑level contention.",
+      "Adjust vCPU counts or CPU shares for high‑usage VMs to better align resources with demand.",
+      "Investigate whether application tuning could reduce CPU consumption for the busiest VMs."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs",
+    "description": "Indicates the number of virtual CPU cores allocated to this VM.[file:23]",
+    "unit": "Number[file:23]",
+    "interpretation": "This defines the VM’s CPU capacity and is used for context when interpreting CPU utilization and contention metrics.[file:23]",
+    "troubleshootingSteps": [
+      "Ensure the number of vCPUs is appropriate for the VM’s workload and not excessively high or low.",
+      "Compare vCPU allocation with utilization to identify under‑utilized or over‑stressed VMs.",
+      "Avoid over‑allocating vCPUs across many VMs on the same host, which can increase contention.",
+      "Track changes in vCPU configuration over time to understand their impact on performance."
+    ]
+  },
+  {
+    "measurement": "Disk read and write rate",
+    "description": "Indicates the rate at which read‑write requests were processed by this VM.[file:23]",
+    "unit": "Kbytes/Sec[file:23]",
+    "interpretation": "This combined metric reflects overall disk I/O throughput for the VM. Comparing it across VMs helps identify those with abnormally high I/O activity.[file:23]",
+    "troubleshootingSteps": [
+      "Identify VMs with unusually high combined disk I/O compared to peers with similar roles.",
+      "Correlate this measure with disk latency and queue size to detect I/O saturation.",
+      "Break down into separate read and write measures when needed to see which direction dominates.",
+      "Optimize disk usage patterns (e.g., batching, caching) in high‑I/O VMs to reduce load."
+    ]
+  },
+  {
+    "measurement": "Network data sent and received",
+    "description": "Indicates the rate at which network I/O is processed by this VM.[file:23]",
+    "unit": "Mbps[file:23]",
+    "interpretation": "This metric aggregates total network throughput (inbound and outbound) and can be compared across VMs to find those with unusually high network activity.[file:23]",
+    "troubleshootingSteps": [
+      "Compare total network throughput across VMs to detect bandwidth‑heavy workloads.",
+      "Use detailed network monitoring to determine whether high usage is due to legitimate traffic patterns.",
+      "Ensure that NICs, virtual switches, and upstream links can handle the aggregate load from top‑talker VMs.",
+      "Consider scaling out or load‑balancing services hosted on VMs with persistently high network I/O."
+    ]
+  },
+  {
+    "measurement": "Total IOPS",
+    "description": "Indicates the rate at which I/O operations are performed by this VM.[file:23]",
+    "unit": "Requests/Sec[file:23]",
+    "interpretation": "This is a key indicator of the VM’s I/O processing capacity; higher values are generally desirable for I/O‑intensive workloads. A consistent drop can indicate a processing bottleneck. Comparing Read operations and Write operations helps identify whether the limitation is on reads or writes.[file:23]",
+    "troubleshootingSteps": [
+      "Monitor Total IOPS over time against expected workload patterns to detect degradation.",
+      "When IOPS decline, examine read and write operation metrics to pinpoint which type of I/O slowed.[file:23]",
+      "Check storage backend performance and contention for VMs with falling IOPS.",
+      "Redistribute I/O‑heavy workloads or upgrade storage resources if capacity limits are reached."
+    ]
+  },
+  {
+    "measurement": "Read operations",
+    "description": "Indicates the rate at which this VM services read requests.[file:23]",
+    "unit": "Requests/Sec[file:23]",
+    "interpretation": "Ideally, this value should be high for read‑heavy workloads. A steady drop indicates a slowdown in processing read requests. Comparing across VMs reveals which guest is slowest in responding to read requests.[file:23]",
+    "troubleshootingSteps": [
+      "Compare read operation rates for VMs sharing the same datastore to locate read‑limited guests.",
+      "Correlate drops in read operations with increased latency or queue length to confirm bottlenecks.",
+      "Optimize application access patterns (e.g., caching, query tuning) to reduce excessive random reads.",
+      "Consider relocating heavily read‑bound VMs to faster storage tiers."
+    ]
+  },
+  {
+    "measurement": "Write operations",
+    "description": "Indicates the rate at which this VM services write requests.[file:23]",
+    "unit": "Requests/Sec[file:23]",
+    "interpretation": "Ideally, this value should be high for write‑intensive workloads. A steady drop indicates a slowdown in processing write requests. Comparing this metric across VMs shows which is slowest in responding to writes.[file:23]",
+    "troubleshootingSteps": [
+      "Identify VMs with low write operations relative to expected workload, especially if latency is high.",
+      "Tune storage (write caching, RAID levels) and application behavior (batching, logging) to improve write throughput.",
+      "Monitor for contention on shared storage resources impacting write performance across multiple VMs.",
+      "Relocate write‑heavy VMs to storage with better write characteristics if necessary."
+    ]
+  },
+  {
+    "measurement": "Time spent waiting for I/O",
+    "description": "Indicates the percentage of time the host’s CPU was waiting for this VM to complete I/O processing.[file:23]",
+    "unit": "Percent[file:23]",
+    "interpretation": "A high value indicates that the VM is taking too long to complete I/O operations, suggesting an I/O processing bottleneck associated with that VM.[file:23]",
+    "troubleshootingSteps": [
+      "Correlate high I/O wait with disk latency, IOPS, and queue size for the VM to confirm storage bottlenecks.",
+      "Check whether other VMs on the same storage are also experiencing high I/O wait, indicating shared contention.",
+      "Optimize or reschedule I/O‑intensive tasks running inside the VM to reduce peak load.",
+      "Upgrade or reconfigure underlying storage if high I/O wait is widespread and persistent."
+    ]
+  },
+  {
+    "measurement": "Average queue size",
+    "description": "Indicates the average number of I/O requests to this VM that are in queue for processing.[file:23]",
+    "unit": "Number[file:23]",
+    "interpretation": "If this value grows consistently, the VM is unable to process requests quickly enough to clear the queue. The VM with the highest queued requests is likely experiencing a serious I/O bottleneck.[file:23]",
+    "troubleshootingSteps": [
+      "Track average queue size over time to identify VMs with growing backlogs.",
+      "Relate high queue size to increased latency and I/O wait to quantify user impact.",
+      "Redistribute workloads or adjust storage provisioning for VMs with large queues.",
+      "Tune queue depth or I/O scheduler parameters if available to better handle bursts without long queues."
+    ]
+  },
+  {
+    "measurement": "Current requests in flight",
+    "description": "Indicates the number of I/O requests to this VM that are currently being processed.[file:23]",
+    "unit": "Number[file:23]",
+    "interpretation": "This shows the level of concurrent I/O activity on the VM at any given time. Very high values may indicate heavy load, while very low values during expected busy periods may suggest throttling or upstream issues.[file:23]",
+    "troubleshootingSteps": [
+      "Compare current requests in flight with IOPS and latency to see how concurrency affects performance.",
+      "Investigate whether high in‑flight request counts correlate with longer response times, indicating saturation.",
+      "If concurrency is low despite high demand, check for configuration limits or bottlenecks in the I/O stack.",
+      "Adjust concurrency‑related settings (queue depth, thread counts) where appropriate to balance throughput and latency."
+    ]
+  },
+  {
+    "measurement": "Current sessions",
+    "description": "For virtual desktops (Citrix XenServer VDI), indicates the number of sessions that each user has currently logged into when reporting metrics per user.[file:23]",
+    "unit": "Number[file:23]",
+    "interpretation": "This is a good indicator of how busy a user is. Detailed diagnosis reveals which guests the user is currently logged on to.[file:23]",
+    "troubleshootingSteps": [
+      "Identify users with an unusually high number of concurrent sessions and verify whether this is expected.",
+      "Use detailed diagnosis to list the specific VMs a user is logged into for support or troubleshooting.",
+      "Correlate high session counts with resource usage to ensure desktop infrastructure can handle user load.",
+      "Review policies for session limits to prevent resource exhaustion caused by too many simultaneous logins."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs full run",
+    "description": "Indicates the percentage of the time that the vCPUs were running on this VM.[file:23]",
+    "unit": "Percentage[file:23]",
+    "interpretation": "A high value indicates that vCPUs are using a lot of physical CPU resources for prolonged periods, which may signal a CPU‑intensive workload or potential over‑commitment on the host.[file:23]",
+    "troubleshootingSteps": [
+      "Monitor this metric alongside host CPU utilization to detect CPU saturation driven by this VM.",
+      "Identify CPU‑intensive processes inside the VM and optimize or redistribute workloads if necessary.",
+      "Consider allocating additional vCPUs or moving the VM to a host with more available CPU capacity.",
+      "Adjust CPU shares or limits to ensure fair distribution of CPU resources among VMs."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs partial run",
+    "description": "Indicates the percentage of time that some of the total vCPUs were running and others were blocked on this VM.[file:23]",
+    "unit": "Percentage[file:23]",
+    "interpretation": "This reflects periods where not all vCPUs are able to run simultaneously, possibly due to contention or scheduling constraints. Elevated values can highlight uneven utilization or waiting among vCPUs.[file:23]",
+    "troubleshootingSteps": [
+      "Correlate partial run percentages with concurrency and contention metrics to understand scheduling behavior.",
+      "Review whether the VM has more vCPUs than necessary, which can increase scheduling overhead without performance gains.",
+      "Tune application threading models to better match the number of vCPUs available.",
+      "If contention is host‑wide, consider rebalancing VMs across hosts or reducing over‑commitment."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs idle",
+    "description": "Indicates the percentage of time that the vCPUs were blocked or offline on this VM.[file:23]",
+    "unit": "Percentage[file:23]",
+    "interpretation": "High idle percentages suggest that vCPUs are frequently blocked or not needed, indicating potential over‑allocation of CPU resources for the VM.[file:23]",
+    "troubleshootingSteps": [
+      "If vCPUs idle values are consistently high, consider reducing the number of vCPUs assigned to the VM.",
+      "Compare idle time with workload patterns to determine whether CPU capacity is aligned with actual demand.",
+      "Use freed CPU capacity to support other VMs that are CPU constrained.",
+      "Check for misconfigured applications that might block threads unnecessarily rather than doing useful work."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs concurrency hazard",
+    "description": "Indicates the percentage of time that some of the total vCPUs were running and other vCPUs were waiting for the physical CPU.[file:23]",
+    "unit": "Percentage[file:23]",
+    "interpretation": "This reveals periods where partial concurrency is limited by physical CPU availability, indicating contention between vCPUs for host CPU resources.[file:23]",
+    "troubleshootingSteps": [
+      "Monitor this together with full contention metrics to quantify how often vCPUs compete for CPU time.",
+      "Reduce vCPU counts or migrate VMs if concurrency hazards are high on heavily over‑committed hosts.",
+      "Balance CPU‑intensive VMs across multiple hosts to reduce contention for individual physical CPUs.",
+      "Adjust CPU scheduling or priority settings if supported to favor critical workloads."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs full contention",
+    "description": "Indicates the percentage of time that the vCPUs on this VM were waiting for the physical CPU.[file:23]",
+    "unit": "Percentage[file:23]",
+    "interpretation": "High full contention means that all vCPUs were unable to obtain CPU time, strongly indicating CPU over‑commitment or heavy contention on the host.[file:23]",
+    "troubleshootingSteps": [
+      "Investigate host‑level CPU utilization; if near saturation, move VMs or add CPU capacity.",
+      "Reduce vCPU allocations for less critical VMs to relieve contention for this and other guests.",
+      "Schedule CPU‑intensive tasks during off‑peak times to minimize concurrent demand.",
+      "Use this metric to justify capacity upgrades or redistribution of workloads across additional hosts."
+    ]
+  },
+  {
+    "measurement": "Virtual CPUs partial contention",
+    "description": "Indicates the percentage of time that some of the total vCPUs were waiting for the physical CPU and others were blocked.[file:23]",
+    "unit": "Percentage[file:23]",
+    "interpretation": "This captures intervals where no vCPU is making forward progress because some are waiting and others are blocked, reflecting complex contention and blocking scenarios.[file:23]",
+    "troubleshootingSteps": [
+      "Analyze partial contention in conjunction with application behavior to see whether lock contention or synchronization is causing blocked CPUs.",
+      "Reduce over‑commitment and rebalance VMs to minimize physical CPU contention that exacerbates blocking.",
+      "Tune application locking and concurrency constructs to reduce periods where many vCPUs are simultaneously unable to run.",
+      "Monitor trends; rising partial contention may signal that overall CPU demand is approaching or exceeding host capacity."
+    ]
+  }
+]

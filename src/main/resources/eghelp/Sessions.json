@@ -1,0 +1,110 @@
+[
+  {
+    "measurement": "Total live sessions",
+    "description": "Indicates the current number of user sessions that are actively being tracked and can be replayed in real time.",
+    "unit": "Number",
+    "interpretation": "This shows how many users are presently interacting with the site and have an active RUM session; a higher value reflects higher concurrent usage. Sudden surges may indicate traffic spikes, marketing events, or potential bot or attack traffic and should be correlated with business context and security indicators.",
+    "troubleshootingSteps": [
+      "Correlate sudden increases in live sessions with deployment times, marketing campaigns, or external events to determine if the surge is expected.",
+      "Check security and WAF logs when live sessions spike without an obvious business reason to rule out automated or malicious traffic.",
+      "Compare Total live sessions with backend resource utilization (CPU, memory, DB connections) to verify that the infrastructure scales adequately.",
+      "If live sessions are persistently low compared to expected traffic, validate that the RUM and session replay tags are correctly deployed on key pages."
+    ]
+  },
+  {
+    "measurement": "Average session duration",
+    "description": "Indicates the average time span from the start to the end of a user session.",
+    "unit": "Minutes",
+    "interpretation": "Longer average durations can indicate high engagement or users struggling to complete tasks, while very short durations may suggest bounces or poor initial experience. This metric is best interpreted with context from error rates, Apdex, and conversion funnels to distinguish healthy engagement from inefficient or confusing user journeys.",
+    "troubleshootingSteps": [
+      "If average duration is unusually short, inspect entry pages, initial load performance, and errors to see if users abandon sessions early.",
+      "If average duration is very long, review replays for representative long sessions to determine whether users are engaged or stuck.",
+      "Segment average session duration by device, browser, and geography to uncover cohorts with abnormal behavior.",
+      "Correlate changes in session duration with UX changes and releases to understand their impact on user journeys."
+    ]
+  },
+  {
+    "measurement": "Average session apdex score",
+    "description": "Indicates the average Apdex score computed across all sessions, based on session‑level performance and user experience.",
+    "unit": "Number",
+    "interpretation": "Apdex converts session performance into a single score between 0 and 1, where 1 means all sessions are satisfactory and 0 means none are. A declining average session Apdex indicates that a growing share of sessions are tolerating or frustrated, signaling worsening user experience across the application.",
+    "troubleshootingSteps": [
+      "Break down the session Apdex into counts of satisfied, tolerating, and frustrated sessions to see which category is growing.",
+      "Correlate low session Apdex with slow page views, JavaScript errors, and backend response time spikes seen during those sessions.",
+      "Segment session Apdex by device, browser, page group, or geography to locate specific segments with poor experience.",
+      "Review and adjust the Apdex threshold T if it does not align with your current performance objectives and user expectations."
+    ]
+  },
+  {
+    "measurement": "Healthy live sessions",
+    "description": "Indicates the number of live sessions currently classified as healthy, based on performance and error conditions.",
+    "unit": "Number",
+    "interpretation": "Healthy live sessions are those where users are not encountering significant slowness or errors and are operating within acceptable performance thresholds. A high proportion of healthy sessions implies that the majority of active users currently have a satisfactory experience.",
+    "troubleshootingSteps": [
+      "Track the ratio of Healthy live sessions to Total live sessions over time to see how often live users have good experience.",
+      "If the healthy share drops, inspect concurrent trends in slow sessions, error sessions, and Apdex to locate likely causes.",
+      "Use session replay to sample healthy sessions and confirm that classification rules align with real user perception.",
+      "Correlate dips in healthy sessions with recent deployments or configuration changes and roll back or fix as needed."
+    ]
+  },
+  {
+    "measurement": "Slow live sessions",
+    "description": "Indicates the number of live sessions where users are experiencing slow page load or interaction performance.",
+    "unit": "Number",
+    "interpretation": "Slow live sessions are those where one or more key pages or interactions breach configured performance thresholds during the session. A growing count of slow live sessions suggests that many active users are currently exposed to performance problems that may affect satisfaction and conversion.",
+    "troubleshootingSteps": [
+      "Inspect replays from slow live sessions to identify which pages or actions are consistently slow from the user’s perspective.",
+      "Correlate slow sessions with backend metrics (server time, database latency, external services) during the same time window.",
+      "Segment slow sessions by device, browser, and geography to spot environmental or regional performance issues.",
+      "Tune thresholds and optimize problematic pages or APIs, then monitor slow live sessions to confirm that counts decrease."
+    ]
+  },
+  {
+    "measurement": "Erroneous live sessions",
+    "description": "Indicates the number of live sessions in which users are encountering JavaScript errors or other client‑side failures.",
+    "unit": "Number",
+    "interpretation": "Erroneous live sessions reflect active users currently affected by client‑side errors that can break flows, cause visual glitches, or block completion of key actions. A rise in this metric often follows front‑end deployments and may signal regressions that warrant immediate investigation.",
+    "troubleshootingSteps": [
+      "Filter replays for erroneous live sessions and review error overlays or console logs to identify recurring JavaScript errors.",
+      "Correlate error sessions with specific releases, feature flags, or A/B tests to quickly find the source of regressions.",
+      "Segment error sessions by browser and device to detect compatibility issues with specific environments.",
+      "Prioritize fixes for errors seen in high‑value journeys (checkout, login, bookings), then confirm that erroneous live sessions drop after deployment."
+    ]
+  },
+  {
+    "measurement": "Poor user experience live sessions",
+    "description": "Indicates the number of live sessions where overall user experience is classified as poor based on Apdex and other quality indicators.",
+    "unit": "Number",
+    "interpretation": "These sessions combine signals such as low Apdex, slow interactions, and high error counts to flag live users currently having an unsatisfactory experience. A high or rising value means many active users may be struggling, making this metric important for real‑time triage and prioritization.",
+    "troubleshootingSteps": [
+      "Review replays of poor‑experience sessions to understand exactly where users encounter friction, delays, or failures.",
+      "Correlate these sessions with backend incidents, network issues, or release events to identify systemic problems.",
+      "Segment poor‑experience live sessions by user segment (e.g., new vs returning, geography, device) to focus fixes where impact is highest.",
+      "Set alerts on this metric so on‑call teams are notified when live user experience degrades beyond acceptable thresholds."
+    ]
+  },
+  {
+    "measurement": "Slow session percentage",
+    "description": "Indicates the percentage of sessions in the selected period that are classified as slow based on performance thresholds.",
+    "unit": "Percent",
+    "interpretation": "This metric shows what fraction of all sessions are affected by slow performance; ideally it should be close to 0%. Values above 50% indicate that most users are seeing slowness during their sessions and that performance issues are widespread rather than isolated.",
+    "troubleshootingSteps": [
+      "Track Slow session percentage alongside Average session Apdex and Average page load time to gauge overall performance health.",
+      "Segment slow sessions by key dimensions (device, browser, geography, page group) to identify cohorts most impacted.",
+      "Review detailed performance breakdowns (browser, network, server, content) from sessions marked as slow to locate systemic bottlenecks.",
+      "After optimizing problem areas, compare Slow session percentage before and after to quantify the impact of your improvements."
+    ]
+  },
+  {
+    "measurement": "Error session percentage",
+    "description": "Indicates the percentage of sessions in which users encounter one or more significant client‑side errors during their journey.",
+    "unit": "Percent",
+    "interpretation": "This reflects how common error‑affected sessions are; ideally, it should be as low as possible. High values mean that a substantial share of users face script errors, broken interactions, or crashes during their sessions, which can drastically reduce satisfaction and task completion.",
+    "troubleshootingSteps": [
+      "Monitor Error session percentage together with Erroneous live sessions to understand both historical and real‑time error impact.",
+      "Use filters to find replays of sessions with errors on critical flows (checkout, registration, payment) and prioritize fixes there.",
+      "Segment error‑affected sessions by app version, browser, device, and feature flag to localize the source of defects.",
+      "Re‑evaluate this metric after releasing fixes to ensure the proportion of error‑affected sessions declines to an acceptable level."
+    ]
+  }
+]

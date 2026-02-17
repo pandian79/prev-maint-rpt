@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Core resource status",
+    "description": "Indicates the current state of this core resource.",
+    "measurementUnit": null,
+    "interpretation": "Values: Online (100), Online Pending (90), Inherited (80), Initializing (70), Pending (60), Offline Pending (50), Unknown (40), Offline (20), Failed (0). The detailed diagnosis lists the owner node, the type of the core resource, and the cluster group.",
+    "troubleshootingSteps": [
+      "Check the 'Detailed Diagnosis' or use PowerShell (`Get-ClusterResource`) to identify the failed or pending core resource (e.g., Quorum Witness, Cluster IP, or a shared disk) and its owner node.[web:416][web:417][web:420]",
+      "If status is 'Failed' or 'Offline', verify basic connectivity and storage access on the owner node; inspect Cluster Events (Event ID 1069) for specific error codes like 'Resource failed to bring online'.[web:416][web:420][web:428][web:331]",
+      "If status is 'Online Pending' or stuck, try moving the Core Cluster Group to another node using Failover Cluster Manager or `Move-ClusterGroup`. If it remains stuck, you may need to restart the Cluster Service on the current owner node.[web:418][web:419][web:420][web:421]",
+      "For 'Quorum' or 'Witness' failures, ensure the witness share or disk is accessible from all nodes and that network partitioning hasn't isolated the active node.[web:417][web:420][web:426]",
+      "Use `Get-ClusterLog -Destination .` to generate and review logs for deadlock messages (Event 1230) or specific resource DLL errors if the issue persists.[web:416][web:332]"
+    ]
+  }
+]

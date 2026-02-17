@@ -1,0 +1,30 @@
+[
+  {
+    "measurement": "Handles used by processes",
+    "description": "Indicates the number of handles opened by various processes running in a target Windows virtual machine in the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Use the detailed diagnosis of this measure to determine the top ten processes in terms of number of handles opened. This highlights processes with too many open handles; by tracking their handle usage over time, you can identify potential handle leaks.",
+    "troubleshootingSteps": [
+      "Enable and review detailed diagnosis to identify the top processes by handle count and note their process IDs.",
+      "Use tools such as Process Explorer or Sysinternals Handle to inspect which types of handles (files, registry keys, events, threads, etc.) the high-usage processes have open.",
+      "Baseline normal handle counts for key applications and compare current values to detect abnormal growth over time.",
+      "Look for steadily increasing handle counts between measurement periods; a monotonically growing pattern is a strong indicator of a handle leak.",
+      "For suspect processes, review recent code changes around resource management and ensure every acquired handle (files, sockets, registry, GDI objects, etc.) is explicitly closed in all code paths, including error handling.",
+      "If possible, reproduce the leak in a test environment and attach a debugger or use handle-tracing tools to capture where handles are created and never released."
+    ]
+  },
+  {
+    "measurement": "Processes using handles above limit",
+    "description": "Indicates the number of processes which open handles on or above the value defined in the input parameter HANDLES GROWTH LIMIT.",
+    "unit": "Number",
+    "interpretation": "Detailed diagnosis helps isolate the exact processes that have opened more handles than the configured limit. A high value indicates that many processes are opening handles excessively. Observing their handle usage over time helps you determine if spikes are sporadic or consistent; a consistent increase suggests a handle leak.",
+    "troubleshootingSteps": [
+      "Inspect the detailed diagnosis for this measure to list all processes exceeding the HANDLES GROWTH LIMIT and review their handle totals and sub-handle breakdowns (file, registry, thread, etc.) if enabled.",
+      "Validate that the configured HANDLES GROWTH LIMIT is appropriate for your environment and adjust it if certain well-known services legitimately use many handles (e.g., SQL Server, LSASS). Use published guidance or vendor documentation as a reference.",
+      "For each over-limit process, track handle counts across several intervals to see whether they plateau or continue to grow without bound (leak behavior).",
+      "Correlate handle growth with application logs, configuration changes, and workload patterns (e.g., new connections, opened files) to pinpoint which operations create handles that never close.",
+      "Where leaks are confirmed, engage the application owner or development team to fix resource management defects and deploy patched versions.",
+      "As a containment step, consider restarting severely leaking processes during maintenance windows before they exhaust system resources and cause instability, while you work on a permanent fix."
+    ]
+  }
+]

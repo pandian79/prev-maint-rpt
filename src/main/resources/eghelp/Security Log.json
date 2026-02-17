@@ -1,0 +1,24 @@
+[
+  {
+    "measurement": "Successful audits",
+    "description": "The number of successful audits of windows security logs",
+    "measurementUnit": "Number",
+    "interpretation": "The detailed diagnosis of this measure, if enabled, provides the details of the successful log audits.",
+    "troubleshootingSteps": [
+      "Review the volume and type of successful audits in the Security event log (e.g., Event IDs 4624 for logons, 4672 for privilege use) to establish a normal baseline for user and system activity.[web:357][web:361][web:368]",
+      "If the number of successful audits spikes abnormally, filter for repetitive events (such as repeated service logons or file access events) that may indicate a misconfigured application, script loop, or automated task generating excessive noise.[web:361][web:367][web:369]",
+      "Use audit policy configuration (auditpol /get /category:*) to fine-tune what is logged; disable success auditing for high-volume, low-value subcategories (like detailed file share or filtering platform access) if they overwhelm the logs.[web:363][web:366]"
+    ]
+  },
+  {
+    "measurement": "Failure audits",
+    "description": "The number of windows security log audits that failed",
+    "measurementUnit": "Number",
+    "interpretation": "The detailed diagnosis of this measure, if enabled, provides the details of the failed log audits.",
+    "troubleshootingSteps": [
+      "Investigate failure audits (e.g., Event ID 4625 for failed logons) to identify the source IP, account name, and failure reason (bad password, locked account, etc.).[web:362][web:364][web:368][web:370]",
+      "If you see a high volume of failure audits, check for brute-force attacks, misconfigured service accounts with expired passwords, or scripts using stale credentials.[web:362][web:364][web:368]",
+      "Correlate failure events with other system logs (Application, System) to determine if a specific application or service is malfunctioning and triggering authentication errors.[web:364][web:368]"
+    ]
+  }
+]

@@ -1,0 +1,55 @@
+[
+  {
+    "measurement": "Cluster disk status",
+    "description": "Indicates the current state of this cluster disk.",
+    "measurementUnit": null,
+    "interpretation": "Values: Online (100), Online pending (90), Inherited (80), Initializing (70), Pending (60), Offline pending (50), Unknown (40), Offline (20), Failed (0). A failed disk adversely impacts availability. Use detailed diagnosis to see the owner node, path, and group.",
+    "troubleshootingSteps": [
+      "Check the physical disk connectivity and SAN/storage array status; verify if the LUN is presented correctly to all cluster nodes.[web:431][web:437][web:440]",
+      "If the disk is 'Failed' or stuck in 'Online Pending', run cluster validation tests for storage to identify SCSI reservation conflicts or driver issues.[web:419][web:431][web:434]",
+      "Inspect the System and FailoverClustering event logs (Event IDs 1069, 1034, 1066) for specific error codes like 'Disk is reserved by another node' or 'Access Denied'.[web:419][web:429][web:431]",
+      "Clear any 'stuck' reservations using `Clear-ClusterDiskReservation` (forcefully) if a node retains a lock on the disk after a crash, but use caution to avoid data corruption.[web:429][web:431]",
+      "If the disk is marked Read-Only, use Diskpart or PowerShell to clear the Read-Only attribute, which can happen after certain failure scenarios.[web:437][web:440]"
+    ]
+  },
+  {
+    "measurement": "Total capacity of cluster disk",
+    "description": "Indicates the total capacity of this cluster disk.",
+    "measurementUnit": "GB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Verify that the reported capacity matches the LUN size on the storage array; discrepancies might indicate partition alignment issues or unallocated space that can be expanded.[web:438][web:439]"
+    ]
+  },
+  {
+    "measurement": "Space used in cluster disk",
+    "description": "Indicates the space in this cluster disk that is in use currently.",
+    "measurementUnit": "GB",
+    "interpretation": "Ideally, the value should be low. A high value indicates excessive space usage.",
+    "troubleshootingSteps": [
+      "Identify large files or folders (e.g., VHDX files, ISOs, logs) consuming space using tools like TreeSize or PowerShell scripts adapted for Cluster Shared Volumes (CSV).[web:433][web:439]",
+      "Check for shadow copies or system volume information bloat that might be consuming hidden space.[web:438][web:439]"
+    ]
+  },
+  {
+    "measurement": "Free space in cluster disk",
+    "description": "Indicates the amount of space in this cluster disk that is currently unused.",
+    "measurementUnit": "GB",
+    "interpretation": "A high value is desired for this measure.",
+    "troubleshootingSteps": [
+      "Monitor free space trends to predict when capacity will be exhausted; proactive expansion is better than reacting to a full disk.[web:433][web:436][web:439]",
+      "If free space is critically low, immediately free up space by deleting non-essential files or migrating workloads to other volumes to prevent service stoppages (e.g., paused VMs).[web:433][web:435][web:441]"
+    ]
+  },
+  {
+    "measurement": "Percentage of cluster disk space used",
+    "description": "Indicates the percentage of the total capacity of this cluster disk that is utilized.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100% indicates abnormal usage. Compare across disks to balance loads. Check this before assigning new services.",
+    "troubleshootingSteps": [
+      "Set alerts for high usage thresholds (e.g., Warning at 80%, Critical at 90%) to allow time for remediation.[web:433][web:435][web:436]",
+      "Balance storage loads by moving virtual machines or data to less utilized cluster disks or CSVs using Live Migration.[web:433][web:435][web:441]",
+      "Expand the LUN on the SAN and then extend the volume in Windows Disk Management if usage is legitimately high and cannot be reduced.[web:433][web:435][web:441]"
+    ]
+  }
+]

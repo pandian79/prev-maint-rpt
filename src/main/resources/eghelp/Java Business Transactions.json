@@ -1,0 +1,169 @@
+[
+  {
+    "measurement": "All transactions",
+    "description": "Indicates the total number of requests received for transactions of this pattern during the last measurement period. For the Summary descriptor, this reveals the total number of transaction requests received by the target JVM.",
+    "measurementUnit": "Number",
+    "interpretation": "Identifies the most popular transaction patterns and overall workload. Detailed diagnosis reveals specific transactions.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Avg response time",
+    "description": "Indicates the average time taken by the transactions of this pattern to complete execution.",
+    "measurementUnit": "Msecs",
+    "interpretation": "Isolates types of transactions taking too long. Abnormally low values for Summary could indicate a processing bottleneck on the target JVM.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify the slowest transaction in the group and analyze its execution path (methods, queries, external calls).[web:530][web:536]",
+      "If the average response time is high across all patterns, check JVM health (GC activity, heap usage) and underlying server resources (CPU, I/O).[web:533][web:534]"
+    ]
+  },
+  {
+    "measurement": "Healthy transactions",
+    "description": "Indicates the number of healthy transactions of this pattern.",
+    "measurementUnit": "Number",
+    "interpretation": "For Summary, reports total healthy transactions on the target JVM.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Healthy transactions percentage",
+    "description": "Indicates what percentage of the total number of transactions of this pattern is healthy.",
+    "measurementUnit": "Percent",
+    "interpretation": "For Summary, reports overall percentage of healthy transactions on the target JVM.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Slow transactions",
+    "description": "Indicates the number of transactions of this pattern that were slow during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Reports transactions with response time higher than the configured SLOW TRANSACTION CUTOFF (MS). High values indicate poor user experience.",
+    "troubleshootingSteps": [
+      "Drill down into slow transactions to see if they are bound by CPU, database queries, or external service calls.[web:530][web:533][web:537]",
+      "Analyze the execution trace to find inefficient loops, unoptimized algorithms, or heavy synchronized blocks causing delays.[web:530][web:536]"
+    ]
+  },
+  {
+    "measurement": "Slow transactions response time - avg",
+    "description": "Indicates the average time taken by the slow transactions of this pattern to execute.",
+    "measurementUnit": "Msecs",
+    "interpretation": "For Summary, reports average response time of all slow transactions on the target JVM.",
+    "troubleshootingSteps": [
+      "If the average time is excessively high, check for resource contention (e.g., connection pool exhaustion) or specific slow SQL queries affecting these transactions.[web:532][web:535]"
+    ]
+  },
+  {
+    "measurement": "Slow transactions percentage",
+    "description": "Indicates what percentage of the total number of transactions of this pattern is currently slow.",
+    "measurementUnit": "Percent",
+    "interpretation": "Drill down to identify specific slow transactions and their causes.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Error transactions",
+    "description": "Indicates the number of transactions of this pattern that experienced errors during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "High values indicate poor user experience. For Summary, indicates how error-prone the target JVM is.",
+    "troubleshootingSteps": [
+      "Examine exception stack traces for error transactions to identify the root cause (e.g., NullPointerException, SQL exceptions, timeouts).[web:534][web:540]"
+    ]
+  },
+  {
+    "measurement": "Error transactions response time - avg",
+    "description": "Indicates the average duration for which the transactions of this pattern were processed before an error condition was detected.",
+    "measurementUnit": "Msecs",
+    "interpretation": "Helps discern if error transactions were also slow.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Error transactions percentage",
+    "description": "Indicates what percentage of the total number of transactions of this pattern is experiencing errors.",
+    "measurementUnit": "Percent",
+    "interpretation": "Use detailed diagnosis to isolate error transactions and determine the cause.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Stalled transactions",
+    "description": "Indicates the number of transactions of this pattern that were stalled during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Reports transactions with response time higher than the configured STALLED TRANSACTION CUTOFF (MS). High values indicate poor user experience.",
+    "troubleshootingSteps": [
+      "Check for thread deadlocks or long waits on external resources (databases, web services) that might be causing transactions to hang.[web:534][web:540]",
+      "Use thread dumps or contention monitoring to identify threads stuck in 'WAITING' or 'BLOCKED' states.[web:531][web:534]"
+    ]
+  },
+  {
+    "measurement": "Stalled transactions response time - avg",
+    "description": "Indicates the average time taken by the stalled transactions of this pattern to execute.",
+    "measurementUnit": "Msecs",
+    "interpretation": "For Summary, reports average response time of all stalled transactions on the target JVM.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Stalled transactions percentage",
+    "description": "Indicates what percentage of the total number of transactions of this pattern is stalling.",
+    "measurementUnit": "Percent",
+    "interpretation": "Use detailed diagnosis to drill down and identify causes of stalling.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "SQL statements executed",
+    "description": "Indicates the number of slow SQL queries that were executed by the transactions of this pattern during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "For Summary, reports total slow SQL queries executed by all transactions.",
+    "troubleshootingSteps": [
+      "Identify the specific SQL queries associated with slow transactions and optimize them using indexing, query rewriting, or caching.[web:532][web:538][web:539]"
+    ]
+  },
+  {
+    "measurement": "Avg SQL statement time",
+    "description": "Indicates the average execution time of the slow SQL queries that were run by the transactions of this pattern.",
+    "measurementUnit": "Msecs",
+    "interpretation": "Helps figure out if query execution is slowing down transactions. Drill down to confirm database query impact.",
+    "troubleshootingSteps": [
+      "Use database profiling tools (like EXPLAIN plans) to analyze the execution plans of the slowest queries.[web:532][web:538]",
+      "Consider database tuning (schema changes, configuration) if queries remain slow despite optimization.[web:532][web:535]"
+    ]
+  },
+  {
+    "measurement": "CPU time - average",
+    "description": "Indicates the average time for which transactions of this pattern were utilizing the CPU.",
+    "measurementUnit": "Msecs",
+    "interpretation": "Identifies CPU-intensive transaction patterns. Requires ENABLE THREAD CPU MONITORING flag and JVM support.",
+    "troubleshootingSteps": [
+      "If CPU time is high, look for computationally intensive code (e.g., complex calculations, large data processing) and optimize algorithms.[web:534][web:539]"
+    ]
+  },
+  {
+    "measurement": "Block time - average",
+    "description": "Indicates the average duration for which transactions of this pattern were blocked and could not execute.",
+    "measurementUnit": "Msecs",
+    "interpretation": "Helps figure out if prolonged blocking is causing slowness/stalling. Requires ENABLE THREAD CONTENTION MONITORING flag and JVM support.",
+    "troubleshootingSteps": [
+      "Analyze thread contention to identify synchronization bottlenecks (e.g., too many threads waiting for a lock on a shared object).[web:531][web:534]",
+      "Refactor code to reduce lock granularity or use non-blocking data structures where possible.[web:531]"
+    ]
+  },
+  {
+    "measurement": "Wait time - average",
+    "description": "Indicates the average duration for which transactions of this pattern were waiting before they resumed execution.",
+    "measurementUnit": "Msecs",
+    "interpretation": "Helps figure out if high waiting time is causing slowness/stalling. Requires ENABLE THREAD CONTENTION MONITORING flag and JVM support.",
+    "troubleshootingSteps": [
+      "Investigate what the threads are waiting for (e.g., I/O operations, network responses, other threads) and optimize those dependencies.[web:531][web:534]"
+    ]
+  },
+  {
+    "measurement": "Total transactions per minute",
+    "description": "Indicates the number of transactions of this pattern that are executed per minute.",
+    "measurementUnit": "Number",
+    "interpretation": "Indicator of transaction processing ability.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Error transactions per minute",
+    "description": "Indicates the number of error transactions of this pattern that are executed per minute.",
+    "measurementUnit": "Number",
+    "interpretation": "A very low value is desired. Compare across patterns to find error-prone transactions.",
+    "troubleshootingSteps": [
+      "Monitor error rates closely; a sudden spike indicates a potential service outage or critical bug that needs immediate rollback or fix.[web:540]"
+    ]
+  }
+]

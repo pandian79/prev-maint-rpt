@@ -1,0 +1,8 @@
+[
+  {
+    "measurement": "CPU utilization of JVM",
+    "description": "Indicates the percentage of total available CPU time taken up by the JVM.",
+    "unit": "Percent",
+    "interpretation": "On multi-processor systems, this is the total CPU time consumed by the JVM divided by the number of processors. Ideally this percentage should remain low; unusually high values or a steadily rising trend point to abnormal CPU usage and should be investigated. When this occurs, use the detailed diagnosis for this measure to identify runnable threads that are currently consuming excessive CPU."
+  }
+]

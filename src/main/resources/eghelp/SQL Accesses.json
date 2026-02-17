@@ -1,0 +1,133 @@
+[
+  {
+    "measurement": "Full table scans",
+    "description": "Indicates the number of unrestricted full scans being handled by the server. The scans can either be base table or full index scans and the value represents the sum of all scans for all the database instances being handled by the server.",
+    "unit": "Scans/Sec",
+    "interpretation": "Generally it is better to have fewer table scans for a database. In many cases, the SQL server itself will perform a few full table scans on a regular basis for internal use. To detect anomalies, check for random full table scans that may represent the behavior of applications using the database server. If an unusually high number of full table scans are noticed, tools such as profilers and index tuning wizards can be used to determine what is causing these scans and whether adding or adjusting indexes can help reduce them.",
+    "troubleshootingSteps": [
+      "Establish a normal baseline for full table scans per second for the workload and alert when the rate deviates significantly upward.",
+      "Identify the specific queries causing full table scans by examining execution plans or using a query profiler, and verify whether they really need to read most of the table.",
+      "Add or refine indexes on frequently filtered or joined columns so queries can use index seeks instead of scanning entire tables.",
+      "Rewrite queries to be more selective (for example, avoid non-sargable predicates, unnecessary functions on indexed columns, or SELECT * when only a few columns are needed).",
+      "Ensure table and index statistics are up to date so the optimizer can choose index-based plans when appropriate.",
+      "Consider partitioning very large tables so that scans are limited to relevant partitions rather than the entire table."
+    ]
+  },
+  {
+    "measurement": "Page splits",
+    "description": "Indicates the rate of page splits occurring in a database server as the result of index pages overflowing.",
+    "unit": "Splits/Sec",
+    "interpretation": "If the rate of page splits is high, it indicates frequent index page overflows, which increase I/O and can fragment indexes, negatively impacting performance. In such cases, adjusting index fill factor or data loading patterns may be necessary.",
+    "troubleshootingSteps": [
+      "Monitor page splits per index (where possible) to identify which indexes are experiencing the highest split rates.",
+      "Adjust the fill factor for heavily updated indexes so that more free space is left on each page, reducing the likelihood of splits during inserts and updates.",
+      "Review insert patterns, especially for non-sequential keys (for example, GUIDs), which can cause random inserts and more page splits; consider using sequential keys where feasible.",
+      "Rebuild or reorganize heavily fragmented indexes to restore efficient page layout after long periods of frequent splits.",
+      "Evaluate whether certain indexes are truly necessary; removing unused or rarely used indexes can reduce maintenance overhead and page splitting."
+    ]
+  },
+  {
+    "measurement": "SQL compilations",
+    "description": "Indicates the rate of SQL compilations happening in the database.",
+    "unit": "Reqs/Sec",
+    "interpretation": "SQL compilations are a normal part of an SQL Server's operation, but they consume CPU and other resources. The server attempts to reuse execution plans in cache to minimize compilation overhead. A high rate of compilations indicates the server is busy and may not be reusing plans effectively; in some cases, unnecessary compilations can be reduced.",
+    "troubleshootingSteps": [
+      "Compare the compilation rate to the overall batch request rate; a very high ratio of compilations to batch requests may indicate poor plan reuse.",
+      "Investigate frequent schema changes, recompilation hints, or options that force recompiles, and adjust application code or configuration to avoid unnecessary recompilation.",
+      "Ensure parameterized queries or stored procedures are used instead of many ad-hoc dynamically generated queries that differ only in literals.",
+      "Review the workload for excessive use of OPTION (RECOMPILE) or statements that cause statistics to be recomputed too often.",
+      "Verify that the plan cache is sized appropriately and that other memory pressures are not causing frequent eviction of useful plans."
+    ]
+  },
+  {
+    "measurement": "SQL recompilations",
+    "description": "Indicates the rate of SQL recompilations happening in the database server.",
+    "unit": "Reqs/Sec",
+    "interpretation": "Recompilations occur when previously compiled execution plans must be regenerated, for example because of schema or statistics changes. A lower rate of SQL recompilations is generally better for performance, as recompilation uses CPU and can add latency to queries.",
+    "troubleshootingSteps": [
+      "Track the ratio of recompilations to compilations and batch requests; high ratios may indicate frequent invalidation of cached plans.",
+      "Identify which queries or stored procedures are being frequently recompiled and examine their dependencies for volatile schema or statistics.",
+      "Reduce unnecessary schema changes or frequent statistics updates that cause plans to become invalid more often than needed.",
+      "Avoid excessive use of query-level hints or options that force recompilation on every execution.",
+      "Where appropriate, adjust statistics update thresholds or use filtered or incremental statistics to reduce disruptive plan invalidations."
+    ]
+  },
+  {
+    "measurement": "Batch requests",
+    "description": "Indicates the rate of batch requests being handled by the database server.",
+    "unit": "Reqs/Sec",
+    "interpretation": "This metric is a good indicator of how busy an SQL Server is, and it generally correlates with CPU usage. Very high values (for example, 1000 requests/sec or higher) may expose CPU or network bottlenecks, depending on hardware capabilities such as CPU, memory, and network interface speeds.",
+    "troubleshootingSteps": [
+      "Correlate batch request rate with CPU, memory, I/O, and network metrics to determine whether the server is approaching capacity.",
+      "If CPU utilization rises sharply with batch requests, consider scaling up (more CPU/memory) or scaling out (adding replicas or redistributing workload).",
+      "Evaluate connection pooling, query batching, and application-side throttling to reduce unnecessary chattiness between applications and the database.",
+      "Identify and optimize the most frequent or most expensive queries so that the server can handle high batch rates more efficiently.",
+      "Use workload management or resource governance features to prevent a few noisy tenants or applications from overwhelming the server."
+    ]
+  },
+  {
+    "measurement": "Work files rate",
+    "description": "Indicates the number of workfiles that are created per second.",
+    "unit": "Workfiles/Sec",
+    "interpretation": "Workfiles are used for temporary record storage during hash operations. They are created in memory but can overflow or spill to disk (to tempdb). A value greater than about 20 suggests excessive hash work in tempdb or poorly coded queries.",
+    "troubleshootingSteps": [
+      "Inspect execution plans for queries that use hash joins or hash aggregates and determine whether indexes or different join strategies could reduce hash work.",
+      "Optimize queries that cause large hash operations, for example by adding selective indexes, improving join conditions, or reducing the size of intermediate result sets.",
+      "Monitor tempdb I/O and space usage; if workfiles frequently spill to disk, consider increasing memory or tuning settings that affect memory grants.",
+      "Review query patterns that involve large sorts or aggregations; in some cases, breaking operations into smaller steps can reduce the need for large workfiles.",
+      "Ensure tempdb is configured with sufficient data files and appropriate disk performance to handle unavoidable hash and sort activity."
+    ]
+  },
+  {
+    "measurement": "Work tables rate",
+    "description": "Indicates the number of worktables per second.",
+    "unit": "Worktables/Sec",
+    "interpretation": "Worktables are built in tempdb to perform logical operations such as certain GROUP BY, ORDER BY, or UNION queries, especially when required columns are not covered by indexes. They are dropped automatically at the end of the statement. High rates may indicate heavy reliance on tempdb for intermediate operations.",
+    "troubleshootingSteps": [
+      "Analyze queries using GROUP BY, ORDER BY, or UNION that frequently create worktables and consider adding or adjusting indexes to better support their access patterns.",
+      "Use execution plans to confirm where worktables are being created and whether covering indexes can reduce the need for them.",
+      "Tune tempdb configuration (number of data files, disk performance) to better handle required worktable activity.",
+      "Refactor queries that generate very large intermediate result sets, for example by filtering earlier or simplifying joins, to reduce worktable size and frequency.",
+      "Monitor worktables in conjunction with tempdb contention indicators (such as waits on allocation map pages) to decide if additional tempdb optimization is needed."
+    ]
+  },
+  {
+    "measurement": "Cache requests for work table creation",
+    "description": "Indicates the percentage of queries that used work tables from the cache.",
+    "unit": "Percent",
+    "interpretation": "When a query execution plan is cached, any tempdb worktables required by that plan are often cached as truncated tables with a few pages retained, improving performance for subsequent executions. A value less than 90% may indicate insufficient memory, causing the engine to drop plans and their worktables from cache. On 32-bit systems, persistently low values may also suggest a need to move to 64-bit.",
+    "troubleshootingSteps": [
+      "If this percentage is low, check overall memory usage and signs of plan cache pressure; increase memory or adjust cache-related settings as appropriate.",
+      "Identify whether frequent schema changes or query variations are preventing effective plan and worktable reuse.",
+      "Consider consolidating similar queries or using parameterized queries and stored procedures to improve cache reuse.",
+      "On legacy 32-bit systems, evaluate migrating to 64-bit so the database engine can use more memory for plan and worktable caching.",
+      "Monitor this metric together with tempdb usage and general buffer cache hit ratios to get a complete picture of memory health."
+    ]
+  },
+  {
+    "measurement": "Free space scans",
+    "description": "Indicates the percentage of scans that were initiated to search for free space in which to insert a new record fragment.",
+    "unit": "Percent",
+    "interpretation": "This measure represents inserts into a heap table (a table without a clustered index and no physical row ordering). Inserts into heaps require SQL Server to perform free-space scans to locate pages with space for new rows and to generate an additional uniquifier column. These scans add I/O overhead and can cause contention on allocation pages. A low value is desirable.",
+    "troubleshootingSteps": [
+      "If free space scans are high, evaluate whether heavily inserted tables should be converted from heaps to tables with clustered indexes to provide more efficient insert patterns.",
+      "Review insert workloads and access patterns; where appropriate, choose clustered index keys that align with common insert ordering to minimize free-space scanning.",
+      "Monitor contention on allocation-related pages and tempdb or data files; high free space scans combined with contention may indicate the need for schema or index redesign.",
+      "Consider rebuilding or reorganizing heap tables or converting them to clustered tables where performance issues are observed.",
+      "Ensure that autogrowth and file layout are configured to avoid excessive fragmentation and to help maintain contiguous free space."
+    ]
+  },
+  {
+    "measurement": "SQL cancelled rate",
+    "description": "Indicates the number of SQL queries that were cancelled per second.",
+    "unit": "Cancelled/Sec",
+    "interpretation": "Users or clients may cancel currently executing queries or batches, triggering attention events. A high cancellation rate produces many attention events; if cancelled queries were in explicit user transactions, this can leave open transactions and cause severe blocking or locking problems.",
+    "troubleshootingSteps": [
+      "Monitor which sessions and applications are responsible for most cancellations to determine whether user behavior, timeouts, or application logic is causing frequent aborts.",
+      "Investigate whether long-running or poorly performing queries are leading users or client libraries to cancel requests; optimize those queries or adjust timeout settings as appropriate.",
+      "Check for open or orphaned transactions left behind by cancelled requests and ensure that application code properly rolls back transactions on errors or cancellations.",
+      "Review connection pool and client error-handling logic to avoid repeatedly issuing and cancelling similar problematic queries.",
+      "Correlate spikes in cancellation rate with blocking, deadlocks, or application incidents to pinpoint underlying issues driving cancellations."
+    ]
+  }
+]

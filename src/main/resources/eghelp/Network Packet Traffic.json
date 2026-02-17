@@ -1,0 +1,14 @@
+[
+  {
+    "Measurement": "Incoming packet traffic",
+    "Description": "Represents the rate of incoming traffic.",
+    "MeasurementUnit": "Pkts/Sec",
+    "Interpretation": "An increase in traffic to the server can indicate an increase in accesses to the server (from users or from other applications) or that the server is under an attack of some form."
+  },
+  {
+    "Measurement": "Outgoing packet traffic",
+    "Description": "Represents the rate of outgoing traffic.",
+    "MeasurementUnit": "Pkts/Sec",
+    "Interpretation": "An increase in traffic from the server can indicate an increase in accesses to the server (from users or from other applications)."
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "Measurement": "Licensed agents",
+    "Description": "Indicates the total number of agents configured in the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Not running licensed agents",
+    "Description": "Indicates the number of agents (configured in the eG manager) that are not running currently.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "An agent that is not running will not be able to collect metrics from the components assigned to it for monitoring. Without metrics, the eG manager will have no basis for determining the state of the related components, and will hence be forced to attach an Unknown state to all components monitored by that agent. Use the detailed diagnosis of this measure to identify the agents that are not currently running."
+  },
+  {
+    "Measurement": "Not installed licensed agents",
+    "Description": "Indicates the number of agents (configured in the eG manager) that have not been installed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "While actively using the eG Enterprise Suite, you may come across situations where an agent is configured in the eG manager for monitoring one/more components, but the agent software is not physically deployed on a host. The value of this measure is indicative of how many such configured but not installed agents are available in the environment. Such agents again will not be able to extract performance statistics from components. These components will hence assume the Unknown state, until the agent is physically deployed and started. Use the detailed diagnosis of this measure to know which agents are yet to be installed."
+  },
+  {
+    "Measurement": "Agents for components with user/desktop licenses",
+    "Description": "Indicates the number of agents assigned to components that are monitored with User/VM-based eG Monitoring License.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure is applicable only in environments where the license of the eG manager permits monitoring components using User/VM-based eG Monitoring License."
+  },
+  {
+    "Measurement": "Not running agents for components with user/desktop licenses",
+    "Description": "Indicates the number of agents that are currently not running while they are assigned to the components that are monitored with User/VM-based eG Monitoring License.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure is applicable only in environments where the license of the eG manager permits monitoring components using User/VM-based eG Monitoring License. Use the detailed diagnosis of this measure to identify the agents that are not running but are assigned to monitor the components that are monitored with User/VM-based eG Monitoring License."
+  },
+  {
+    "Measurement": "Not installed agents for components with user/desktop licenses",
+    "Description": "Indicates the number of agents that have not been installed to monitor the components that are monitored with User/VM-based eG Monitoring License.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure is applicable only in environments where the license of the eG manager permits monitoring components using User/VM-based eG Monitoring License. Use the detailed diagnosis of this measure to identify the agents that have not been installed to monitor the components that are monitored with User/VM-based eG Monitoring License."
+  },
+  {
+    "Measurement": "Percentage of agents not installed",
+    "Description": "Indicates the percentage of agents that have not been installed.",
+    "MeasurementUnit": "Percentage",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Agents reporting to this manager",
+    "Description": "Indicates the total number of eG agents reporting to the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The value of this measure is the sum of Licensed agents and Agents for components with user/desktop licenses measures."
+  },
+  {
+    "Measurement": "Percentage of agents not running",
+    "Description": "Indicates the percentage of agents that are not running currently.",
+    "MeasurementUnit": "Percentage",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "New not running agents in the last measure period",
+    "Description": "Indicates the number of agents that were not running since the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Use the detailed diagnosis of this measure to identify the agents that are not running since the last measurement period."
+  },
+  {
+    "Measurement": "Not running agents",
+    "Description": "Indicates the total number of agents that are not running currently.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The value of this measure is the sum of Not running licensed agents and the Not running agents for components with user/desktop licenses measures."
+  },
+  {
+    "Measurement": "Not installed agents",
+    "Description": "Indicates the total number of agents that have not been installed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The value of this measure is the sum of Not installed licensed agents and the Not installed agents for components with user/desktop licenses measures."
+  }
+]

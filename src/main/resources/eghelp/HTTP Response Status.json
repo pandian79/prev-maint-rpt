@@ -1,0 +1,72 @@
+[
+  {
+    "measurement": "Requests processed",
+    "description": "Indicates the number of transaction requests that returned this HTTP response code during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Compare across HTTP response codes to know if error transactions exceed successful ones. High errors imply sub-par user experience. Use detailed diagnosis to identify affected transactions.",
+    "troubleshootingSteps": [
+      "Compare the volume of successful (2xx) vs. error (4xx/5xx) requests to determine the severity of the issue.[web:517][web:523]",
+      "If the total request count is unexpectedly low or zero, check for network connectivity issues, DNS failures, or a down server process.[web:512][web:519]",
+      "If the total count is abnormally high (spike), investigate potential DDoS attacks, bot traffic, or a misconfigured client retrying requests aggressively.[web:516][web:519]"
+    ]
+  },
+  {
+    "measurement": "Requests processed per minute",
+    "description": "Indicates the number of transaction requests that returned this HTTP response per minute.",
+    "measurementUnit": "Number",
+    "interpretation": "Compare across HTTP response codes. Frequent error responses are a cause for concern.",
+    "troubleshootingSteps": [
+      "Correlate spikes in 'requests per minute' with server resource usage (CPU/Memory) to see if high load is causing errors (e.g., 503 Service Unavailable).[web:513][web:522]",
+      "Set alerts for sudden drops or spikes in traffic to detect outages or surges early.[web:517][web:522]"
+    ]
+  },
+  {
+    "measurement": "Error page redirections",
+    "description": "Indicates the number of transaction requests with this HTTP response, which were redirected to error pages during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Ideally, the value of this measure should be low.",
+    "troubleshootingSteps": [
+      "High redirection counts often indicate broken links or changed URL structures; review 404 logs to fix internal broken links or set up proper 301 redirects.[web:521][web:524]",
+      "Ensure that the custom error page itself is not throwing an error (e.g., infinite redirect loop), which would compound the issue.[web:521][web:524]"
+    ]
+  },
+  {
+    "measurement": "Status 2xx",
+    "description": "Indicates the percentage of transactions requests that returned HTTP response codes of the range 200-299.",
+    "measurementUnit": "Percent",
+    "interpretation": "Represents successful responses. A high value is desired.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Status 3xx",
+    "description": "Indicates the percentage of transactions requests that returned HTTP response codes of the range 300-399.",
+    "measurementUnit": "Percent",
+    "interpretation": "Represents redirection responses. Ideally, the value should be low.",
+    "troubleshootingSteps": [
+      "If 3xx percentage is high, check for redirect loops or excessive chaining (e.g., A -> B -> C), which slows down the user experience and impacts SEO.[web:518][web:521]",
+      "Update client applications or internal links to point directly to the new destination URL instead of relying on the redirect.[web:518][web:521]"
+    ]
+  },
+  {
+    "measurement": "Status 4xx",
+    "description": "Indicates the percentage of transactions requests that returned HTTP response codes of the range 400-499.",
+    "measurementUnit": "Percent",
+    "interpretation": "Represents client errors (bad syntax, not found). Ideally, the value should be low.",
+    "troubleshootingSteps": [
+      "Analyze 4xx logs to distinguish between 404 (Not Found) and 401/403 (Unauthorized/Forbidden); fix broken links for 404s and check permission settings for 403s.[web:516][web:517][web:525]",
+      "If seeing high 429 (Too Many Requests), check if a specific client is being rate-limited and whether the rate limits are configured correctly.[web:519]",
+      "Review client-side code to ensure it is constructing valid requests (correct method, headers, payload) to avoid 400 Bad Request errors.[web:516][web:519]"
+    ]
+  },
+  {
+    "measurement": "Status 5xx",
+    "description": "Indicates the percentage of transactions requests that returned HTTP response codes of the range 500-599.",
+    "measurementUnit": "Percent",
+    "interpretation": "Represents server errors (failed to fulfill valid request). Ideally, the value should be low.",
+    "troubleshootingSteps": [
+      "Treat 5xx errors as critical server-side failures. Check server application logs (Java, PHP, Node.js, etc.) for exceptions or stack traces corresponding to the 500 timestamp.[web:517][web:520][web:525]",
+      "For 502/504 errors (Bad Gateway / Gateway Timeout), investigate the backend service or database; it may be down, overloaded, or timing out.[web:517][web:519][web:520]",
+      "Ensure server capacity (CPU/RAM) is sufficient to handle the load; scale up resources if 503 errors (Service Unavailable) occur during traffic peaks.[web:513][web:522]"
+    ]
+  }
+]

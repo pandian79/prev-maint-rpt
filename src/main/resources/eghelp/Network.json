@@ -1,0 +1,26 @@
+[
+  {
+    "Measurement": "Avg network delay",
+    "Description": "Indicates the average delay between transmission of packet to a target and receipt of the response to the packet at the source.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "An increase in network latency could result from misconfiguration of the router(s) along the path, network congestion, retransmissions at the network, etc. The detailed diagnosis capability, if enabled, lists the hop-by-hop connectivity and delay."
+  },
+  {
+    "Measurement": "Min network delay",
+    "Description": "The minimum time between transmission of a packet and receipt of the response back.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "A significant increase in the minimum round-trip time is often a sure sign of network congestion."
+  },
+  {
+    "Measurement": "Packet loss",
+    "Description": "Indicates the percentage of packets lost during transmission from source to target and back.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Packet loss is often caused by network buffer overflows at a network router or by packet corruptions over the network. The detailed diagnosis for this measure provides a listing of routers that are on the path from the external agent to target server, and the delays on each hop. This information can be used to diagnose the hop(s) that could be causing excessive packet loss/delays."
+  },
+  {
+    "Measurement": "Network availability",
+    "Description": "Indicates the availability of the network connection.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "A value of 100 indicates that the system is connected. The value 0 indicates that the system is not connected. Typically, the value 100 corresponds to a Packet loss of 0."
+  }
+]

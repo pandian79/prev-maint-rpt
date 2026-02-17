@@ -1,0 +1,57 @@
+[
+  {
+    "measurement": "Information messages",
+    "description": "This refers to the number of application information events generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A change in the value of this measure may indicate infrequent but successful operations performed by one or more applications. This log level is the default in many systems and includes successful transactions, startup events, and standard operational milestones.",
+    "troubleshootingSteps": [
+      "Review information messages to establish a baseline of normal activity (e.g., successful connections, configuration loads, regular health checks) which helps in detecting anomalies during incidents.",
+      "If information messages suddenly stop or drastically decrease, check if the broker service is stalled, network connectivity is lost, or if the logging level was inadvertently changed to a higher severity (e.g., Warn/Error).",
+      "Use information logs to trace the sequence of events leading up to a failure, confirming that prerequisites (like successful authentication or resource allocation) were met before an error occurred."
+    ]
+  },
+  {
+    "measurement": "Warnings",
+    "description": "This refers to the number of warnings that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A high value of this measure indicates problems with the broker that may not have an immediate impact, but may cause future problems in one or more machines of this broker. A very low value or 0 indicates the system is healthy or COMPLIANT",
+    "troubleshootingSteps": [
+      "Investigate warning messages (such as deprecated API usage, near-capacity resource limits, or transient network retries) to identify proactive maintenance needs before they escalate to errors.",
+      "If warnings spike, correlate them with performance metrics (like latency or memory usage) to determine if the system is under stress or if a specific client/application is misbehaving.",
+      "Address persistent warnings (e.g., configuration mismatches or certificate expiry notifications) to prevent future outages or service degradation."
+    ]
+  },
+  {
+    "measurement": "Error messages",
+    "description": "This refers to the number of application error events that were generated.",
+    "measurementUnit": "Number",
+    "interpretation": "A very low value (0) indicates a healthy state or COMPLIANT. An increasing trend or high value indicates problems like loss of functionality or data in one or more applications.",
+    "troubleshootingSteps": [
+      "Analyze error logs to identify the specific failure type (e.g., connection refused, authentication failed, database timeout) and the affected components.",
+      "Drill down into specific error events to find the root cause, such as a down backend service, a code exception, or invalid input data from a client.",
+      "Check for patterns in error timing or source (e.g., errors from a specific IP or during high load) to isolate whether the issue is systemic or localized."
+    ]
+  },
+  {
+    "measurement": "Critical messages",
+    "description": "Indicates the number of critical events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A critical event is one that an application or component cannot automatically recover from. A very low value (0) indicates a healthy state. An increasing trend indicates fatal/irreparable problems. or COMPLIANT",
+    "troubleshootingSteps": [
+      "Treat critical events as high-priority incidents requiring immediate intervention; examples include service crashes, data corruption, or complete loss of connectivity to essential dependencies.",
+      "Immediately check the status of the broker service and dependent infrastructure (database, network, storage) to determine if a restart or failover is required.",
+      "Review the sequence of events preceding the critical error (using Info/Warn logs) to understand what triggered the unrecoverable state."
+    ]
+  },
+  {
+    "measurement": "Verbose messages",
+    "description": "Indicates the number of verbose events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "Verbose logging provides more details in the log entry (e.g., debug/trace level), enabling better troubleshooting of complex issues.",
+    "troubleshootingSteps": [
+      "Enable verbose/debug logging temporarily when diagnosing reproducible bugs or complex interaction issues that standard logs don't explain.[web:375]",
+      "Use verbose logs to inspect payload contents, variable states, and detailed execution paths (trace events) to pinpoint logic errors or protocol mismatches.",
+      "Disable verbose logging after troubleshooting is complete to avoid excessive disk I/O, storage consumption, and performance overhead."
+    ]
+  }
+]

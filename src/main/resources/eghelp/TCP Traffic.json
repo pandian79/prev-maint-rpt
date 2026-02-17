@@ -1,0 +1,26 @@
+[
+  {
+    "Measurement": "Segments received",
+    "Description": "Indicates the rate at which segments are received by the server.",
+    "MeasurementUnit": "Segments/Second",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Segments sent",
+    "Description": "Indicates the rate at which segments are sent to clients or other servers.",
+    "MeasurementUnit": "Segments/Second",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Segment retransmissions",
+    "Description": "Indicates the rate at which segments are being retransmitted by the server to clients/other servers.",
+    "MeasurementUnit": "Segments/Second",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "TCP retransmit ratio",
+    "Description": "Indicates the ratio of the rate of data retransmissions to the rate of data being sent by the server to clients/other servers.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Ideally, the retransmission ratio should be low (< 5%). Most often retransmissions at the TCP layer have significant impact on application performance. Very often a large number of retransmissions are caused by a congested network link, bottlenecks at a router causing buffer/queue overflows, or by lousy network links due to poor physical layer characteristics (e.g., low signal to noise ratio). By tracking the percentage of retransmissions at a server, an administrator can quickly be alerted to problem situations in the network link(s) to the server that may be impacting the service performance."
+  }
+]

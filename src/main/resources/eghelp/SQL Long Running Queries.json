@@ -1,0 +1,28 @@
+[
+  {
+    "measurement": "Average elapsed time",
+    "description": "The average time taken by queries to execute on this database.",
+    "unit": "Secs",
+    "interpretation": "If this value is very high, it may indicate that the database cannot process queries quickly or that one or more queries are taking too long to execute. Common causes include missing or improper indexes, fragmented tables, and poorly structured queries. Long-running queries consume more resources, so such resource‑intensive queries should be quickly identified and tuned using the detailed diagnosis for this measure.",
+    "troubleshootingSteps": [
+      "Use the detailed diagnosis view or query statistics to identify queries with the highest average elapsed times.",
+      "Inspect execution plans for slow queries to detect missing indexes, full scans, or expensive operators, and add or tune indexes accordingly.",
+      "Check index and table fragmentation and perform appropriate maintenance (rebuild or reorganize) where fragmentation is significantly affecting performance.",
+      "Rewrite inefficient queries (for example, reduce unnecessary joins and sorts, avoid non‑sargable predicates, and limit result sets) to lower execution time.",
+      "Correlate long elapsed times with CPU, I/O, and wait statistics to determine whether queries are CPU‑bound, I/O‑bound, or blocked, and address the dominant bottleneck."
+    ]
+  },
+  {
+    "measurement": "Maximum elapsed time",
+    "description": "The maximum time taken by the queries to this database.",
+    "unit": "Secs",
+    "interpretation": "This measure shows the single longest query execution time observed on the database during the measurement period. Very high maximum elapsed times can point to outlier queries or operations that significantly degrade performance, even if the average is acceptable.",
+    "troubleshootingSteps": [
+      "Identify the specific query (or queries) associated with the maximum elapsed time using detailed diagnostics or query history.",
+      "Determine whether the long-running query is expected (for example, a large maintenance or reporting job) or indicates an inefficiency or regression.",
+      "Analyze its execution plan for missing indexes, large scans, or parameter sniffing issues and tune indexes, statistics, or query structure as needed.",
+      "Check for blocking or contention affecting the long-running query by reviewing lock and wait information during its execution window.",
+      "If the query is a periodic batch job, consider rescheduling it to off‑peak hours or breaking it into smaller batches to reduce peak impact."
+    ]
+  }
+]

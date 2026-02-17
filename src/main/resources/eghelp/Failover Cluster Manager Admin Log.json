@@ -1,0 +1,55 @@
+[
+  {
+    "measurement": "Information messages",
+    "description": "This refers to the number of information events generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A change in the value of this measure may indicate infrequent but successful operations performed by one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-Manager/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Review informational events in the Failover Cluster Operational log (Event IDs such as 1000, 1025, 1206) to confirm normal operations like resources coming online, nodes joining, or successful group moves.[web:330][web:333]",
+      "If the count of information messages is unusually high, investigate whether the cluster is frequently failing over resources or restarting services, which might indicate instability despite successful recovery.[web:325][web:330]"
+    ]
+  },
+  {
+    "measurement": "Warnings",
+    "description": "This refers to the number of warnings that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A high value of this measure indicates application problems that may not have an immediate impact, but may cause future problems in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-Manager/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Investigate warning events (such as Event IDs 1026, 1573, 2050) in the Cluster logs to identify potential issues like intermittent communication loss, heartbeat delays, or resource timeouts.[web:330][web:333]",
+      "Use the 'Validate a Configuration' wizard in Failover Cluster Manager to proactively detect configuration or hardware weaknesses that might be triggering these warnings.[web:312][web:323]",
+      "Check network and storage path stability if warnings relate to lost communication paths or witness resource accessibility.[web:312][web:330]"
+    ]
+  },
+  {
+    "measurement": "Error messages",
+    "description": "This refers to the number of application error events that were generated.",
+    "measurementUnit": "Number",
+    "interpretation": "A very low value (zero) indicates that the system is in a healthy state. An increasing trend or high value indicates the existence of problems like loss of functionality or data in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-Manager/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Focus on error events (such as Event IDs 1069, 1205, 1560) that indicate resource failures, failed group moves, or quorum issues.[web:330][web:331][web:333]",
+      "Identify the specific resource or node mentioned in the error and check its individual status, dependencies, and logs for root causes (e.g., failed disk, crashed service).[web:331][web:333]",
+      "Generate the Cluster Debug Log (Get-ClusterLog) if standard event logs lack sufficient detail to diagnose complex failures.[web:326][web:327]"
+    ]
+  },
+  {
+    "measurement": "Critical messages",
+    "description": "This refers to the number of critical error events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A critical event is one that an application or a component cannot automatically recover from. A very low value (zero) indicates that the system is in a healthy state. An increasing trend or high value indicates the existence of fatal/irrepairable problems in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-Manager/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Immediately address critical events (such as Event IDs 1069, 1205, 1558 in the Critical channel) which often signify service outages, quorum loss, or node evictions.[web:330][web:332][web:333]",
+      "Verify cluster service status and quorum health; if quorum is lost, the cluster may shut down, requiring manual intervention to force start or recover.[web:312][web:330][web:332]",
+      "Check for hardware failures or total network isolation of nodes if critical communication or partition events are logged.[web:312][web:330][web:332]"
+    ]
+  },
+  {
+    "measurement": "Verbose messages",
+    "description": "This refers to the number of verbose events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "Verbose logging provides more details in the log entry, which will enable you to troubleshoot issues better. This measure is applicable only for Windows 2008/Windows Vista/Windows 7 systems. Please check the Application and Services/Microsoft/Windows/FailoverClustering-Manager/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Enable and review verbose or diagnostic logging (Cluster API Debug Tracing) when standard logs are insufficient to trace intermittent or complex synchronization issues.[web:326][web:327]",
+      "Use the verbose data to correlate cluster state changes with external system events (network flaps, storage latency) during deep-dive troubleshooting.[web:326][web:327]"
+    ]
+  }
+]

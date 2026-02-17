@@ -1,0 +1,41 @@
+[
+  {
+    "measurement": "Root blockers",
+    "description": "Indicates the number of root blocker processes.",
+    "unit": "Number",
+    "interpretation": "Usually, the number of root blocker processes should be low. A sudden increase in this value, or a root-blocker process that has been blocking others for a long time, is a cause for concern. Detailed diagnosis typically shows the SPIDs, programs, and queries of these root-blocker processes. Terminating a long‑running root‑blocker often clears the blocking chain and restores normal database operation.",
+    "troubleshootingSteps": [
+      "Use the detailed diagnosis or blocking views/DMVs to identify the root-blocker SPID, its login, host, and the exact query it is running.",
+      "Check whether the root-blocker is performing a legitimate long-running operation (such as maintenance or reporting) or is stuck due to a bad plan or waiting on an external resource.",
+      "If appropriate, tune or cancel the offending query (for example by adding indexes, rewriting the query, or changing isolation levels) so it can complete without causing prolonged blocking.",
+      "As a remediation of last resort, kill the confirmed root-blocker session, understanding that this will roll back its transaction and may impact users of that session.",
+      "Review application logic and transaction design to keep transactions short, avoid holding locks while waiting for user input, and reduce the likelihood of future root blockers."
+    ]
+  },
+  {
+    "measurement": "Blocked processes",
+    "description": "Indicates the number of processes that are blocked by the root blockers.",
+    "unit": "Number",
+    "interpretation": "This measure shows how many sessions are currently unable to proceed because they are waiting on locks held by root-blocker processes. A higher value indicates broader impact from blocking. Detailed diagnosis can reveal which processes are blocked.",
+    "troubleshootingSteps": [
+      "List all blocked sessions and identify what resources (tables, indexes, rows) they are waiting on and which root-blocker SPID is blocking them.",
+      "Prioritize investigation of blocked sessions that are business critical or have been blocked for a long time.",
+      "Determine whether the blocking is due primarily to write-heavy operations, missing indexes, or overly restrictive isolation levels, and address those root causes.",
+      "After resolving or killing the root-blocker, confirm that the number of blocked processes drops and that affected sessions can complete.",
+      "Implement monitoring and alerting on blocked process counts and durations so that future blocking storms are detected early."
+    ]
+  },
+  {
+    "measurement": "Maximum waiting time",
+    "description": "Indicates the waiting time (blocked time) of the process or processes that were blocked for the maximum duration.",
+    "unit": "Secs",
+    "interpretation": "If this value matches or exceeds the configured MAX BLOCKING TIME threshold, it indicates that one or more processes have been blocked for a very long time. Detailed diagnosis can be used to identify these long-blocked processes, who initiated them, and their resource usage, helping you pinpoint resource-heavy or misbehaving sessions.",
+    "troubleshootingSteps": [
+      "Investigate any process whose blocked time approaches or exceeds the MAX BLOCKING TIME threshold and identify the blocking session responsible.",
+      "Check the workload and query text of long-blocked sessions to understand what they were attempting to do and whether they need to be retried or cancelled.",
+      "Analyze lock and wait statistics to determine whether certain tables, indexes, or application modules are consistently involved in long blocking chains.",
+      "Work with application owners to shorten transaction scopes, improve retry logic, and avoid long-held locks that can cause extended blocking.",
+      "Tune indexing and query patterns on hot tables to reduce lock contention, and consider using appropriate isolation levels (for example, read committed snapshot) where suitable to lessen blocking."
+    ]
+  }
+]

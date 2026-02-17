@@ -1,0 +1,165 @@
+[
+  {
+    "measurement": "Is GET method supported?",
+    "description": "Indicates the status of GET method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if the endpoint accepts GET requests, No (0) otherwise. Detailed diagnosis shows GET status details.",
+    "troubleshootingSteps": [
+      "If GET is expected but not supported, verify route configuration and that the handler is registered for GET in your framework or server.[web:622][web:625][web:628]",
+      "When a GET call returns 405 Method Not Allowed, ensure the endpoint URL is correct and that allowedMethods includes GET in API gateway or server policy.[web:622][web:625][web:628]"
+    ]
+  },
+  {
+    "measurement": "Is HEAD method supported?",
+    "description": "Indicates the status of HEAD method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if HEAD is accepted; No (0) otherwise. Detailed diagnosis shows HEAD status.",
+    "troubleshootingSteps": [
+      "If HEAD should be supported (for monitoring or SEO), enable it alongside GET; many servers can auto‑map HEAD to GET handlers.[web:622][web:628]"
+    ]
+  },
+  {
+    "measurement": "Is PUT method supported?",
+    "description": "Indicates the status of PUT method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if PUT is accepted; No (0) if blocked.",
+    "troubleshootingSteps": [
+      "If 405 errors occur for legitimate PUT requests, confirm that the route supports PUT in the application and that reverse proxies/firewalls do not block this verb.[web:620][web:622][web:628]",
+      "If PUT is not used by design, keep it disabled to reduce attack surface.[web:618][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is POST method supported?",
+    "description": "Indicates the status of POST method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if POST is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "If POST is required but returns 405, verify server routing, CSRF/authorization rules, and that security devices allow POST to that path.[web:622][web:625]",
+      "If a resource should be read‑only, ensure POST is disabled and the API returns 405 with the proper Allow header.[web:625][web:628]"
+    ]
+  },
+  {
+    "measurement": "Is DELETE method supported?",
+    "description": "Indicates the status of DELETE method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if DELETE is accepted; No (0) if blocked.",
+    "troubleshootingSteps": [
+      "For REST APIs that support DELETE, confirm routing and that WAF or web server configuration does not deny DELETE.[web:620][web:622]",
+      "If DELETE is not needed, explicitly block it at the web server or API gateway level to limit destructive operations.[web:618][web:620][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is OPTIONS method supported?",
+    "description": "Indicates the status of OPTIONS method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if OPTIONS is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "If CORS preflight requests fail, ensure OPTIONS is allowed and correctly configured to return required CORS headers.[web:622][web:628]",
+      "If OPTIONS is not needed and not used for CORS, you may restrict it; however, be careful not to break browser preflight flows.[web:620][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is TRACE method supported?",
+    "description": "Indicates the status of TRACE method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if TRACE is accepted; No (0) if disabled.",
+    "troubleshootingSteps": [
+      "TRACE should normally be disabled because it can be abused for cross‑site tracing and header sniffing; configure the web server to disallow TRACE/TRACK.[web:619][web:623][web:626][web:629]",
+      "Verify with `curl -X TRACE` or scanners that TRACE now returns 403/405 or no response.[web:626][web:629]"
+    ]
+  },
+  {
+    "measurement": "Is PROPFIND method supported?",
+    "description": "Indicates the status of PROPFIND method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if PROPFIND is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "Unless you explicitly use WebDAV, disable PROPFIND at the web server (e.g., deny verbs PROPFIND in IIS or block via rewrite rules in Apache/Nginx).?[web:617][web:620][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is PROPPATCH method supported?",
+    "description": "Indicates the status of PROPPATCH method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if PROPPATCH is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "Disable PROPPATCH if WebDAV is not required, as scanners often flag it as an unnecessary and potentially dangerous method.[web:617][web:620][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is MOVE method supported?",
+    "description": "Indicates the status of MOVE method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if MOVE is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "If you are not using WebDAV file operations, block MOVE to prevent unintended file manipulation on the server.[web:617][web:620][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is LOCK method supported?",
+    "description": "Indicates the status of LOCK method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if LOCK is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "Disable LOCK (and UNLOCK) if WebDAV locking is not intentionally used, by denying these verbs in the server configuration.[web:617][web:620][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is TRACK method supported?",
+    "description": "Indicates the status of TRACK method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if TRACK is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "Like TRACE, TRACK is generally considered unsafe and should be disabled to avoid cross‑site tracing vulnerabilities.[web:619][web:623][web:626][web:629]"
+    ]
+  },
+  {
+    "measurement": "Is DEBUG method supported?",
+    "description": "Indicates the status of DEBUG method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if DEBUG is accepted; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "DEBUG‑style verbs should not be exposed on public endpoints; disable them in production to avoid information disclosure or misuse.[web:618][web:623]"
+    ]
+  },
+  {
+    "measurement": "Is Gzip compression enabled?",
+    "description": "Indicates the status of Gzip compression.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if responses are compressed with gzip when clients request it; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "Enable gzip (or equivalent) in your web server (e.g., `gzip on;` in Nginx, compression in IIS/Apache) to reduce payload size and improve performance.[web:621][web:624][web:627]",
+      "Verify gzip by sending requests with `Accept-Encoding: gzip` and checking for `Content-Encoding: gzip` in responses.[web:624][web:627]"
+    ]
+  },
+  {
+    "measurement": "Is HTTPS supported?",
+    "description": "Indicates the status of HTTPS method.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if the endpoint can be reached over HTTPS; No (0) if only HTTP is available.",
+    "troubleshootingSteps": [
+      "If HTTPS is not supported, install a valid TLS certificate and configure the web server to listen on port 443 with secure protocols and ciphers.[web:608][web:615]",
+      "Run SSL/TLS security scans to ensure there are no major certificate or protocol issues once HTTPS is enabled.[web:608][web:615]"
+    ]
+  },
+  {
+    "measurement": "Is HTTPS redirect supported?",
+    "description": "Indicates the status of HTTPS redirect.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if HTTP requests are redirected to HTTPS; No (0) otherwise.",
+    "troubleshootingSteps": [
+      "If HTTPS exists but redirect is not enabled, add HTTP→HTTPS redirect rules at the load balancer or web server (301/308) to enforce secure access by default.[web:608][web:615]",
+      "Test the redirect with `curl -I http://…` to confirm it returns a 301/302 pointing to the HTTPS URL and does not loop.[web:621][web:624]"
+    ]
+  },
+  {
+    "measurement": "Is HTTP2 protocol supported?",
+    "description": "Indicates the status of HTTP2 protocol.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1) if HTTP/2 is negotiated; No (0) if only HTTP/1.x is available.",
+    "troubleshootingSteps": [
+      "Enable HTTP/2 support in the web server (e.g., `http2` in Nginx or appropriate flags in Apache/IIS) on HTTPS listeners for better multiplexing and performance.[web:621][web:624][web:630]",
+      "Verify HTTP/2 with browser dev tools or `curl --http2 -I` to ensure ALPN negotiation is successful.[web:621][web:630]"
+    ]
+  }
+]

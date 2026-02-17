@@ -1,0 +1,50 @@
+[
+  {
+    "Measurement": "Number of Java installations",
+    "Description": "Indicates the total number of Java installations detected on the host.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A higher value may indicate multiple Java runtimes or SDKs installed, which can complicate maintenance, patching, and security hardening."
+  },
+  {
+    "Measurement": "Java not in 'Program Files' location",
+    "Description": "Indicates the number of Java installations that are not located under standard 'Program Files' directories.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Java runtimes installed outside standard locations may bypass standard administrative controls and hardening guidelines, increasing the risk of unmanaged or vulnerable Java installations."
+  },
+  {
+    "Measurement": "Running Java instances",
+    "Description": "Indicates the number of Java processes that are currently running on the host.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A higher value may indicate multiple Java-based applications or services running simultaneously, which can increase resource utilization and broaden the security attack surface."
+  },
+  {
+    "Measurement": "Java processes running without Xmx settings",
+    "Description": "Indicates the number of Java processes started without an explicit -Xmx maximum heap setting.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Processes without an explicit -Xmx may rely on JVM defaults, which can lead to unpredictable memory usage, potential out-of-memory errors, or over-consumption of system memory under load."
+  },
+  {
+    "Measurement": "Java processes running with multiple Xmx settings",
+    "Description": "Indicates the number of Java processes that have multiple -Xmx options specified in their startup arguments.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Multiple -Xmx options can lead to configuration ambiguity and maintenance issues; only one value is used by the JVM, and misconfiguration may cause incorrect assumptions about effective heap limits."
+  },
+  {
+    "Measurement": "Java processes with passwords in arguments",
+    "Description": "Indicates the number of Java processes whose command-line arguments contain passwords or other sensitive credentials.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Passing passwords on the command line is insecure because process arguments can often be viewed by other users and logging tools, leading to potential credential exposure."
+  },
+  {
+    "Measurement": "Java processes with MaxRAMPercentage in arguments",
+    "Description": "Indicates the number of Java processes started with the -XX:MaxRAMPercentage option in their arguments.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Using MaxRAMPercentage allows heap sizing based on container or system memory; improper values may lead to either under-utilization of memory or excessive heap allocation that starves other processes."
+  },
+  {
+    "Measurement": "Java processes with Xms-Xmx inconsistencies",
+    "Description": "Indicates the number of Java processes where initial heap (-Xms) and maximum heap (-Xmx) settings are configured inconsistently with recommended sizing policies.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Inconsistent Xms/Xmx settings can cause excessive heap resizing, unpredictable GC behavior, or inefficient memory usage, impacting performance and stability of Java applications."
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "measurement": "Is a user session active on the simulation endpoint?",
+    "description": "Indicates whether or not the user session on the logon simulation endpoint is active.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "This measure shows if there is an active user session on the logon simulation endpoint. The value \"Yes\" (numeric 1) means a session is currently active, while \"No\" (numeric 0) means there is no active session. Dashboards typically plot the numeric values 0 and 1 to visualize when the session status changes over time.",
+    "troubleshootingSteps": [
+      "If the value remains \"No\" when a session is expected to be active, verify that the logon simulation is configured and scheduled correctly.",
+      "Check the health and connectivity of the simulation endpoint and any synthetic/agent process responsible for maintaining the session.",
+      "Confirm that authentication steps (credentials, MFA, redirects) are succeeding so that a session can be established and kept alive.",
+      "Correlate session status changes with application outages, login errors, or maintenance windows to understand why sessions may be dropping."
+    ]
+  }
+]

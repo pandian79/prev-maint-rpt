@@ -1,0 +1,14 @@
+[
+  {
+    "measurement": "Is the printer service available",
+    "description": "Shows whether the printer is available for printing or not.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that the printer is not available for printing, and a value of 1 indicates that it is available. A printer may be unavailable if it is off the network due to a power shutdown or network connection failure, or if it is on the network but does not support SNMP or is in an unknown state.",
+    "troubleshootingSteps": [
+      "If the value is 0, first verify basic connectivity: check printer power, cabling, and that the device is connected to the correct network segment.",
+      "Confirm that network routing and firewall rules allow communication between the monitoring system and the printer.",
+      "Check whether SNMP is enabled and correctly configured on the printer if SNMP is required for status detection.",
+      "Inspect the printer’s front panel or embedded web UI for error or unknown states (e.g., jams, door open, no paper/toner) and resolve any reported issues."
+    ]
+  }
+]

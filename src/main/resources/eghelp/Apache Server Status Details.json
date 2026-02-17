@@ -1,0 +1,129 @@
+[
+  {
+    "Measurement": "Total uptime of Apache server",
+    "Description": "Indicates the total number of days that the server has been up since its last reboot.",
+    "MeasurementUnit": "Days",
+    "Interpretation": "Administrators may wish to be alerted if a server has been running without a reboot for a very long period. Setting a threshold for this measure allows administrators to determine such conditions."
+  },
+  {
+    "Measurement": "Uptime during the last measure period",
+    "Description": "Indicates the time period that the server has been up since the last time this test ran.",
+    "MeasurementUnit": "Seconds",
+    "Interpretation": "If the server has not been rebooted during the last measurement period and the agent has been running continuously, this value will be equal to the measurement period. If the server was rebooted during the last measurement period, this value will be less than the measurement period of the test. For example, if the measurement period is 300 secs, and if the server was rebooted 120 secs back, this metric will report a value of 120 seconds. The accuracy of this metric is dependent on the measurement period - the smaller the measurement period, greater the accuracy."
+  },
+  {
+    "Measurement": "Has the server been restarted?",
+    "Description": "Indicates whether the server has been rebooted during the last measurement period or not.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "By checking the time periods when this metric changes from No to Yes, an administrator can determine the times when this server was rebooted. The Detailed Diagnosis of this measure, if enabled, lists the time, shutdown date, reboot date, shutdown duration, and reveals whether the server is in maintenance mode or not.",
+      "Mappings": [
+        { "MeasureValue": "No", "NumericValue": 0 },
+        { "MeasureValue": "Yes", "NumericValue": 1 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed above to indicate whether the server has been rebooted or not. In the graph of this measure however, the Measure Values are represented using the numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Total hits",
+    "Description": "Indicates the number of times the server was accessed by users during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Data traffic",
+    "Description": "Indicates the rate at which data is transmitted by the web server during the last measurement period.",
+    "MeasurementUnit": "KB/Second",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "CPU usage",
+    "Description": "Indicates the percentage of CPU utilized by the web server during the last measurement period.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "If the value of this measure increases with time, it could be a cause for concern."
+  },
+  {
+    "Measurement": "Requests rate",
+    "Description": "Indicates the rate at which HTTP requests were processed by the web server during the last measurement period.",
+    "MeasurementUnit": "Requests/second",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Processing rate of requests",
+    "Description": "Indicates the amount of data transferred by the web server per second during the last measurement period.",
+    "MeasurementUnit": "KB/Second",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Average bytes per request",
+    "Description": "Indicates the amount of data transferred by the web server per HTTP request during the last measurement period.",
+    "MeasurementUnit": "KB/Requests",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Current requests",
+    "Description": "Indicates the number of HTTP requests that are currently being processed by the web server during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Idle workers",
+    "Description": "Indicates the number of idle Apache processes waiting for an HTTP request during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Total server instances",
+    "Description": "Indicates the total number of server instances i.e., threads on the web server during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A very high value of this measure could indicate a processing bottleneck."
+  },
+  {
+    "Measurement": "Instances waiting for connection",
+    "Description": "Indicates the total number of threads that were waiting for a connection during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Currently starting instances",
+    "Description": "Indicates the number of HTTP requests that were currently processed by the web server during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Instances reading requests",
+    "Description": "Indicates the number of HTTP requests that were reading the processes of the web server during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Instances sending reply",
+    "Description": "Indicates the number of HTTP requests that received response from the web server during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Instances in keepalive state",
+    "Description": "Indicates the number of processes in KEEPALIVE state in the web server during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Instances in DNS lookup state",
+    "Description": "Indicates the number of requests for which DNS lookup state was enabled during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Instances in logging state",
+    "Description": "Indicates the number of processes that were in Logging state during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Gracefully finishing instances",
+    "Description": "Indicates the number of processes that were in gracefully finishing state during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Sometimes after a graceful restart of the Apache server, certain extra processes i.e., the child processes are left running on the server and these processes are deemed to be in gracefully finishing state. These processes remain in this state indefinitely and will not go away until a stop-and-start or a restart is issued on the server. A low value is desired for this measure as frequent restarts to the server may gradually degrade the performance of the server."
+  }
+]

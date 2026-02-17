@@ -1,0 +1,33 @@
+[
+  {
+    "measurement": "Exceptions",
+    "description": "Indicates the number of transactions that encountered this Java exception during the last measurement period. For the Summary descriptor, this indicates the total number of transactions that encountered Java exceptions during the last measurement period, regardless of the exception type.",
+    "measurementUnit": "Number",
+    "interpretation": "Compare the value of this measure across Java exceptions to identify the exception that has affected the performance of the maximum number of transactions. Use the detailed diagnosis of this measure to know which transactions were affected by Java exceptions of this type.",
+    "troubleshootingSteps": [
+      "Use the detailed diagnosis to identify the specific transaction paths and lines of code generating the most exceptions.[web:499][web:500][web:503][web:505]",
+      "Investigate whether the exceptions are 'expected' (handled flow control) or 'unexpected' (system errors); reduce the use of exceptions for normal flow control to improve performance.[web:497][web:498][web:501][web:510]",
+      "Check for recurring patterns in the exception types (e.g., NullPointerException vs. SQLTimeoutException) to decide if the fix requires code changes, database tuning, or configuration updates.[web:500][web:502][web:503]"
+    ]
+  },
+  {
+    "measurement": "Exceptions per minute",
+    "description": "Indicates the number of transactions that encountered this Java exception per minute. For the Summary descriptor, this measure will report the total number of transactions per minute that threw Java exceptions, regardless of the exception type.",
+    "measurementUnit": "Number",
+    "interpretation": "Compare the value of this measure across Java exceptions to determine which type of exception was frequently encountered by the target application.",
+    "troubleshootingSteps": [
+      "Correlate spikes in exceptions per minute with load metrics (requests per minute) to see if errors scale with traffic or occur independently (indicating a specific bug or resource constraint).[web:499][web:503][web:508]",
+      "Set alerts on this rate to detect sudden degradation in application health, such as a backend service failure causing a flood of connection exceptions.[web:503][web:505][web:509]"
+    ]
+  },
+  {
+    "measurement": "Percentage of total exceptions",
+    "description": "Indicates the percentage of transactions that encountered this Java exception during the last measurement period. For the Summary descriptor, this measure will report the percentage of total transactions that encountered Java exceptions, regardless of the exception type.",
+    "measurementUnit": "Number",
+    "interpretation": "Compare the value of this measure across Java exceptions to determine which type of exception affected a majority of the transactions.",
+    "troubleshootingSteps": [
+      "Prioritize fixing exceptions with the highest percentage, as they impact the largest portion of user transactions.[web:503][web:505][web:509]",
+      "If the summary percentage is high (e.g., >5-10%), investigate immediate systemic issues like a database outage or a bad deployment affecting all users.[web:503][web:509]"
+    ]
+  }
+]

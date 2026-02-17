@@ -1,0 +1,16 @@
+[
+  {
+    "measurement": "CPU utilization waiting for I/O",
+    "description": "Indicates the percentage of CPU utilized by processes waiting for input or output",
+    "measurementUnit": "Percent",
+    "interpretation": "If this percentage exceeds 10%, it indicates a critical issue which needs to be addressed immediately.",
+    "troubleshootingSteps": [
+      "Confirm that I/O wait is actually high using tools such as top or vmstat by checking the wa (I/O wait) field.[web:1][web:6][web:7]",
+      "Use iostat and iotop (or equivalent tools) to identify which disks and which processes are generating the highest I/O load.[web:1][web:5][web:6][web:8][web:9]",
+      "Check for failing or slow storage (e.g., disk errors in dmesg or syslog, high latency on specific devices) and replace or fix problematic hardware if needed.[web:1][web:6][web:8][web:9]",
+      "Verify there is sufficient memory to avoid excessive swapping; use vmstat/free to see if the system is heavily swapping, and reduce memory pressure if necessary.[web:1][web:6][web:8]",
+      "Optimize or throttle I/O‑heavy applications (batch jobs, backups, database queries) by rescheduling them, adding rate limits, or improving their access patterns.[web:1][web:6][web:8][web:9]",
+      "If storage or workload cannot be reduced, scale out by adding faster disks/SSDs, more storage bandwidth, or moving hot data to faster tiers.[web:1][web:6][web:8][web:9]"
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Recent messages",
+    "description": "Indicates the number of messages matching the specified search pattern that were recently logged in the specified alert file.",
+    "unit": "Number",
+    "interpretation": "This shows how many log entries in the target alert file match a given search pattern over the last measurement interval, helping you detect whether specific conditions or errors are occurring. A value greater than zero indicates that at least one matching event has been logged; sudden increases may signal new or worsening issues that match the pattern. Detailed diagnosis can be used to inspect the actual matching messages and understand the underlying errors, such as problems occurring during a cleanup or maintenance process.",
+    "troubleshootingSteps": [
+      "Review the detailed diagnosis to inspect the exact log lines that matched the search pattern, including timestamps and context around each message.",
+      "Verify that the search pattern is correctly defined (for example, exact text, wildcard, or regular expression) so you are capturing all relevant messages without excessive noise.[web:240]",
+      "Correlate spikes in recent matching messages with recent deployments, configuration changes, or scheduled jobs that may be producing new errors or warnings.[web:231][web:242]",
+      "If the pattern targets error conditions (such as cleanup failures), investigate the components or scripts responsible for those operations and correct the root cause.",
+      "Consider integrating this metric with an alerting system so that when the count of recent messages exceeds a threshold, notifications are sent and responders can immediately review the detailed log entries.[web:237][web:242][web:243]"
+    ]
+  }
+]

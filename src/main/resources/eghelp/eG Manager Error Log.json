@@ -1,0 +1,8 @@
+[
+  {
+    "Measurement": "Recent messages",
+    "Description": "Indicates the number of messages matching the specified SEARCHPATTERN that were recently logged in the specified ALERTFILE.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure sheds light on the nature of errors/warnings that occurred when installing, configuring, or starting the eG manager."
+  }
+]

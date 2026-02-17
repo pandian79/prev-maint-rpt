@@ -1,0 +1,163 @@
+[
+  {
+    "measurement": "CPU utilization",
+    "description": "Indicates the average CPU usage of the PowerShell processes on this host.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100% implies that PowerShell processes are consuming CPU excessively. Use the detailed diagnosis of the 'Number of processes running' measure to identify contributing processes.",
+    "troubleshootingSteps": [
+      "Use Get-Process or detailed diagnosis to identify which PowerShell script or command is driving high CPU usage; terminate runaway scripts if necessary.[web:391][web:394][web:396]",
+      "If CPU usage is high due to legitimate scripts, optimize them by adding sleep intervals (Start-Sleep) in loops, avoiding intense busy-wait loops, or offloading heavy processing to background jobs.[web:388][web:391][web:396]",
+      "Scan for malware or unauthorized mining scripts if high CPU usage persists without a clear administrative task running, as PowerShell is a common vector for fileless attacks.[web:391][web:393][web:396]"
+    ]
+  },
+  {
+    "measurement": "Number of processes running",
+    "description": "Indicates the number of PowerShell processes that are currently running.",
+    "measurementUnit": "Number",
+    "interpretation": "Use the detailed diagnosis to know which PowerShell processes are currently running and their resource consumption.",
+    "troubleshootingSteps": [
+      "Check for orphaned or zombie PowerShell processes left behind by scheduled tasks or automation tools and terminate them.[web:388][web:391][web:394]",
+      "Consolidate multiple small scripts into fewer sessions or use PowerShell jobs/runspaces efficiently to reduce process overhead.[web:388][web:391][web:394]"
+    ]
+  },
+  {
+    "measurement": "Memory utilization",
+    "description": "Indicates the percent memory usage of the PowerShell processes running on the host.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100% implies excessive memory consumption. Use detailed diagnosis to find the specific processes responsible.",
+    "troubleshootingSteps": [
+      "Identify scripts loading large datasets or objects into memory (e.g., storing huge arrays or XML/JSON objects) and refactor them to process data in streams or batches.[web:386][web:387][web:394][web:399]",
+      "Look for memory leaks in long-running scripts (infinite loops creating objects) and restart the PowerShell session periodically to release memory.[web:387][web:388][web:390][web:399]"
+    ]
+  },
+  {
+    "measurement": "Handle count",
+    "description": "Indicates the number of handles opened by the PowerShell processes.",
+    "measurementUnit": "Number",
+    "interpretation": "An increasing trend indicates a potential memory/handle leak. Use detailed diagnosis to identify the leaking process.",
+    "troubleshootingSteps": [
+      "Monitor handle counts over time; if they rise continuously, debug the script for unclosed file streams, network connections, or COM objects.[web:390][web:391]",
+      "Explicitly close and dispose of objects (using .Dispose() or `Using` blocks) in scripts that handle external resources.[web:390][web:391]"
+    ]
+  },
+  {
+    "measurement": "Number of threads",
+    "description": "Indicates the number of threads that are used by the PowerShell processes.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Investigate scripts using heavy parallelism (Runspaces, Jobs, or Start-ThreadJob); reduce concurrency limits if thread count causes context-switching overhead.[web:388][web:391]"
+    ]
+  },
+  {
+    "measurement": "Virtual memory used",
+    "description": "Indicates the amount of virtual memory that is being used by the PowerShell processes.",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "If virtual memory usage is high, check for scripts loading large modules or .NET assemblies; unload unused modules or restart sessions to free up address space.[web:386][web:388][web:399]"
+    ]
+  },
+  {
+    "measurement": "I/O data rate",
+    "description": "Indicates the rate at which PowerShell processes are reading and writing bytes in I/O operations.",
+    "measurementUnit": "KB/Sec",
+    "interpretation": "Unusually high values suggest I/O-intensive activities. Use detailed diagnosis to identify the source.",
+    "troubleshootingSteps": [
+      "Identify scripts performing massive file copies, log parsing, or network transfers and verify if such intensity is expected.[web:391][web:392][web:398]",
+      "Throttle I/O in scripts (e.g., using Start-Sleep between operations) or schedule them during off-peak hours to prevent disk saturation.[web:388][web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "I/O data operations",
+    "description": "Indicates the rate at which PowerShell processes are issuing read and write data to file, network, and device I/O operations.",
+    "measurementUnit": "Operations/Sec",
+    "interpretation": "Consistently high values mean I/O-heavy processing. Use detailed diagnosis to find the responsible processes.",
+    "troubleshootingSteps": [
+      "Check for scripts doing many small file operations (e.g., looping through thousands of small files); optimize by batching or using more efficient APIs (.NET methods vs Cmdlets).[web:391][web:392][web:398]"
+    ]
+  },
+  {
+    "measurement": "I/O read data rate",
+    "description": "Indicates the rate at which the PowerShell processes are reading data from file, network and device I/O operations.",
+    "measurementUnit": "KB/Sec",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Review scripts scanning large logs or file systems; ensure they are reading only necessary data and not reprocessing entire files repeatedly.[web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "I/O write data rate",
+    "description": "Indicates the rate at which the PowerShell processes are writing data to file, network and device I/O operations.",
+    "measurementUnit": "KB/Sec",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Investigate scripts generating excessive logs or exporting large datasets; reduce log verbosity or use compression/filtering before writing to disk.[web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "Page fault rate",
+    "description": "Indicates the total rate at which page faults are occurring for the threads of the PowerShell processes.",
+    "measurementUnit": "Faults/Sec",
+    "interpretation": "Page faults occur when a thread refers to a virtual memory page not in its working set. High rates can indicate memory pressure.",
+    "troubleshootingSteps": [
+      "High page fault rates often accompany memory pressure; check if the system is thrashing and add RAM or optimize scripts to reduce their memory footprint.[web:391][web:395][web:399]",
+      "Ensure scripts are not continuously allocating and releasing large blocks of memory, forcing frequent paging activity.[web:388][web:391][web:399]"
+    ]
+  },
+  {
+    "measurement": "Memory working set",
+    "description": "Indicates the average size of the working set of PowerShell processes.",
+    "measurementUnit": "MB",
+    "interpretation": "The Working Set is the set of memory pages touched recently. Use detailed diagnosis to compare working sets and identify processes taking up excessive memory.",
+    "troubleshootingSteps": [
+      "Monitor working set growth over time; steady growth indicates a leak. Restart long-running scripts or fix object disposal logic.[web:388][web:390][web:394][web:399]",
+      "Use [System.GC]::Collect() in scripts handling large objects to force garbage collection if memory isn't being released automatically.[web:386][web:388][web:399]"
+    ]
+  },
+  {
+    "measurement": "Write operations",
+    "description": "Indicates the total number of write operations performed by the PowerShell processes.",
+    "measurementUnit": "Number",
+    "interpretation": "Unusually high values indicate heavy write activity. Use detailed diagnosis to identify the responsible process.",
+    "troubleshootingSteps": [
+      "Audit scripts for loops that write to files/logs in every iteration; buffer writes or write only summary data.[web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "Read operations",
+    "description": "Indicates the total number of read operations performed by the PowerShell processes.",
+    "measurementUnit": "Number",
+    "interpretation": "Unusually high values indicate heavy read activity. Use detailed diagnosis to identify the responsible process.",
+    "troubleshootingSteps": [
+      "Optimize scripts that traverse file systems (e.g., Get-ChildItem -Recurse); use filters to limit the scope of reads.[web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "Writes",
+    "description": "Indicates the amount of data written to disk by PowerShell processes.",
+    "measurementUnit": "MB",
+    "interpretation": "Abnormally high values hint at potential I/O contention. Use detailed diagnosis to identify intensive processes.",
+    "troubleshootingSteps": [
+      "Check for scripts creating large temporary files or exports; redirect output to null or use in-memory processing if persistence isn't needed.[web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "Reads",
+    "description": "Indicates the amount of data read from disk by PowerShell processes.",
+    "measurementUnit": "MB",
+    "interpretation": "Abnormally high values hint at potential I/O contention. Use detailed diagnosis to identify intensive processes.",
+    "troubleshootingSteps": [
+      "Verify if scripts are reading the same data repeatedly; implement caching or variable storage to reduce disk reads.[web:391][web:392]"
+    ]
+  },
+  {
+    "measurement": "Uptime",
+    "description": "Indicates the total uptime of PowerShell processes.",
+    "measurementUnit": "Minutes",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Identify scripts running longer than expected (stuck loops or hung states) and terminate them if they exceed a defined runtime threshold.[web:388][web:391]"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "Measurement": "Active sessions",
+    "Description": "Indicates the sessions that are currently active",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value for this measure is indicative of heavy load on the Tomcat server."
+  },
+  {
+    "Measurement": "Max active sessions so far",
+    "Description": "Indicates the high watermark for sessions on the Tomcat server",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Expired sessions",
+    "Description": "Indicates the number of sessions that expired since the last measurement period",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A large number of expired sessions could hint at the need to reset the TIMEOUT period for sessions on the Tomcat server."
+  },
+  {
+    "Measurement": "Rejected sessions",
+    "Description": "Indicates the number of sessions that were rejected since the last measurement period",
+    "MeasurementUnit": "Number",
+    "Interpretation": "It is imperative to check if there is any loss of session state happening due to network congestion. Therefore, if the value of this measure is unusually high, the reasons behind the unusual occurrence would have to be investigated."
+  }
+]

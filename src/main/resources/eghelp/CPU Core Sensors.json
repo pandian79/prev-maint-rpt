@@ -1,0 +1,49 @@
+[
+  {
+    "measurement": "Clock speed",
+    "description": "Indicates the current speed of this CPU core.",
+    "measurementUnit": "MHz",
+    "interpretation": "A very low value indicates that the CPU core is slow. Comparing values across cores reveals which core is currently operating at reduced speed.",
+    "troubleshootingSteps": [
+      "Verify whether the low clock speed is due to power management or thermal throttling by checking CPU temperature, power plan settings (ensure High Performance is selected), and BIOS/UEFI settings (enable Turbo Boost and disable extreme power-saving modes).[web:249][web:250][web:251][web:252][web:253][web:256][web:259]",
+      "If one or more cores are stuck at very low frequencies (for example, 0.78 GHz or 800 MHz), disable Intel SpeedStep or similar dynamic frequency scaling features in BIOS to test if it's a frequency-scaling bug; also update chipset drivers and reinstall processor drivers.[web:250][web:252][web:253][web:256][web:262]",
+      "Check for overheating or failing cooling systems—if the CPU throttles due to high temperatures, address cooling (reapply thermal paste, clean dust, verify fan operation) before adjusting clock settings.[web:252][web:254][web:256][web:257][web:260][web:263]",
+      "On laptops or battery-powered systems, confirm that the power adapter is correctly connected and that battery-related power policies or BIOS settings are not artificially limiting CPU frequency.[web:253][web:256]"
+    ]
+  },
+  {
+    "measurement": "Temperature",
+    "description": "Indicates the current temperature of this CPU core.",
+    "measurementUnit": "Celsius",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Establish normal and maximum operating temperature thresholds for your CPU model (typically 70–90°C under load); alert and take action when core temps approach or exceed these limits.[web:254][web:257][web:260][web:263]",
+      "If temperatures are consistently high, check cooling system health (fan operation, heatsink contact, airflow), clean dust from fans and heatsinks, and ensure the case has adequate ventilation with properly configured intake and exhaust fans.[web:254][web:257][web:260][web:263]",
+      "Reapply thermal paste if the CPU cooler has not been serviced for a long time or if temps rise despite good airflow; use high-quality thermal compound and follow proper application procedures.[web:254][web:257][web:260][web:263]",
+      "If overheating persists, upgrade to more capable cooling solutions (larger air coolers, all-in-one liquid coolers, or custom loops) and review any CPU overclocking or voltage settings that may be contributing to excess heat.[web:254][web:257][web:260][web:263]"
+    ]
+  },
+  {
+    "measurement": "Load utilized",
+    "description": "Indicates the percentage of load handled by this CPU core.",
+    "measurementUnit": "Percent",
+    "interpretation": "Comparing values across cores helps identify overloaded cores.",
+    "troubleshootingSteps": [
+      "Investigate why certain cores are heavily loaded while others are underutilized; check OS and application threading behaviors, and ensure the power plan and BIOS settings do not park cores unnecessarily.[web:255][web:258][web:261]",
+      "For servers and workstations, verify CPU affinity and interrupt distribution settings (such as RSS for network, IRQ affinity for devices) to ensure that workloads and interrupts are balanced across all cores.[web:255][web:258][web:261]",
+      "On Windows, confirm that processor power management (minimum and maximum processor state) and core parking settings are configured for balanced or high-performance profiles instead of aggressive power saving, which can leave many cores idle.[web:252][web:253][web:261]",
+      "If one core is consistently overloaded by a single-threaded application, consider whether the application can be optimized or replaced with multithreaded alternatives, or pin multiple instances/threads to different cores to spread load.[web:255][web:258][web:261]"
+    ]
+  },
+  {
+    "measurement": "Power utilized",
+    "description": "Indicates the power consumed by this CPU core.",
+    "measurementUnit": "Watts",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Monitor per-core power consumption to identify if some cores are drawing excessive power due to overclocking, voltage settings, or abnormal workloads; correlate with temperature and load for complete understanding.[web:252][web:260][web:263]",
+      "If power consumption is very high and causing thermal or stability issues, consider undervolting the CPU using tools such as Intel XTU or BIOS settings to reduce voltage (and thus power and heat) without significantly impacting performance.[web:252][web:263]",
+      "Ensure power delivery systems (VRM on motherboard, power supply) are adequate for the CPU, especially if power usage spikes or is sustained at high levels during heavy workloads or overclocking.[web:254][web:257][web:260]"
+    ]
+  }
+]

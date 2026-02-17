@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Cluster network status",
+    "description": "Indicates the current state of this cluster network.",
+    "measurementUnit": null,
+    "interpretation": "Values: Up (100), Partitioned (70), Down (50), Unavailable (30), Unknown (10).",
+    "troubleshootingSteps": [
+      "If status is 'Partitioned', check physical connectivity and VLAN configuration between nodes; a partitioned state often means some nodes can communicate on this network while others cannot.[web:310][web:455][web:460]",
+      "Verify that all nodes have correct and matching IP subnet masks and that no duplicate IP addresses exist on the network segment.[web:456][web:460]",
+      "If the network is 'Down' or 'Unavailable', inspect the network adapters on all nodes; ensure they are enabled, connected, and that the Cluster Service is running.[web:309][web:452][web:453]",
+      "Check for firewall rules blocking UDP/TCP port 3343 or ICMP (Ping), which are required for heartbeat and status updates.[web:312][web:455]",
+      "If the issue persists after correcting network settings, try disabling and re-enabling the network adapter or restarting the Cluster Service on the affected node to force a topology refresh.[web:453][web:457][web:460]"
+    ]
+  }
+]

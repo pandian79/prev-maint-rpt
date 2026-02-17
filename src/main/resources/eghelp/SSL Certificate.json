@@ -1,0 +1,14 @@
+[
+  {
+    "measurement": "SSL certificate validity",
+    "description": "Represents the validity of the SSL certificate in days.",
+    "measurementUnit": "Days",
+    "interpretation": "As this value approaches 0, an alert is generated to inform the administrator that the SSL certificate is nearing expiry. A value of 0 indicates that the SSL certificate has expired.",
+    "troubleshootingSteps": [
+      "Set graduated alerts (for example at 90, 60, 30, 15, and 7 days before expiry) via your monitoring system so renewals are never missed.[web:601][web:602][web:605][web:614]",
+      "Maintain an inventory of all certificates (domains, issuers, expiry dates, locations) in a central system or certificate management platform.[web:601][web:602][web:603][web:608]",
+      "For expiring or expired certificates, renew with the issuing CA or via ACME clients (e.g., Let’s Encrypt with certbot/acme.sh) and install the new certificate on all relevant endpoints (web servers, load balancers, proxies).?[web:606][web:607][web:610][web:612][web:613]",
+      "After renewal, verify the deployment using a browser and external SSL checkers to ensure the new certificate chain is valid and served by all nodes.[web:605][web:606][web:608][web:615]"
+    ]
+  }
+]

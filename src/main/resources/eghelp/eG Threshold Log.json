@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Recent messages",
+    "description": "Indicates the number of messages matching the specified SEARCHPATTERN that were recently logged in the specified ALERTFILE.",
+    "unit": "Number",
+    "interpretation": "This shows how many log entries in the chosen alert file match the configured search pattern over the last measurement period. A value greater than zero indicates that at least one relevant event has occurred; sudden increases can signal new or worsening issues related to threshold computation. The detailed diagnosis reveals the matching messages so you can understand the specific errors that occurred while thresholds were being computed.",
+    "troubleshootingSteps": [
+      "Review the detailed diagnosis output to inspect each matching log entry, including timestamps and full error text, to understand what went wrong during threshold computation.",
+      "Verify that the SEARCHPATTERN is correctly defined so that it accurately captures threshold-computation errors without including unrelated messages.",
+      "Correlate spikes in this metric with configuration changes, new test deployments, or recent upgrades that may have affected threshold logic.",
+      "If the same error repeatedly appears in recent messages, investigate and fix the underlying configuration, data, or code issue causing threshold computation to fail.",
+      "Once fixes are applied, continue monitoring this measure to confirm that the number of recent messages drops back to normal or zero."
+    ]
+  }
+]

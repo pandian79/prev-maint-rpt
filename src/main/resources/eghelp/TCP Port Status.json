@@ -1,0 +1,14 @@
+[
+  {
+    "Measurement": "Availability",
+    "Description": "Whether the TCP connection is available.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "An availability problem can be caused by different factors - e.g., the server process may not be up, a network problem may exist, or there could be a configuration problem with the DNS server."
+  },
+  {
+    "Measurement": "Response time",
+    "Description": "Time taken (in seconds) by the server to respond to a request.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "An increase in response time can be caused by several factors such as a server bottleneck, a configuration problem with the DNS server, a network problem, etc."
+  }
+]

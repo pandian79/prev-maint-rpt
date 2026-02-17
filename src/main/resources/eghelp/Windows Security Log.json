@@ -1,0 +1,38 @@
+[
+  {
+    "measurement": "Successful audits",
+    "description": "Indicates the number of successful audits of Windows security logs.",
+    "unit": "Number",
+    "interpretation": "This counts security log audit events classified as successful (for example, successful logons or actions where auditing is enabled). A healthy baseline of successful audits reflects normal, authorized activity being correctly recorded. Detailed diagnosis can list each successful audited event for review.[web:228][web:231][web:232]",
+    "troubleshootingSteps": [
+      "Verify that audit policies for logon and account logon events are correctly configured to record success events where required (for example, event ID 4624). [web:228][web:230][web:232]",
+      "Periodically review samples of successful audit entries to confirm that they correspond to legitimate user and service activity, especially for privileged accounts.[web:229][web:231]",
+      "Correlate spikes in successful audits with expected events such as batch jobs, maintenance windows, or user login surges; investigate unexplained spikes for possible misuse.[web:229][web:231]",
+      "Export or forward successful audit logs to a SIEM or log management platform for long-term retention, correlation with failures, and threat detection use cases.[web:231]"
+    ]
+  },
+  {
+    "measurement": "Failure audits",
+    "description": "Indicates the number of Windows security log audits that failed.",
+    "unit": "Number",
+    "interpretation": "This counts security log audit events classified as failures (such as failed logon attempts and other denied operations) where auditing is enabled. Elevated or increasing failure audit counts can indicate misconfigurations, user issues, or potential security threats such as brute-force attempts. Detailed diagnosis can list each failed audited event.[web:228][web:229][web:231]",
+    "troubleshootingSteps": [
+      "Ensure that failure auditing is enabled for relevant policies (for example, Audit logon events and Audit account logon events) so failed actions are reliably recorded (event ID 4625 and others).[web:228][web:230][web:231]",
+      "Investigate recurring failure audit entries for specific accounts, hosts, or times as they may indicate password issues, misconfigured services, or attack activity.[web:229][web:231][web:235]",
+      "Use Event Viewer filters, PowerShell, or SIEM queries to focus on critical failure events such as repeated 4625 (failed logon) entries.[web:229][web:231][web:235]",
+      "Coordinate with security teams to define thresholds where spikes in failure audits trigger alerts and follow-up investigations.[web:229][web:231]"
+    ]
+  },
+  {
+    "measurement": "Failed logons",
+    "description": "Indicates the number of failed login attempts recorded in the Windows Security event log.",
+    "unit": "Number",
+    "interpretation": "This specifically tracks failed logon attempts (for example, event ID 4625), which may be caused by incorrect credentials, expired accounts, misconfigured applications, or malicious attempts to guess passwords. A sudden spike in this value is a cause for concern and can signal active attack or widespread configuration errors.[web:228][web:229][web:231][web:235]",
+    "troubleshootingSteps": [
+      "When failed logons increase, quickly identify the affected accounts, source IPs/hosts, and logon types by inspecting event 4625 details in the Security log or via a SIEM.[web:229][web:231][web:235]",
+      "Determine whether failures are benign (users forgetting passwords, expired accounts) or suspicious (high-volume attempts, unusual locations or times, targeted admin accounts). [web:229][web:231]",
+      "Resolve benign causes by assisting users, correcting service credentials, or updating application connection settings; for suspicious patterns, apply lockout, MFA, or network controls as appropriate.[web:229][web:231][web:235]",
+      "Set up automated monitoring and alerting for failed logon spikes, especially outside business hours or against privileged accounts, to support rapid incident response.[web:229][web:231][web:235]"
+    ]
+  }
+]

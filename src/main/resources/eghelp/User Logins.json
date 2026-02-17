@@ -1,0 +1,26 @@
+[
+  {
+    "measurement": "Current users",
+    "description": "Indicates the total number of users who have currently logged into the target server.",
+    "measurementUnit": "Number",
+    "interpretation": "The detailed diagnosis of this measure if enabled, lists the name of the users who have logged into the target server and their IP addresses.",
+    "troubleshootingSteps": [
+      "Use system commands or tools (for example, `who`, `w`, `users` on Linux, or session/user monitoring tools on Windows) to list all currently logged‑in users and their sessions.[web:46][web:51]",
+      "Verify that each logged‑in account is expected for this server and time window; investigate any unknown or unusual usernames or IP addresses for possible misuse or compromise.[web:45][web:46][web:51]",
+      "If there are too many concurrent users causing resource contention, enforce connection limits, session timeouts, or redistribute users across servers.[web:42][web:50][web:53]",
+      "Regularly log and audit user login activity so spikes in the current user count can be correlated with planned maintenance, deployments, or potential security incidents.[web:45][web:46][web:49]"
+    ]
+  },
+  {
+    "measurement": "Unauthorized users",
+    "description": "Indicates the number of users who are not authorized to login into the target server.",
+    "measurementUnit": "Number",
+    "interpretation": "The detailed diagnosis of this measure lists the name of the unauthorized users who have logged into the target server and their IP addresses.",
+    "troubleshootingSteps": [
+      "Immediately review the list of unauthorized users and their source IP addresses, and terminate any active unauthorized sessions.[web:45][web:46][web:48][web:52]",
+      "Investigate how these accounts gained access by reviewing authentication logs, security event logs, and recent configuration changes, looking for weak credentials, stolen accounts, or misconfigured access controls.[web:45][web:46][web:48][web:49]",
+      "Disable or remove unauthorized accounts, tighten group memberships and logon rights, and enforce stronger authentication (for example, MFA and stricter password policies).?[web:48][web:51][web:54]",
+      "Configure continuous monitoring and alerting for unexpected logins, logins from unusual locations, or logins by accounts that should never access this server.[web:45][web:46][web:48][web:49][web:52]"
+    ]
+  }
+]

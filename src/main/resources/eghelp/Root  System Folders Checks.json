@@ -1,0 +1,8 @@
+[
+  {
+    "Measurement": "New files added to root/system folders",
+    "Description": "Indicates the number of new files added to root/system folders during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure provide details of the file object added, and created time."
+  }
+]

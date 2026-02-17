@@ -1,0 +1,314 @@
+[
+  {
+    "measurement": "Total Page views",
+    "description": "Indicates the total number of times pages were viewed by users from this region.",
+    "unit": "Number",
+    "interpretation": "This is a good measure of the traffic from a specific region. Sudden, but significant spikes in the page view count could be a cause for concern, as they may indicate a malicious attack or hacking attempt. An abnormally high value may also occur when the Real User Monitor agent was stopped or disconnected and later uploads cumulated metrics, making the current period appear to have a sudden surge in Total Page views.",
+    "troubleshootingSteps": [
+      "Investigate sudden spikes in Total Page views from this region using web server, CDN, and WAF logs to distinguish human traffic from bots or attacks.",
+      "Correlate spikes with Real User Monitor agent restarts or agent‑collector reconnections to detect artificial metric inflation.",
+      "Compare traffic from this region with global trends to see whether the spike is localized or part of a broader pattern.",
+      "Apply geo‑specific rate limiting, IP blocking, or CAPTCHA if malicious traffic from particular networks in this region is confirmed."
+    ]
+  },
+  {
+    "measurement": "Apdex score",
+    "description": "Indicates the apdex score of the web site/web application based on the experience of users from this region.",
+    "unit": "Number",
+    "interpretation": "Apdex is an open standard that converts many performance measurements into one number on a 0‑to‑1 scale (0 = no users satisfied, 1 = all users satisfied). The Apdex formula is ApdexT = (Satisfied Count + Tolerating Count / 2) / Total Samples. Ideally the score should be 1.0; values below 1.0 indicate that the experience of users from this region has been less than satisfactory.",
+    "troubleshootingSteps": [
+      "Break down the Apdex score for this region into satisfied, tolerating, and frustrated counts to see which segment drives dissatisfaction.",
+      "Correlate drops in Apdex with Average page load time and error metrics for users in this region.",
+      "Identify slow or error‑prone URLs heavily used in this region via detailed diagnostics and prioritize fixes there.",
+      "Review whether the Apdex threshold T is realistic given typical latency from this region, and adjust if necessary."
+    ]
+  },
+  {
+    "measurement": "Average page load time",
+    "description": "Indicates the average time that pages accessed by users from this region took to load completely on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the average interval between when a user initiates a request and when page load completes in the browser, including Ajax requests until responses are fully processed. Comparing this measure across regions shows whether a particular region suffers higher load times. Examining Average browser initial request time, Average network time, Average server time, Average content download time, and Average browser render time for the region helps pinpoint whether slowness is due to redirection/AppCache and waits, network, backend, HTML download, or DOM/rendering.",
+    "troubleshootingSteps": [
+      "Compare Average page load time for this region with other regions to determine if performance issues are region‑specific.",
+      "For this region, break down timing into browser initial request, network, server, content download, and render components to identify the main bottleneck.",
+      "If network time dominates, investigate TCP latency, DNS delays, and SSL handshake performance for users in this region.",
+      "If server time dominates, focus backend optimization and capacity planning on traffic originating from this region."
+    ]
+  },
+  {
+    "measurement": "Unique user session",
+    "description": "Indicates the number of distinct users who are currently accessing the web site/web application from this region.",
+    "unit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Check consistency of session tracking mechanisms (cookies, tokens, IDs) for users in this region, especially behind carrier‑grade NAT or proxies.",
+      "Compare unique sessions from this region with Total Page views to understand session length and churn patterns.",
+      "Correlate notable changes in unique sessions with regional marketing campaigns, outages, or authentication issues.",
+      "Ensure privacy or security settings (e.g., third‑party cookie blocking) in this region are not breaking session persistence measurement."
+    ]
+  },
+  {
+    "measurement": "Page views per minute",
+    "description": "Indicates the number of times the pages were viewed per minute by users from this region.",
+    "unit": "Number",
+    "interpretation": "An unusually high value for this measure may require investigation.",
+    "troubleshootingSteps": [
+      "Monitor Page views per minute from this region and alert on deviations from historical baselines.",
+      "Identify the top IPs, user agents, and referrers generating high request rates from this region to separate normal surges from automated traffic.",
+      "Correlate spikes with infrastructure utilization to verify that systems can handle bursts originating from this region.",
+      "Introduce regional rate‑limiting or bot‑detection rules for abusive sources in this region if necessary."
+    ]
+  },
+  {
+    "measurement": "Normal page view percentage",
+    "description": "Indicates the percentage of page views that delivered a satisfactory experience to users from this region.",
+    "unit": "Percent",
+    "interpretation": "This indicates the percentage of page views in which users from this region experienced neither slowness nor JavaScript errors. Ideally, it should be 100%. Slightly lower values indicate somewhat degraded experience, while values below 50% suggest serious issues where most page views are slow or error‑prone. Comparing Slow page view percentage and JavaScript error page view percentage for this region reveals whether problematic slowness or JavaScript errors dominate.",
+    "troubleshootingSteps": [
+      "Track Normal page view percentage together with Slow page view percentage and JavaScript error page view percentage for this region.",
+      "If slow pages are the main issue, use Slow page views – Tolerating & Frustrated diagnostics to see which pages are slow and where they lose time (front end, network, backend). ",
+      "If JavaScript errors are the main issue, analyze JavaScript error page view percentage diagnostics to find which errors occur on which pages for this region.",
+      "Monitor this metric before and after deployments or regional changes to confirm user experience improvements."
+    ]
+  },
+  {
+    "measurement": "Slow page view percentage",
+    "description": "Indicates the percentage of pages that were slow in loading when accessed by users in this region.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that over half of the page views are slow. Detailed diagnosis of Slow page views – Tolerating & Frustrated helps identify slow pages and pinpoint whether the front end, network, or backend is responsible.",
+    "troubleshootingSteps": [
+      "Use Slow page views – Tolerating & Frustrated diagnostics to list the most frequently slow URLs for users in this region.",
+      "Analyze timing components (network, server, rendering) for those URLs to target optimization efforts.",
+      "Check whether slow percentages spike at certain times of day, suggesting peak‑time congestion or capacity limits in this region.",
+      "Focus remediation on slow pages that are critical for business workflows used heavily in this region."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page view percentage",
+    "description": "Indicates the percentage of page views that have encountered JavaScript errors.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that more than half of the page views from this region experience JavaScript errors. Detailed diagnostics show which pages and which JavaScript errors occur, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Review JavaScript error diagnostics for this region to identify the most frequent errors and affected URLs.",
+      "Determine whether specific browsers, OS versions, or localized variants popular in this region are associated with higher error rates.",
+      "Fix or guard the most impactful JavaScript errors first, then track this percentage for improvement in this region.",
+      "Implement robust client‑side error handling and fallbacks for key flows to reduce the user impact of unavoidable errors."
+    ]
+  },
+  {
+    "measurement": "Satisfied page views",
+    "description": "Indicates the number of times pages were viewed by users in this region without any slowness.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF; otherwise it is deemed satisfactory. Ideally, Satisfied page views from this region should equal Total Page views. If this value is much lower than Tolerating and Frustrated page views, it clearly indicates that user experience in this region has been below‑par.",
+    "troubleshootingSteps": [
+      "Compare Satisfied page views with Total Page views for this region to understand the fraction of fully good experiences.",
+      "Watch for trends where Satisfied views fall while Tolerating and Frustrated views rise and correlate with changes affecting this region.",
+      "Tune SLOW TRANSACTION CUTOFF so that it aligns with realistic SLAs and network conditions typical for this region.",
+      "Use diagnostics for Tolerating and Frustrated views to fix issues that are preventing views in this region from being classified as satisfied."
+    ]
+  },
+  {
+    "measurement": "Slow page views - Tolerating & Frustrated",
+    "description": "Indicates the number of slow page views from this region.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF. Ideally, 0 is desired. High values show that users in this region frequently experience slowness; detailed diagnostics indicate which page views are slow and why.",
+    "troubleshootingSteps": [
+      "Identify which URLs have the largest counts of slow page views originating from this region and group them by feature.",
+      "Compare slow view counts for this region with other regions to see whether slowness is region‑specific.",
+      "Optimize backend performance, caching, and front‑end payloads focused on pages heavily used in this region.",
+      "Monitor slow view counts for this region after optimizations to confirm improvements."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page views",
+    "description": "Indicates the number of times JavaScript errors occurred when accessing pages from this region.",
+    "unit": "Number",
+    "interpretation": "Ideally, this value should be 0. A high value indicates that many JavaScript errors occur when viewing pages, and detailed diagnostics help identify the error pages and specific JavaScript errors.",
+    "troubleshootingSteps": [
+      "Aggregate JavaScript error counts by error type and page for this region to uncover the most disruptive issues.",
+      "Check whether users in this region commonly use browsers or devices with particular quirks that cause additional errors.",
+      "Implement fixes for the top errors and track JavaScript error page views from this region over time.",
+      "Set up regional alerts for sudden jumps in JavaScript error page views to quickly detect regressions."
+    ]
+  },
+  {
+    "measurement": "Tolerating page views",
+    "description": "Indicates the number of tolerating page views experienced by users in this region.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page exceeds the SLOW TRANSACTION CUTOFF but is less than 4 times that cutoff, the view is considered a Tolerating page view. Ideally, this value should be 0. If it is higher than Satisfied page views, overall experience of users in this region is less than satisfactory.",
+    "troubleshootingSteps": [
+      "Monitor the ratio of Tolerating to Satisfied page views for this region as an early indicator of performance degradation.",
+      "Analyze timing profiles of tolerating views to see whether they are network‑bound, server‑bound, or render‑bound for users here.",
+      "Optimize moderate bottlenecks (asset sizes, caching, queries) affecting this region to shift tolerating views into the satisfied band.",
+      "Validate that changes reduce tolerating counts in this region by comparing before‑and‑after metrics."
+    ]
+  },
+  {
+    "measurement": "Frustrated page views",
+    "description": "Indicates the number of frustrated page views experienced by users in this region.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page is over 4 times the SLOW TRANSACTION CUTOFF, the view is considered a Frustrated page view. Ideally, this value should be 0. Values higher than Satisfied page views show that user experience in this region is clearly poor.",
+    "troubleshootingSteps": [
+      "Identify pages with the highest frustrated view counts from this region and treat them as top‑priority issues.",
+      "Correlate frustrated views with backend errors, timeouts, or resource saturation during the same periods in this region.",
+      "Investigate regional network quality (ISPs, routes, outages) when frustrated counts increase.",
+      "Roll back or disable new features for this region if their rollout coincides with a rise in frustrated views."
+    ]
+  },
+  {
+    "measurement": "Average browser render time",
+    "description": "Indicates the time taken to complete the download of remaining resources, including images, and to finish rendering the pages accessed from this region.",
+    "unit": "ms",
+    "interpretation": "High values indicate that page rendering is taking too long, often due to in‑optimal HTML document architecture, complex CSS (deeply nested rules, slow selectors, complex effects), and large images. When Average page load time is high, comparing this measure with Average browser initial request time, Average network time, Average server time, and Average content download time helps locate whether rendering is the primary bottleneck for this region.",
+    "troubleshootingSteps": [
+      "Profile rendering performance for pages heavily accessed in this region using browser developer tools.",
+      "Simplify layouts, reduce heavy CSS effects, and compress or lazy‑load large images for users in this region.",
+      "Adopt responsive images and conditional loading strategies tailored to devices and networks common in this region.",
+      "Monitor Average browser render time per region after front‑end changes to ensure no regressions for this region."
+    ]
+  },
+  {
+    "measurement": "Average content download time",
+    "description": "Indicates the time to make the complete HTML document (DOM) available for JavaScript to apply rendering logic on the pages accessed from this region.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and documentContentLoadedEventStart and equals the sum of Average DOM download time and Average DOM processing time. If content downloading takes unusually long for requests from this region, comparing these two components indicates whether the delay is due to slow server/cache/local resource responsiveness or heavy DOM processing.",
+    "troubleshootingSteps": [
+      "Break down Average content download time into Average DOM download time and Average DOM processing time for this region.",
+      "Minimize HTML size for frequently accessed pages in this region by removing unused markup and scripts.",
+      "Ensure server and CDN compression is effective for HTML responses delivered to this region.",
+      "If DOM processing time dominates, focus on simplifying DOM structure and scripts that run during parsing for users in this region."
+    ]
+  },
+  {
+    "measurement": "Average DOM download time",
+    "description": "Indicates the time taken to download the complete HTML document for page view requests from this region, on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the interval between responseStart and responseEnd. Higher document download times lengthen the time before the document is available for rendering and negatively impact user experience; therefore, a low value is desired.",
+    "troubleshootingSteps": [
+      "Analyze network latency and throughput from major ISPs in this region to your servers or CDN edges.",
+      "Reduce HTML payload for pages popular in this region by removing inlined large resources and unnecessary markup.",
+      "Check that CDN edge locations adequately cover this region to minimize physical distance and hops.",
+      "Track this metric by sub‑region and ISP to identify localized network issues within the region."
+    ]
+  },
+  {
+    "measurement": "Average DOM processing time",
+    "description": "Indicates the time taken by the browser to build the Document Object Model (DOM) for the pages requested by the users in this region and make it available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "An unusually high value clearly indicates that DOM building is taking longer than normal. This delays page rendering and adversely impacts user experience when this page group is accessed from this region. Ideally, this measure should be low.",
+    "troubleshootingSteps": [
+      "Reduce DOM complexity and node depth on pages often visited by users in this region.",
+      "Avoid heavy synchronous JavaScript during DOM construction that blocks parsing for these users.",
+      "Split large pages into smaller sections or use pagination/infinite scroll so initial DOM is smaller for this region.",
+      "Audit third‑party tags or widgets that may inject large DOM fragments and are primarily visible to users in this region."
+    ]
+  },
+  {
+    "measurement": "Average server time",
+    "description": "Indicates the interval between the start of processing of a request from a user in this region to when response is received.",
+    "unit": "ms",
+    "interpretation": "Average server time is the interval between requestStart and responseStart. Ideally, it should be low, because high values hurt the Apdex score. It is mainly influenced by the processing ability and configuration of the web or application server. Backend slowdowns due to insufficient resources or misconfiguration increase this metric. For IE 11, Navigation Timing may mis‑report requestStart, and Business Transactions traces are recommended as a workaround.",
+    "troubleshootingSteps": [
+      "Monitor backend CPU, memory, database, and external service metrics during periods when Average server time for this region is high.",
+      "Use APM/BTM to trace transactions originating from this region and identify slow operations (e.g., queries, remote calls). ",
+      "Scale or tune backend components most frequently hit by traffic from this region.",
+      "Check server configuration (thread pools, connection pools, caching) and adjust for load patterns from this region."
+    ]
+  },
+  {
+    "measurement": "Average network time",
+    "description": "Indicates the elapsed time since a user in this region initiates a request to the web site/web application and the start of fetching the response document from it.",
+    "unit": "ms",
+    "interpretation": "Average network time is the interval between navigationStart and requestStart and includes DNS lookup and TCP connection time. It equals the sum of Average DNS lookup time and Average TCP connection time. Ideally, it should be low; very high values delay page loading and damage service quality. Navigation Timing issues in IE 11 can cause inaccuracies for that browser.",
+    "troubleshootingSteps": [
+      "Decompose Average network time into Average DNS lookup time and Average TCP connection time for this region.",
+      "Investigate network routes and latency from common ISPs in this region to your servers or CDN edges.",
+      "Leverage CDNs and additional PoPs closer to this region to reduce round‑trip times.",
+      "Enable connection reuse and modern protocols (HTTP/2/3) to reduce connection overhead for users in this region."
+    ]
+  },
+  {
+    "measurement": "Average DNS lookup time",
+    "description": "Indicates the time taken by the browser used by a user in this region to perform the domain lookup for connecting to the web site/web application.",
+    "unit": "ms",
+    "interpretation": "A high value affects DNS lookup itself and also increases Average network time and Average page load time, which can seriously degrade user experience for this region.",
+    "troubleshootingSteps": [
+      "Assess DNS provider performance and resolver proximity for users in this region.",
+      "Reduce CNAME indirection for domains critical to traffic from this region.",
+      "Tune DNS TTL settings to improve cache hit rates while allowing timely updates for this region.",
+      "Monitor DNS errors and timeouts for queries originating in this region to detect intermittent resolution problems."
+    ]
+  },
+  {
+    "measurement": "Average TCP connection time",
+    "description": "Indicates the time taken by the browser used by a user in this region to establish a TCP connection with the server.",
+    "unit": "ms",
+    "interpretation": "A bad network connection between the browser client and the server can delay TCP connections, increasing Average network time and impacting overall page load time and user experience for this region.",
+    "troubleshootingSteps": [
+      "Check load balancer and server connection metrics (connection queues, SYN backlog) during intervals of high TCP connection time for this region.",
+      "Ensure that traffic from this region is routed to the closest data center or CDN edge to reduce round‑trip time.",
+      "Encourage persistent connections and TLS session resumption so repeat requests from this region avoid full handshakes.",
+      "Investigate intermediate network devices (firewalls, proxies) on paths commonly used by this region for throughput or latency issues."
+    ]
+  },
+  {
+    "measurement": "Average browser initial request time",
+    "description": "Indicates the interval between when a request was received from users in this region, when it followed a redirect, to when it was processed in the AppCache.",
+    "unit": "ms",
+    "interpretation": "This is the time between navigationStart and domainLookupStart and includes waits in the browser, redirection time, and AppCache processing. It equals the sum of Average AppCache time, Average redirection time, and Average browser wait time. High values indicate that requests from this region are delayed before DNS begins, and comparing the three components reveals whether redirection, AppCache, or browser wait is the primary cause.",
+    "troubleshootingSteps": [
+      "Break down Average browser initial request time for this region into AppCache time, redirection time, and browser wait time.",
+      "Minimize or streamline redirects particularly affecting users in this region.",
+      "Optimize or reconsider AppCache usage for this region if it contributes significantly to initial request time.",
+      "Reduce resource concurrency to decrease queuing in the browser for requests initiated from this region."
+    ]
+  },
+  {
+    "measurement": "Average SSL handshake time",
+    "description": "Indicates the time taken by requests from this region to complete the SSL handshake.",
+    "unit": "ms",
+    "interpretation": "An SSL handshake occurs when a browser initiates a secure HTTPS connection and negotiates keys and certificates with the server. This negotiation adds to Average network time and page load time; together, DNS lookup, TCP handshake, and SSL handshake can add three round trips. Using HTTP/2 and effective caching can reduce SSL setup to a single round trip.",
+    "troubleshootingSteps": [
+      "Optimize TLS protocol and cipher configuration to minimize handshake overhead for clients in this region.",
+      "Enable TLS session resumption and verify that clients in this region benefit from resumed sessions.",
+      "Terminate TLS at CDN edges located close to this region to reduce handshake latency.",
+      "Monitor SSL handshake time per region to identify unusual delays specific to this region."
+    ]
+  },
+  {
+    "measurement": "Average AppCache time",
+    "description": "Indicates the time taken to check whether/not the requests from this region can be serviced by the AppCache.",
+    "unit": "ms",
+    "interpretation": "HTML5 AppCache lets web applications run offline by caching resources. A high value means requests from this region spend too much time in AppCache, introducing page loading latency and worsening perceived performance. Common causes include missing or incorrect manifest media type, manifest not served from the same origin, incorrect relative URLs, and frequent manifest changes that force full synchronous downloads.",
+    "troubleshootingSteps": [
+      "Serve the manifest file used for this region with media type text/cache‑manifest and from the same origin as the host page.",
+      "Ensure manifest URLs are referenced correctly and relative paths are relative to the manifest file, not the HTML page.",
+      "Avoid frequent manifest changes that cause full cache re‑downloads for users in this region.",
+      "Load the Application Cache from a simple HTML file in an iframe to avoid synchronous heavy downloads at page start for this region."
+    ]
+  },
+  {
+    "measurement": "Average redirection time",
+    "description": "Indicates the time that requests from this region spent in redirection before fetching the pages.",
+    "unit": "ms",
+    "interpretation": "This is the time between redirectStart and redirectEnd. While URL redirection is useful (mobile versions, secure pages, latest content, geo‑specific pages, canonical URLs), each redirect adds latency via extra DNS lookups and HTTP requests. Multiple, invalid, or looping redirects significantly increase page load time and can cause errors.",
+    "troubleshootingSteps": [
+      "Identify redirect chains affecting users in this region and consolidate them to a single redirect where possible.",
+      "Remove obsolete or invalid redirects that lead to 404s or unnecessary hops for this region.",
+      "Ensure geo‑based redirect logic for this region is efficient and not causing redundant redirects.",
+      "Monitor Average redirection time and Average page load time for this region after redirect optimizations to confirm improvements."
+    ]
+  },
+  {
+    "measurement": "Average browser wait time",
+    "description": "Indicates the time that requests from this region spent on the browser, waiting for another request to complete.",
+    "unit": "ms",
+    "interpretation": "This is the sum of the time between each pair of consecutive events from navigationStart to requestStart. Because browsers limit active connections per domain, additional requests may be queued while earlier ones complete. High browser wait time lengthens initial request time and harms overall responsiveness. If Average browser initial request time is abnormally high, comparing this measure with Average AppCache time and Average redirection time reveals whether long waits in the browser are a key cause.",
+    "troubleshootingSteps": [
+      "Reduce the number of simultaneous resource requests on pages popular in this region by bundling and minifying assets and lazy‑loading non‑critical resources.",
+      "Adopt HTTP/2 so multiple resources for users in this region can be multiplexed over fewer connections.",
+      "Use domain sharding carefully (if on HTTP/1.1) to increase effective concurrency for heavy pages accessed in this region.",
+      "Recommend modern browsers (e.g., Firefox, Chrome) that support more parallel connections to heavy users in this region."
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "measurement": "Current usage",
+    "description": "The current usage of a page file",
+    "measurementUnit": "Percent",
+    "interpretation": "This metric should be less than 90%. If the page file has no additional space, additional users/processes cannot be supported and system performance will suffer. To improve performance, consider resizing the page file. Windows allows a minimum and maximum size to be specified; if disk space is sufficient, setting min and max to the same (maximum) value avoids runtime growth overhead during virtual memory shortages.",
+    "troubleshootingSteps": [
+      "If page file usage is consistently above 80–90%, check for memory pressure using Performance Monitor counters (Committed Bytes, Available MBytes, Pages/sec) to confirm that RAM is insufficient and paging is heavy.[web:174][web:176][web:177][web:186][web:188]",
+      "Resize the page file to an appropriate fixed or custom size based on RAM and commit peak (for example, at least system-managed default or a custom size in the range of roughly 1–2× RAM, respecting Microsoft’s guidance and crash dump requirements). Set the same value for minimum and maximum if you want to avoid fragmentation and growth overhead.[web:174][web:176][web:177][web:178][web:179][web:184][web:185][web:188]",
+      "Reduce paging pressure by closing or tuning memory-hungry applications, adding physical RAM, and verifying that no runaway processes are leaking memory.[web:174][web:177][web:180][web:186][web:188]",
+      "After changes, monitor page file percent usage and disk I/O to ensure that both usage and paging-related disk thrashing have decreased to acceptable levels.[web:176][web:177][web:180][web:183][web:186]"
+    ]
+  }
+]

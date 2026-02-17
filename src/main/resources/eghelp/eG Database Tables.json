@@ -1,0 +1,158 @@
+[
+  {
+    "Measurement": "Total tables",
+    "Description": "Indicates the total number of tables that currently exist in the eG database.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "",
+    "troubleshootingSteps": [
+      "Track this measure over time to understand database schema growth as new components and features are added.",
+      "If the total number of tables increases unexpectedly, review recent configuration or product upgrades that might have introduced new tables.",
+      "Use detailed diagnosis or database metadata views to list newly added tables and confirm they are expected.",
+      "For very large environments, periodically review old or unused tables with your vendor or DBA before considering archival or cleanup."
+    ]
+  },
+  {
+    "Measurement": "Default tables",
+    "Description": "Indicates the number of default tables in the eG database.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "",
+    "troubleshootingSteps": [
+      "Compare the count of default tables against product documentation or a reference environment to detect missing or extra tables.",
+      "If the number of default tables is lower than expected, verify whether any tables were accidentally dropped or not created during installation or upgrade.",
+      "If the number is higher than expected, investigate for duplicate or legacy tables left behind from previous versions.",
+      "In case of discrepancy, engage the DBA and vendor support before making structural changes to default tables."
+    ]
+  },
+  {
+    "Measurement": "Dynamic tables",
+    "Description": "Indicates the number of dynamic tables in the eG database.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Dynamic tables are typically a set of virtual tables used to record current database activity.",
+    "troubleshootingSteps": [
+      "Monitor the count of dynamic tables to understand how much transient activity data the system is tracking.",
+      "If the number of dynamic tables grows unexpectedly, check for new features or monitoring scopes that create additional activity tables.",
+      "Review retention and cleanup settings to ensure dynamic tables and their data are pruned appropriately.",
+      "Use detailed diagnosis to identify specific dynamic tables that are large or heavily used and validate that their usage is expected."
+    ]
+  },
+  {
+    "Measurement": "Tables without primary key",
+    "Description": "Indicates the number of tables without a primary key.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The purpose of a primary key is to uniquely identify each record in a table. An index is an alphabetical listing of the terms found on database records and the number of records where the terms are found. A database table can technically exist without a primary key or an index, but this undermines the purpose of easy information retrieval. Use detailed diagnosis to identify tables that do not have a primary key.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list tables without primary keys and validate with application design whether this is intentional.",
+      "For tables frequently used in queries, consider adding appropriate primary keys (and supporting indexes) to improve performance and data integrity.",
+      "Before adding keys, review existing data to ensure uniqueness and resolve duplicates where necessary.",
+      "Coordinate schema changes with the application vendor or development team to avoid breaking application logic."
+    ]
+  },
+  {
+    "Measurement": "Tables without index",
+    "Description": "Indicates the number of tables without an index.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Tables without indexes can suffer from poor query performance and slow data retrieval. Use detailed diagnosis to identify tables that do not have an index.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify high-usage tables that lack indexes and prioritize them for indexing.",
+      "Analyze query patterns (e.g., in SQL monitoring tools) to determine which columns should be indexed.",
+      "Add indexes carefully, balancing performance gains against additional storage and write overhead.",
+      "Reassess index usage periodically and remove unused or redundant indexes to keep maintenance overhead reasonable."
+    ]
+  },
+  {
+    "Measurement": "Newly created tables",
+    "Description": "Indicates the number of tables created in the eG database since the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "New tables are created in the eG database as new components are monitored in the environment or new features are enabled.",
+    "troubleshootingSteps": [
+      "If this measure increases, review which components or features were recently added that triggered new table creation.",
+      "Verify that newly created tables follow naming, indexing, and retention standards.",
+      "Ensure backup routines include new tables and that they are covered by maintenance jobs (indexing, cleanup).",
+      "Investigate any unexpected new tables for potential misconfiguration or schema drift."
+    ]
+  },
+  {
+    "Measurement": "Active sessions",
+    "Description": "Indicates the number of active sessions to the eG backend.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This is a good indicator of the current load on the eG database. Use detailed diagnosis to view the hosts from which the active sessions originated.",
+    "troubleshootingSteps": [
+      "Monitor Active sessions during peak and off-peak hours to establish normal ranges.",
+      "If active sessions are consistently high, validate whether this aligns with user and component activity or indicates inefficient connection usage.",
+      "Use detailed diagnosis to identify hosts or applications contributing the most active sessions and investigate any anomalies.",
+      "Combine this with performance metrics (CPU, I/O, wait times) to decide if database scaling or query tuning is required."
+    ]
+  },
+  {
+    "Measurement": "Inactive sessions",
+    "Description": "Indicates the number of currently inactive sessions to the eG database.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Open but inactive sessions are serious resource drains. Use detailed diagnosis to view the hosts that initiated inactive sessions, determine reasons for inactivity, and terminate sessions if necessary to protect the database from abuse.",
+    "troubleshootingSteps": [
+      "Regularly review inactive sessions and identify patterns (e.g., specific applications or hosts leaving sessions open).",
+      "Adjust connection pooling or application code to ensure sessions are closed when no longer needed.",
+      "Enforce database-side idle session timeouts to automatically clean up long-inactive sessions.",
+      "Monitor the impact of changes on both inactive session count and overall performance."
+    ]
+  },
+  {
+    "Measurement": "Tables with highest volume of data",
+    "Description": "Indicates the number of tables that contain a high data volume.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure includes all tables whose size exceeds the MAXIMUM TABLE SIZE configured for this test. Use detailed diagnosis to identify the large tables.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list large tables and review their growth trends over time.",
+      "Consider partitioning, archiving, or purging old data from very large tables according to retention policies.",
+      "Ensure large tables have appropriate indexes and statistics to maintain acceptable query performance.",
+      "Validate that cleanup jobs are operating correctly on these tables and adjust retention or frequency as needed."
+    ]
+  },
+  {
+    "Measurement": "Tables with lowest volume of data",
+    "Description": "Indicates the number of tables that contain a low data volume.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure includes all tables whose size is less than the MINIMUM TABLE SIZE configured for this test. Use detailed diagnosis to identify the small tables.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify very small tables and determine whether they are still in active use.",
+      "For obsolete tables, consider deprecating or dropping them after confirming with application owners and ensuring backups.",
+      "Review schema design to see if some small tables can be consolidated to simplify the database.",
+      "Verify that maintenance tasks (backups, cleanup) are not unduly impacted by numerous tiny tables."
+    ]
+  },
+  {
+    "Measurement": "Tables with many rows",
+    "Description": "Indicates the number of tables with many rows.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure includes all tables with more rows than the MAXIMUM ROW SIZE configured for this test. Use detailed diagnosis to identify these tables.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list tables exceeding the configured row threshold and analyze their growth patterns.",
+      "Evaluate the need for partitioning or sharding very large tables to improve manageability and performance.",
+      "Implement or refine data retention and archiving strategies to keep row counts within acceptable limits.",
+      "Review indexing and query patterns on these tables to minimize full scans and reduce load."
+    ]
+  },
+  {
+    "Measurement": "Tables with few rows",
+    "Description": "Indicates the number of tables with few rows.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure includes all tables with fewer rows than the MINIMUM ROW SIZE configured for this test. Use detailed diagnosis to identify tables that have only a few rows.",
+    "troubleshootingSteps": [
+      "Identify low-row-count tables and confirm whether they represent staging, configuration, or legacy data structures.",
+      "For legacy or unused tables, plan decommissioning in coordination with application stakeholders.",
+      "Evaluate whether small tables are optimally designed or could be merged to reduce schema complexity.",
+      "Ensure that even small but critical tables are included in backup and maintenance plans."
+    ]
+  },
+  {
+    "Measurement": "Database size",
+    "Description": "Indicates the total size of the eG database.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "",
+    "troubleshootingSteps": [
+      "Track database size over time to understand growth trends and plan capacity upgrades.",
+      "If size grows faster than expected, correlate with measures such as Newly created tables, Tables with highest volume of data, and retention settings.",
+      "Review cleanup and archiving policies to ensure old data is being removed or moved to cheaper storage.",
+      "Work with the DBA to adjust storage allocation, partitioning, or compression strategies if the database approaches storage limits."
+    ]
+  }
+]

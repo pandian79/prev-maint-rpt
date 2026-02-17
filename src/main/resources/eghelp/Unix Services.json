@@ -1,0 +1,50 @@
+[
+  {
+    "Measurement": "Service availability",
+    "Description": "Indicates the Service availability of this service.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "By default, this measure reports the Measure Values listed below to indicate the Service availability of each service. In graphs, the service availability is represented using the corresponding numeric equivalents only.",
+      "Mappings": [
+        { "MeasureValue": "Failed", "NumericValue": 0 },
+        { "MeasureValue": "Inactive", "NumericValue": 10 },
+        { "MeasureValue": "Deactivating", "NumericValue": 20 },
+        { "MeasureValue": "Activating", "NumericValue": 80 },
+        { "MeasureValue": "Reloading", "NumericValue": 90 },
+        { "MeasureValue": "Active", "NumericValue": 100 }
+      ]
+    }
+  },
+  {
+    "Measurement": "Service state",
+    "Description": "Indicates the current state of this service.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "By default, this measure reports the Measure Values listed below to indicate service state. In graphs, service state is represented using the corresponding numeric equivalents only.",
+      "Mappings": [
+        { "MeasureValue": "Failed", "NumericValue": 0 },
+        { "MeasureValue": "Dead", "NumericValue": 1 },
+        { "MeasureValue": "Exited", "NumericValue": 2 },
+        { "MeasureValue": "Stop-sigterm", "NumericValue": 3 },
+        { "MeasureValue": "Tentative", "NumericValue": 4 },
+        { "MeasureValue": "Auto-restart", "NumericValue": 5 },
+        { "MeasureValue": "Mounted", "NumericValue": 6 },
+        { "MeasureValue": "Plugged", "NumericValue": 7 },
+        { "MeasureValue": "Waiting", "NumericValue": 8 },
+        { "MeasureValue": "Running", "NumericValue": 9 }
+      ]
+    }
+  },
+  {
+    "Measurement": "Is restarted?",
+    "Description": "Indicates whether or not this service was restarted.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "By default, this measure reports the Measure Values listed below to indicate whether or not the service was restarted. In graphs, the measure is represented using the corresponding numeric equivalents only (0 or 1).",
+      "Mappings": [
+        { "MeasureValue": "No", "NumericValue": 0 },
+        { "MeasureValue": "Yes", "NumericValue": 1 }
+      ]
+    }
+  }
+]

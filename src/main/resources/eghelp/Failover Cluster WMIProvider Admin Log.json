@@ -1,0 +1,55 @@
+[
+  {
+    "measurement": "Information messages",
+    "description": "This refers to the number of information events generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A change in the value of this measure may indicate infrequent but successful operations performed by one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-WMIProvider/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Review information events in the WMIProvider Admin log to confirm successful WMI queries from management tools like Failover Cluster Manager or PowerShell.[web:348][web:350][web:351]",
+      "If you see a sudden drop in information events, verify that management tools are still actively monitoring the cluster and that the WMI service is running on all nodes.[web:350][web:351][web:353]"
+    ]
+  },
+  {
+    "measurement": "Warnings",
+    "description": "This refers to the number of warnings that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A high value of this measure indicates application problems that may not have an immediate impact, but may cause future problems in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-WMIProvider/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Investigate warning events (such as timeouts or slow responses) in the WMIProvider log, which may indicate WMI repository bloat or high load on the WMI service.[web:329][web:350][web:351]",
+      "Check if specific management applications are querying the cluster too frequently, causing WMI throttling or performance degradation.[web:329][web:350][web:351]",
+      "Verify WMI permissions and namespace security if warnings relate to access denied or partial data retrieval.[web:329][web:350][web:351]"
+    ]
+  },
+  {
+    "measurement": "Error messages",
+    "description": "This refers to the number of application error events that were generated.",
+    "measurementUnit": "Number",
+    "interpretation": "A very low value (zero) indicates that the system is in a healthy state. An increasing trend or high value indicates the existence of problems like loss of functionality or data in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-WMIProvider/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Examine error events indicating WMI provider failures, invalid namespaces, or query errors.[web:329][web:349][web:350][web:353]",
+      "If the ClusWMI provider fails to load or connect, verify the consistency of the WMI repository (winmgmt /verifyrepository) and repair if necessary.[web:329][web:349][web:353]",
+      "Check for 'Invalid Namespace' errors which suggest the cluster WMI provider (Cluswmi.mof) might be missing or unregistered on a node; re-register using mofcomp if needed.[web:329][web:350]"
+    ]
+  },
+  {
+    "measurement": "Critical messages",
+    "description": "This refers to the number of critical error events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A critical event is one that an application or a component cannot automatically recover from. A very low value (zero) indicates that the system is in a healthy state. An increasing trend or high value indicates the existence of fatal/irrepairable problems in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering-WMIProvider/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Treat critical WMI provider events as urgent, as they can prevent Failover Cluster Manager and other tools from connecting to or managing the cluster.[web:350][web:351][web:353]",
+      "Restart the Windows Management Instrumentation service on the affected node and check if the critical error persists.[web:329][web:349][web:351][web:353]",
+      "If the WMI provider is continuously crashing, look for conflicting software or corruption and consider rebuilding the WMI repository as a last resort.[web:329][web:349][web:353]"
+    ]
+  },
+  {
+    "measurement": "Verbose messages",
+    "description": "This refers to the number of verbose events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "Verbose logging provides more details in the log entry, which will enable you to troubleshoot issues better. This measure is applicable only for Windows 2008/Windows Vista/Windows 7 systems. Please check the Application and Services/Microsoft/Windows/FailoverClustering-WMIProvider/Admin Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Enable verbose logging for the WMI provider to trace specific query failures or performance bottlenecks during complex troubleshooting.[web:352][web:354]",
+      "Use the verbose logs to identify the exact WMI query or method call that precedes a failure or crash.[web:352][web:354]"
+    ]
+  }
+]

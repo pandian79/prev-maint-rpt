@@ -1,0 +1,38 @@
+[
+  {
+    "measurement": "Active sessions",
+    "description": "Indicates the number of sessions that are currently active on the eG manager.",
+    "unit": "Number",
+    "interpretation": "This reflects the current interactive load on the eG manager at any given time. Higher values mean more simultaneous users or processes are actively connected, which can increase resource utilization and potentially affect responsiveness if capacity limits are approached.",
+    "troubleshootingSteps": [
+      "Track this value over time to identify normal baseline and peak active-session levels.",
+      "When active sessions are unusually high, correlate with CPU, memory, and database usage to check for emerging performance bottlenecks.",
+      "Review which users or integrations are responsible for large numbers of sessions and optimize their usage patterns if necessary.",
+      "Use this measure for capacity planning to ensure the eG manager has sufficient resources to handle expected peak concurrency."
+    ]
+  },
+  {
+    "measurement": "Failed sessions",
+    "description": "Indicates the number of sessions that failed during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This captures sessions that terminated abnormally (for example, due to errors, timeouts, or connectivity issues) in the current interval. Rising or spiking values can indicate stability problems, configuration issues, or network interruptions affecting user access.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to review each failed session, including user, source host/IP, session start time, and last access time.",
+      "Look for patterns such as repeated failures for the same user, host, or time window that might point to specific configuration or network issues.",
+      "Check application, manager, and system logs for error messages or stack traces corresponding to the failed sessions.",
+      "Address root causes (e.g., authentication issues, timeouts, resource shortages) and monitor subsequent measurements to confirm failures decrease."
+    ]
+  },
+  {
+    "measurement": "Unique users logged in",
+    "description": "Indicates the number of distinct users who are currently logged into the eG manager.",
+    "unit": "Number",
+    "interpretation": "This shows how many different user accounts are simultaneously logged in, providing a view of real-time usage and engagement. It is useful for understanding active user concurrency and verifying that access aligns with licensing and capacity expectations.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify which specific users are currently logged in and verify that all are expected and authorized.",
+      "Correlate this measure with Active sessions to see whether each user tends to maintain multiple concurrent sessions.",
+      "If the number of unique users logged in is higher than anticipated, review access policies and user provisioning practices.",
+      "In periods of high concurrent use, ensure that performance remains acceptable; if not, consider scaling resources or optimizing heavy-use workflows."
+    ]
+  }
+]

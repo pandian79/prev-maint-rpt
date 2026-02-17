@@ -1,0 +1,134 @@
+[
+  {
+    "measurement": "Total throughput",
+    "description": "Indicates the throughput of this SR.",
+    "unit": "MB/Sec",
+    "interpretation": "A high value indicates high throughput and rapid I/O processing by the SR. Comparing this value across SRs helps you identify the SR with the lowest throughput, which may be under‑provisioned or experiencing contention.",
+    "troubleshootingSteps": [
+      "Track Total throughput over time to detect sustained drops that may signal emerging I/O bottlenecks.",
+      "Compare throughput across SRs to find SRs that consistently deliver lower throughput under similar workloads.",
+      "Check backend storage, network bandwidth, and host resource usage for low‑throughput SRs to identify capacity or configuration issues.",
+      "If throughput is unexpectedly high on a particular SR, verify that it is not overloaded and that other SRs are being utilized appropriately."
+    ]
+  },
+  {
+    "measurement": "Read rate",
+    "description": "Indicates the rate at which the host reads data from this SR.",
+    "unit": "MB/Sec",
+    "interpretation": "Ideally, the read rate should be high for workloads that depend on fast data retrieval. A consistent drop indicates a reading bottleneck in the SR; comparing across SRs helps locate the slowest SR for read operations.",
+    "troubleshootingSteps": [
+      "Monitor read rate trends to spot gradual declines that could correlate with growing data volumes or fragmentation.",
+      "Compare read rate across SRs serving similar workloads to identify SRs that respond more slowly to read requests.",
+      "Investigate underlying storage performance (disk latency, cache efficiency) for SRs with poor read rates.",
+      "Review workload patterns; consider redistributing read‑heavy workloads or enabling caching to relieve pressure on slow SRs."
+    ]
+  },
+  {
+    "measurement": "Write rate",
+    "description": "Indicates the rate at which the host writes data to this SR.",
+    "unit": "MB/Sec",
+    "interpretation": "Ideally, the write rate should be high for write‑intensive workloads. A consistent drop suggests a writing bottleneck in the SR. Comparing this metric across SRs highlights those that are slowest in processing write requests.",
+    "troubleshootingSteps": [
+      "Trend write rate over time to identify persistent degradation, especially following configuration or hardware changes.",
+      "Compare write rate across SRs to locate SRs that are significantly slower at accepting write traffic.",
+      "Check storage back‑end characteristics (write cache settings, RAID configuration, SSD/HDD mix) for write‑limited SRs.",
+      "If write bottlenecks appear, consider rebalancing write‑heavy workloads or upgrading storage tiers for affected SRs."
+    ]
+  },
+  {
+    "measurement": "Total IOPS",
+    "description": "Indicates the rate at which I/O operations are performed by this SR.",
+    "unit": "Requests/Sec",
+    "interpretation": "This is a key indicator of the I/O processing capacity of the SR; higher values are generally desirable. A consistent drop in Total IOPS may indicate a processing bottleneck. Comparing Read operations and Write operations helps determine whether the limitation is on reads, writes, or both.",
+    "troubleshootingSteps": [
+      "Monitor Total IOPS against expected workload baselines to detect capacity shortfalls.",
+      "When IOPS decline, compare read and write operation rates to see which type of I/O is most affected.",
+      "Check queue depth, latency, and backend storage health for SRs with low IOPS.",
+      "Scale out or move high‑IOPS workloads to SRs or storage tiers that can sustain the required operations per second."
+    ]
+  },
+  {
+    "measurement": "Read operations",
+    "description": "Indicates the rate at which this SR services read requests.",
+    "unit": "Requests/Sec",
+    "interpretation": "Ideally, this value should be high for read‑intensive workloads. A steady drop indicates a slowdown in processing read requests. Comparing across SRs reveals which SR is slowest at responding to read requests.",
+    "troubleshootingSteps": [
+      "Compare read operation rates across SRs to detect those that process significantly fewer read I/Os under similar loads.",
+      "Investigate latency and queue size on SRs with low read operation rates to confirm read‑side bottlenecks.",
+      "Optimize storage configuration (e.g., read cache, tiering) for read‑heavy SRs experiencing constraints.",
+      "Consider redistributing read‑heavy applications or enabling additional caching layers to reduce pressure on slow SRs."
+    ]
+  },
+  {
+    "measurement": "Write operations",
+    "description": "Indicates the rate at which this SR services write requests.",
+    "unit": "Requests/Sec",
+    "interpretation": "Ideally, this value should be high for write‑intensive workloads. A steady drop indicates a slowdown in processing write requests. Comparing this measure across SRs shows which SR is slowest in responding to write requests.",
+    "troubleshootingSteps": [
+      "Compare write operation rates across SRs to identify targets that handle fewer writes than expected.",
+      "Check write latency, cache settings, and backend storage performance where write operations are constrained.",
+      "Investigate whether write‑heavy workloads are concentrated on a small subset of SRs and consider rebalancing.",
+      "Enable or tune write‑back caching and ensure protection mechanisms (e.g., battery‑backed cache) are functioning correctly."
+    ]
+  },
+  {
+    "measurement": "Time spent waiting for I/O",
+    "description": "Indicates the percentage of time the host’s CPU was waiting for this SR to complete I/O processing.",
+    "unit": "Percent",
+    "interpretation": "A high value means the host CPU frequently waits for this SR to finish I/O, implying that the SR is taking too long to service requests. This is a strong signal of an I/O processing bottleneck associated with that SR.",
+    "troubleshootingSteps": [
+      "Correlate high wait time with latency, IOPS, and queue size for this SR to confirm an I/O bottleneck.",
+      "Examine host CPU utilization; high I/O wait with low compute usage suggests storage, not CPU, is the limiting factor.",
+      "Check underlying storage hardware, network paths (for remote SRs), and configuration for signs of overload or faults.",
+      "Consider upgrading storage performance or moving critical workloads away from SRs that consistently cause high I/O wait."
+    ]
+  },
+  {
+    "measurement": "Time spent waiting for IO",
+    "description": "Indicates the percentage of time the host’s CPU was waiting for this SR to complete I/O processing.",
+    "unit": "Percent",
+    "interpretation": "A high value means the host CPU frequently waits for this SR to finish I/O, implying that the SR is taking too long to service requests. This is a strong signal of an I/O processing bottleneck associated with that SR.",
+    "troubleshootingSteps": [
+      "Correlate high wait time with latency, IOPS, and queue size for this SR to confirm an I/O bottleneck.",
+      "Examine host CPU utilization; high I/O wait with low compute usage suggests storage, not CPU, is the limiting factor.",
+      "Check underlying storage hardware, network paths (for remote SRs), and configuration for signs of overload or faults.",
+      "Consider upgrading storage performance or moving critical workloads away from SRs that consistently cause high I/O wait."
+    ]
+  },
+  {
+    "measurement": "Average latency",
+    "description": "Indicates the average time taken by this SR to process I/O requests.",
+    "unit": "MSecs",
+    "interpretation": "A high average latency means the SR is slow to process I/O, which can degrade application performance. Comparing this metric across SRs helps identify the most latent SRs that may require attention or reconfiguration.",
+    "troubleshootingSteps": [
+      "Set latency thresholds appropriate for your workload and alert when average latency exceeds them for sustained periods.",
+      "Compare average latency across SRs to flag those with consistently higher delays.",
+      "Analyze whether high latency correlates more with reads or writes, then focus tuning on the dominant I/O type.",
+      "Investigate storage tier, contention, or oversubscription on SRs with chronic high latency and rebalance workloads if necessary."
+    ]
+  },
+  {
+    "measurement": "Average queue size",
+    "description": "Indicates the average number of I/O requests to this SR that are in queue for processing.",
+    "unit": "Number",
+    "interpretation": "A consistently growing average queue size indicates that the SR cannot process requests quickly enough to clear its queue. The SR with the highest queued requests is likely experiencing a serious I/O processing bottleneck.",
+    "troubleshootingSteps": [
+      "Trend average queue size over time to detect growing backlogs on specific SRs.",
+      "Correlate large queue sizes with high latency and I/O wait time to confirm performance saturation.",
+      "Reduce load on SRs with excessive queues by redistributing workloads or increasing their underlying storage capacity.",
+      "Adjust queue depth and I/O scheduler settings if applicable to better handle bursts without prolonged queuing."
+    ]
+  },
+  {
+    "measurement": "Current requests in flight",
+    "description": "Indicates the number of I/O requests to this SR that are currently being processed.",
+    "unit": "Number",
+    "interpretation": "This shows how many concurrent I/O operations are active on the SR at a given time. Persistently high values may indicate sustained heavy load, while extremely low values under expected workload may point to under‑utilization or upstream throttling.",
+    "troubleshootingSteps": [
+      "Monitor this metric together with IOPS and latency to see how concurrency affects performance on the SR.",
+      "If current requests in flight are high and latency is also high, consider scaling storage performance or reducing per‑SR load.",
+      "If the value remains low despite high application demand, check for limiting factors such as host queue depth or controller constraints.",
+      "Tune concurrency settings where supported to achieve a balance between high throughput and acceptable latency for the SR."
+    ]
+  }
+]

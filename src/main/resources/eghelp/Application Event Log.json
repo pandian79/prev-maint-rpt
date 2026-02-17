@@ -1,0 +1,32 @@
+[
+  {
+    "Measurement": "Application errors",
+    "Description": "This refers to the number of application error events that were generated.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A very low value (0) indicates that the system is in a healthy state or COMPLIANT and all applications are running smoothly without any potential problems. An increasing trend or high value indicates the existence of problems like loss of functionality or data in one or more applications. Please check the Application Logs in the Event Log Viewer for more details."
+  },
+  {
+    "Measurement": "Application information count",
+    "Description": "This refers to the number of application information events generated when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A change in the value of this measure may indicate infrequent but successful operations performed by one or more applications. Please check the Application Logs in the Event Log Viewer for more details."
+  },
+  {
+    "Measurement": "Application warnings",
+    "Description": "This refers to the number of warnings that were generated when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value of this measure indicates application problems that may not have an immediate impact, but may cause future problems in one or more applications. Please check the Application Logs in the Event Log Viewer for more details. A very low value (0) indicates that the system is in a healthy state or COMPLIANT"
+  },
+  {
+    "Measurement": "Application critical errors",
+    "Description": "Indicates the number of critical events that were generated when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A critical event is one that an application or a component cannot automatically recover from. A very low value (0) indicates that the system is in a healthy state or COMPLIANT and all applications are running smoothly without any potential problems. An increasing trend or high value indicates the existence of fatal/irrepairable problems in one or more applications. The detailed diagnosis of this measure describes all the critical application events that were generated during the last measurement period. Please check the Application Logs in the Event Log Viewer for more details."
+  },
+  {
+    "Measurement": "Application verbose",
+    "Description": "Indicates the number of verbose events that were generated when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Verbose logging provides more details in the log entry, which will enable you to troubleshoot issues better. The detailed diagnosis of this measure describes all the verbose events that were generated during the last measurement period. Please check the Application Logs in the Event Log Viewer for more details."
+  }
+]

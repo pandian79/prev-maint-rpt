@@ -1,0 +1,32 @@
+[
+  {
+    "Measurement": "Recently installed programs",
+    "Description": "Indicates the number of programs that were recently installed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure provide details of the Service name, and identified time."
+  },
+  {
+    "Measurement": "Recently installed Windows services",
+    "Description": "Indicates the number of Windows services that were recently installed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure provide details of the Service name, and identified time."
+  },
+  {
+    "Measurement": "Configured disabled services found to be running",
+    "Description": "Indicates the number of disabled services, configured in Services to be Disabled parameter, that are running.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure provide details of the Service name, and identified time."
+  },
+  {
+    "Measurement": "Windows services with vulnerable permissions",
+    "Description": "Indicates the number of services with weak or vulnerable permissions.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure provide details of the Service name, identified time, image path with arguments, and start mode."
+  },
+  {
+    "Measurement": "Unquoted Windows services",
+    "Description": "Indicates the number of unquoted windows services.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "When a service is created whose executable path contains spaces and isn't enclosed within quotes, leads to a vulnerability known as Unquoted Service Path which allows a user to gain SYSTEM privileges. The detailed diagnosis of this measure provide details of the Service name, identified time, image path with arguments, and start mode."
+  }
+]

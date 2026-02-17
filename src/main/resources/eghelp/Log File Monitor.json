@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Recent errors",
+    "description": "Indicates the number of errors that were added to the alert log when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "The value of this measure is a clear indicator of the number of new alerts that have come into the alert log of the monitored database.",
+    "troubleshootingSteps": [
+      "Review the database alert/error log around the time of the latest run to identify the exact error codes and messages.",
+      "Group recent errors by error code to see if a single recurring issue (e.g., space, locks, connectivity) is dominating.",
+      "Check recent configuration or deployment changes (schema changes, parameter updates, version upgrades) that coincide with the time new errors started.",
+      "Verify database resource health (disk space, I/O latency, CPU, memory, connection pool utilization) to rule out infrastructure issues.",
+      "Create alerts or thresholds on this metric so that sudden spikes in new errors trigger immediate investigation."
+    ]
+  }
+]

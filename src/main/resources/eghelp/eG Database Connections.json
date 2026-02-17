@@ -1,0 +1,86 @@
+[
+  {
+    "Measurement": "Initial connections",
+    "Description": "Indicates the number of initial connections allocated to the pool.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This parameter, along with Maximum connections, can be configured from the DATABASE SETTINGS page (Configure -> Data Management -> Database Settings) in the eG administrative interface. As the number of monitored components or users increases, you should consider increasing the number of connections in the pool.",
+    "troubleshootingSteps": [
+      "Compare the Initial connections value with typical connection usage (Used connections and Total connections) during peak load.",
+      "If the pool frequently exhausts free connections shortly after startup, increase the Initial connections so enough connections are preallocated.",
+      "Review recent changes in the number of monitored components or concurrent users and adjust Initial connections accordingly.",
+      "After tuning, monitor Used connections and Free connections over a few cycles to verify that the pool warms up quickly without causing connection starvation."
+    ]
+  },
+  {
+    "Measurement": "Maximum connections",
+    "Description": "Indicates the maximum number of database connections that the eG manager can use from the pool.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This parameter, together with Initial connections, is configurable via the DATABASE SETTINGS page in the eG administrative interface. As the monitoring scope or user load grows, you may need to increase the maximum connections to prevent connection shortages.",
+    "troubleshootingSteps": [
+      "Monitor Used connections; if it regularly approaches Maximum connections and Free connections is low, increase Maximum connections within database capacity limits.",
+      "Check database server resource limits (max sessions, CPU, memory) before raising Maximum connections to avoid overloading the DB.",
+      "Correlate spikes in Used connections with load patterns (more components, more users, batch jobs) and size Maximum connections for those peaks.",
+      "After changing Maximum connections, observe connection timeout and Connections waiting to ensure you are not creating excessive contention."
+    ]
+  },
+  {
+    "Measurement": "Used connections",
+    "Description": "Indicates the number of connections currently used by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "If this measure grows dangerously close to Maximum connections, the pool is rapidly running out of connections. Use detailed diagnosis to see which classes are utilizing database connections and how many connections each uses, so over-utilizing classes and root causes can be identified.",
+    "troubleshootingSteps": [
+      "If Used connections frequently approaches Maximum connections, review application code or modules that hold connections for long periods.",
+      "Use detailed diagnosis to identify classes or components that overuse connections and ensure they properly close connections in all code paths.",
+      "Consider increasing Maximum connections and/or Initial connections if growth in monitored components or users justifies a larger pool.",
+      "Check for slow queries or database contention that keep connections busy longer than expected, and tune queries or indexes accordingly."
+    ]
+  },
+  {
+    "Measurement": "Free connections",
+    "Description": "Indicates the number of free connections currently available in the pool.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A low value indicates that the connection pool does not have enough free connections, possibly due to an increase in monitored components or users. In that case, fine-tune Initial Connections and Maximum Connections via the eG administrative interface so the pool is sized to handle the workload.",
+    "troubleshootingSteps": [
+      "Monitor Free connections over time; if it often drops near zero, the pool is undersized for current load.",
+      "Increase Initial connections and/or Maximum connections to maintain a comfortable buffer of free connections during peak usage.",
+      "Investigate long-running operations or connection leaks that may be consuming connections and not returning them to the pool.",
+      "Correlate low Free connections with spikes in connection timeout or application slowdowns to validate the impact of pool exhaustion."
+    ]
+  },
+  {
+    "Measurement": "Connection timeout",
+    "Description": "Indicates the time taken for connections to time out.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "By observing this measure over time, you can determine the maximum ideal time for which a connection should remain alive before timing out.",
+    "troubleshootingSteps": [
+      "Trend Connection timeout together with Used connections and Connections waiting to see if timeouts are too long or too short.",
+      "If connections are timing out while still in use, increase the timeout to match realistic query and transaction durations.",
+      "If many idle connections linger unnecessarily, reduce the timeout so idle connections are returned to the pool sooner.",
+      "Align the connection timeout with database and application-level timeouts to avoid inconsistent behavior."
+    ]
+  },
+  {
+    "Measurement": "Total connections",
+    "Description": "Indicates the total number of connections in the pool.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This reflects the current size of the connection pool (used plus free connections). It is influenced by Initial connections and Maximum connections settings and the runtime behavior of the pool.",
+    "troubleshootingSteps": [
+      "Compare Total connections with Maximum connections to see how close the pool is to its configured limit under peak load.",
+      "Ensure that the ratio of Used connections to Total connections leaves sufficient headroom for sudden spikes in demand.",
+      "If Total connections frequently reaches Maximum connections, consider increasing pool size or optimizing connection usage.",
+      "Use this measure together with Free connections and Connections waiting to validate that pool sizing changes are effective."
+    ]
+  },
+  {
+    "Measurement": "Connections waiting",
+    "Description": "Indicates the number of connections that are currently waiting to be closed on the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally this value should be low. A very high value indicates that many connections are open and waiting to be closed but cannot close due to issues. This unnecessarily consumes pool connections, can cause connection shortages, and in extreme cases may even lead to manager restarts.",
+    "troubleshootingSteps": [
+      "If Connections waiting is high, inspect application code to ensure connections are always closed in finally blocks or equivalent constructs.",
+      "Check for long-running transactions or queries that prevent connections from being closed and optimize or break them into smaller units.",
+      "Review database locks, blocking sessions, or resource contention that may delay completion of operations and closing of connections.",
+      "Monitor this measure along with Used connections and Free connections; if waiting connections grow over time, take corrective action before the manager becomes unstable."
+    ]
+  }
+]

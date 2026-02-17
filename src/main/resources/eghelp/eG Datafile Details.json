@@ -1,0 +1,98 @@
+[
+  {
+    "Measurement": "Read rate",
+    "Description": "Indicates the rate of reads from this datafile.",
+    "MeasurementUnit": "Reads/Sec",
+    "Interpretation": "This measure shows how many read operations per second are being performed on the datafile and helps assess read workload intensity.",
+    "troubleshootingSteps": [
+      "Monitor Read rate alongside I/O stall reads and overall disk latency to distinguish between high but healthy read activity and problematic I/O.",
+      "If Read rate is high and I/O stall reads is also high, investigate disk subsystem performance (queue length, latency, throughput).",
+      "Identify which queries or workloads are generating heavy reads against this datafile and consider tuning queries or adding indexes.",
+      "If necessary, redistribute data across additional datafiles or disks to balance read load."
+    ]
+  },
+  {
+    "Measurement": "Data read rate",
+    "Description": "Indicates the rate at which data was read from this datafile.",
+    "MeasurementUnit": "KB/Sec",
+    "Interpretation": "This measure shows the data throughput (in KB per second) being read from the datafile, indicating how much data is being pulled from storage over time.",
+    "troubleshootingSteps": [
+      "Compare Data read rate with Read rate to understand average read size (KB per read) and detect inefficient access patterns (many small reads vs fewer large reads).",
+      "If Data read rate is high and I/O stalls increase, verify that the underlying storage can sustain the required throughput.",
+      "Consider caching improvements, query tuning, or moving hot objects to faster storage tiers if sustained high read throughput causes bottlenecks.",
+      "Use workload analysis tools to identify the main consumers of read bandwidth on this datafile."
+    ]
+  },
+  {
+    "Measurement": "I/O stall reads",
+    "Description": "Indicates the total time taken to read from this datafile.",
+    "MeasurementUnit": "Millisecs",
+    "Interpretation": "A high value indicates a bottleneck while reading from the datafile. By comparing this measure across datafiles, you can identify which datafile experiences the longest read times.",
+    "troubleshootingSteps": [
+      "Identify datafiles with significantly higher I/O stall reads than others and focus investigation on the underlying disks or LUNs.",
+      "Check disk performance counters (latency, queue length, throughput) and storage system health for the affected datafile.",
+      "Review query plans to identify large scans, missing indexes, or inefficient access patterns that drive heavy read I/O on this file.",
+      "Consider moving heavily accessed objects to faster storage, adding more spindles/IOPS, or partitioning data to spread load."
+    ]
+  },
+  {
+    "Measurement": "Write rate",
+    "Description": "Indicates the rate at which writes occurred on this datafile.",
+    "MeasurementUnit": "Writes/Sec",
+    "Interpretation": "This measure shows how many write operations per second are performed on the datafile and reflects write workload intensity.",
+    "troubleshootingSteps": [
+      "Track Write rate alongside I/O stall writes and disk latency to see if high write activity correlates with performance issues.",
+      "If Write rate is high, check for workload patterns such as bulk loads, heavy logging, or frequent updates that target this datafile.",
+      "Optimize write-heavy queries and maintenance jobs to reduce unnecessary write activity.",
+      "If needed, distribute write-intensive objects across multiple datafiles or storage volumes to balance write load."
+    ]
+  },
+  {
+    "Measurement": "Data write rate",
+    "Description": "Indicates the rate at which data was written to this datafile.",
+    "MeasurementUnit": "KB/Sec",
+    "Interpretation": "This measure captures the data throughput (in KB per second) being written to the datafile, indicating the volume of write traffic handled by the storage.",
+    "troubleshootingSteps": [
+      "Compare Data write rate with Write rate to determine average write size and detect patterns like many small writes versus fewer large writes.",
+      "If Data write rate is high and I/O stall writes increases, verify that storage throughput and write cache are adequate.",
+      "Investigate checkpoint, log, or batch processes that may be generating heavy sustained writes to this datafile.",
+      "Consider placing this datafile on faster disks or separating write-heavy workloads from read-heavy ones."
+    ]
+  },
+  {
+    "Measurement": "I/O stall writes",
+    "Description": "Indicates the total time taken to write to this datafile.",
+    "MeasurementUnit": "Millisecs",
+    "Interpretation": "A high value indicates a bottleneck while writing to the datafile. Comparing this measure across datafiles helps identify where write operations take too long to complete.",
+    "troubleshootingSteps": [
+      "Identify datafiles with the highest I/O stall writes and examine the underlying disk or storage configuration for those files.",
+      "Check for write cache issues, saturated disks, or misconfigured RAID/storage that could be slowing writes.",
+      "Analyze workloads that perform frequent or large writes and optimize them (batching writes, reducing unnecessary logging, tuning indexes).",
+      "Consider relocating write-intensive objects to faster storage or increasing the number of disks/IOPS to handle the write load."
+    ]
+  },
+  {
+    "Measurement": "I/O stalls",
+    "Description": "Indicates the total time taken for I/O to complete on this datafile.",
+    "MeasurementUnit": "Millisecs",
+    "Interpretation": "A high value indicates an I/O bottleneck on this datafile, affecting both read and write operations.",
+    "troubleshootingSteps": [
+      "Use this measure in combination with I/O stall reads and I/O stall writes to determine whether the bottleneck is read-heavy, write-heavy, or mixed.",
+      "Check storage subsystem metrics (latency, queue depth, throughput) to confirm and quantify the I/O bottleneck.",
+      "Balance workloads by spreading hot tables or indexes across additional datafiles or storage volumes.",
+      "Work with the storage and DBA teams to adjust provisioning (more IOPS, better RAID level, SSD tiers) and tune database access patterns."
+    ]
+  },
+  {
+    "Measurement": "Size on disk",
+    "Description": "Indicates the total size on disk of each datafile.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "This measure is used to determine the growth of the datafile. A lower value is generally preferred. Very large sizes or consistent growth can adversely impact I/O operations. Maintaining multiple smaller datafiles can improve I/O efficiency and speed up backup/restore operations.",
+    "troubleshootingSteps": [
+      "Trend Size on disk over time to detect rapid growth and correlate it with workload, retention settings, and application changes.",
+      "If a datafile becomes very large, consider splitting data into multiple datafiles or filegroups to improve manageability and I/O distribution.",
+      "Review data retention and archiving policies to ensure old or unused data is removed or moved to cheaper storage.",
+      "Evaluate backup/restore times and adjust datafile layout to keep individual files at sizes that are practical for maintenance operations."
+    ]
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "measurement": "Running tasks",
+    "description": "Indicates the number of tasks that were running during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Use Task Scheduler or PowerShell (Get-ScheduledTask | Where State -eq 'Running') to verify which tasks are currently active.[web:402][web:407]",
+      "If a task remains in the 'Running' state indefinitely, investigate the process in Task Manager; it may be hung or waiting for user input.[web:402][web:415]",
+      "Check task settings like 'Stop the task if it runs longer than X' to prevent zombie tasks from accumulating.[web:406][web:410]"
+    ]
+  },
+  {
+    "measurement": "Succeeded tasks",
+    "description": "Indicates the number of tasks that were executed successfully during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Use the detailed diagnosis of this measure to know which tasks have succeeded.",
+    "troubleshootingSteps": [
+      "Review the History tab in Task Scheduler or the Operational event log (Event ID 102/201) to confirm successful completion codes (usually 0x0).[web:402][web:408][web:413]",
+      "If a task reports success but didn't perform its action (e.g., file not copied), check the script/application logs for internal logic errors that Task Scheduler doesn't catch.[web:402][web:408]"
+    ]
+  },
+  {
+    "measurement": "Failed tasks",
+    "description": "Indicates the number of tasks that failed during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "A task is said to have failed when the most recent attempt to start the task did not work. Use detailed diagnosis to view failed tasks.",
+    "troubleshootingSteps": [
+      "Check the 'Last Run Result' column in Task Scheduler for non-zero error codes (e.g., 0x1, 0xFF, 0x80070005 for Access Denied).[web:402][web:408][web:413]",
+      "Verify that the 'Run whether user is logged on or not' setting and 'Run with highest privileges' are correctly configured for the account used.[web:406][web:408][web:414]",
+      "Inspect the 'Conditions' tab to see if power (AC/battery) or network conditions prevented the task from starting.[web:406][web:408]"
+    ]
+  },
+  {
+    "measurement": "Disabled tasks",
+    "description": "Indicates the number of tasks that were disabled during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "If one or more attempts to run a task was missed, then such a task is counted as a disabled task. Tasks explicitly disabled by a user are also included.",
+    "troubleshootingSteps": [
+      "Review the list of disabled tasks to ensure critical maintenance or backup jobs haven't been turned off accidentally.[web:409][web:412][web:413]",
+      "Re-enable tasks that were disabled due to repeated failures or after maintenance windows, and test them manually to ensure they work.[web:409][web:412]",
+      "Check for tasks that disable themselves after a scheduled duration or trigger expiration and adjust settings if they need to persist.[web:406][web:412]"
+    ]
+  },
+  {
+    "measurement": "Unknown tasks",
+    "description": "Indicates the number of tasks that could not be identified during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Use detailed diagnosis to determine the unknown tasks.",
+    "troubleshootingSteps": [
+      "Investigate tasks with corrupted metadata or missing files that Task Scheduler cannot fully read or classify.[web:401][web:413]",
+      "Use command-line tools (schtasks /query) or PowerShell to list tasks and identify any that return errors or invalid states.[web:401][web:407][web:413]"
+    ]
+  },
+  {
+    "measurement": "Queued tasks",
+    "description": "Indicates the number of tasks that were in queue during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Check if tasks are queued because an instance is already running and the policy is set to 'Queue a new instance'.[web:407][web:410][web:415]",
+      "If the queue persists, verify that the Task Scheduler service is healthy and that system resources (CPU/RAM) are available to start new instances.[web:401][web:404][web:407]"
+    ]
+  }
+]

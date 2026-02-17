@@ -1,0 +1,62 @@
+[
+  {
+    "Measurement": "Non-default users",
+    "Description": "Indicates the number of users in the eG monitoring deployment that were created by the customer (i.e., users that do not ship with the product by default).",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A higher value indicates greater adoption of the eG platform by customer-created users. Very low numbers in a mature deployment may suggest that only default or admin users are using the system, which can be a sign of limited adoption.",
+    "troubleshootingSteps": [
+      "Periodically review the list of non-default users and confirm that all expected operations and support staff have eG accounts.",
+      "If the number of non-default users is low relative to the organization size, plan an onboarding program to create accounts for additional stakeholders who should be using eG dashboards and reports.",
+      "Check that role-based access control and user roles are configured correctly so new non-default users have appropriate permissions.",
+      "Audit non-default accounts for stale or unused users and remove or disable them according to your security and compliance policies."
+    ]
+  },
+  {
+    "Measurement": "Users who have not logged in during last 30 days",
+    "Description": "Indicates the number of users that exist in the eG monitoring deployment but have not logged in during the last 30 days.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure highlights dormant user accounts and can indicate users who are not actively using the eG solution. A high value suggests poor adoption or many stale accounts that may need review or cleanup.",
+    "troubleshootingSteps": [
+      "Use detailed user reports to list the specific users who have not logged in during the last 30 days.",
+      "Engage with those users or their managers to determine whether they still need access and why they are not using the solution.",
+      "Remove or disable accounts that are no longer required, in line with your security policies.",
+      "If many relevant users are inactive, provide training or communication to increase awareness and encourage use of the eG console."
+    ]
+  },
+  {
+    "Measurement": "Logins in last 24 hrs",
+    "Description": "Indicates the total number of user logins to the eG management console in the last 24 hours.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows recent usage intensity of the eG solution. In an actively monitored environment, you would typically expect regular daily logins from operations and support teams. Very low values may indicate limited or declining use of the system.",
+    "troubleshootingSteps": [
+      "Establish a baseline for typical daily login counts and compare current values against that baseline.",
+      "If logins are significantly lower than expected, verify that users can access the console (network, DNS, SSO, and authentication health).",
+      "Communicate with operations and support teams to understand whether workflows have changed or if alternative tools are being used instead.",
+      "Encourage use of dashboards, alerts, and reports by integrating eG console usage into daily operational routines and handovers."
+    ]
+  },
+  {
+    "Measurement": "Web logins",
+    "Description": "Indicates the number of logins performed via the web-based eG management console.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure reflects how frequently users access eG through the web UI. It is useful for understanding interactive console usage and adoption of the graphical interface for monitoring and reporting.",
+    "troubleshootingSteps": [
+      "Monitor Web logins to ensure that operations staff are regularly accessing dashboards and alerts via the web console.",
+      "If Web logins are low but overall logins are expected to be higher, verify that users are not facing issues with browsers, SSO configuration, or web access.",
+      "Provide user training on key web console features such as dashboards, reports, and drill-downs to increase the value of web-based monitoring.",
+      "Correlate Web login patterns with incident and change calendars to verify that the console is being used during critical events and maintenance windows."
+    ]
+  },
+  {
+    "Measurement": "CLI logins",
+    "Description": "Indicates the number of logins performed via command-line or API interfaces to the eG environment.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows how often automation, scripts, or advanced users access eG through CLI or programmatic interfaces. Higher values may indicate strong automation and integration use, while very low values suggest most access is through the web UI only.",
+    "troubleshootingSteps": [
+      "Review CLI login activity to identify automation scripts, integration jobs, or advanced users relying on CLI access.",
+      "If expected automation is not occurring and CLI logins are lower than anticipated, check credentials, tokens, and network access used by scripts.",
+      "Ensure that CLI or API-based access follows security best practices, including least-privilege accounts and credential rotation.",
+      "If you want to increase automation, document common operational tasks that can be scripted via CLI and promote these patterns to the operations team."
+    ]
+  }
+]

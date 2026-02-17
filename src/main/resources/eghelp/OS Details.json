@@ -1,0 +1,82 @@
+[
+  {
+    "measurement": "Processes count",
+    "description": "The number of processes running on the system",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Use Task Manager, Resource Monitor, or Process Explorer to sort by process count and identify services or applications spawning excessive processes (for example, many worker or child processes). [web:159][web:166][web:172]",
+      "If process count is abnormally high, review and tune offending applications (job schedulers, browsers, background agents), disable unneeded startup items, and consolidate or stop redundant services. [web:159][web:166][web:172][web:169]"
+    ]
+  },
+  {
+    "measurement": "Threads count",
+    "description": "The number of threads in the system",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Correlate high thread counts with Context switches/sec and System Calls/sec to detect excessive thread contention or oversubscription. [web:159][web:161][web:163][web:166]",
+      "Use Process Explorer or similar tools to inspect per-process thread counts and stack traces; refactor or tune applications that create many short-lived threads, switching to thread pools or async I/O where possible. [web:161][web:162][web:163][web:166]"
+    ]
+  },
+  {
+    "measurement": "Registry quota in use",
+    "description": "The percentage of registry quota currently in use by the system",
+    "measurementUnit": "Percent",
+    "interpretation": "If this measure begins to reach 100%, increase the total registry size configured in the system settings.",
+    "troubleshootingSteps": [
+      "Identify applications or services that store large amounts of data in the registry (for example, extensive logging or configuration blobs) and move bulky data to files or databases instead. [web:159][web:167][web:170]",
+      "If usage remains high, increase the registry size limit where applicable and clean up obsolete keys (uninstalled software remnants, stale profiles), following vendor guidance and backing up before changes. [web:159][web:167][web:170]"
+    ]
+  },
+  {
+    "measurement": "Context switches",
+    "description": "This value is the combined rate at which all processors on the computer are switched from one thread to another.",
+    "measurementUnit": "Switches/Sec",
+    "interpretation": "Context switches occur when a running thread yields, is preempted by a higher-priority thread, or transitions between user and kernel mode. Unusually high rates imply excessive contention for CPU resources.",
+    "troubleshootingSteps": [
+      "Use Performance Monitor counters (System\\Context Switches/sec and Thread\\Context Switches/sec) and tools like Process Explorer to locate processes and threads with very high and rapidly increasing context switch counts. [web:161][web:160][web:163][web:166]",
+      "Reduce context switching by minimizing unnecessary threads, using more coarse-grained locking, batching small operations, and tuning applications that spin or poll aggressively. Hardware upgrades (more cores, faster CPUs) may be required if contention remains high under legitimate load. [web:161][web:163][web:166][web:173]"
+    ]
+  },
+  {
+    "measurement": "System calls rate",
+    "description": "This value is the combined rate of calls to operating system service routines by all processes running on the computer.",
+    "measurementUnit": "Calls/Sec",
+    "interpretation": "OS calls perform scheduling, synchronization, device access, memory management, and namespace management. Excessively high call rates can impact performance; processes issuing many calls may need optimization.",
+    "troubleshootingSteps": [
+      "Monitor System Calls/sec together with Context Switches/sec and thread counts; values significantly above normal baselines can indicate chatty or inefficient applications. [web:163][web:166][web:172]",
+      "Profile high-activity processes to reduce unnecessary kernel transitions (for example, batch I/O, use buffered operations, avoid tight loops of tiny syscalls) and consider redesigning hotspots to do more work per call. [web:163][web:166][web:172][web:173]"
+    ]
+  },
+  {
+    "measurement": "Pin read hits",
+    "description": "The percentage of pin read requests that hit the file system cache, i.e., did not require a disk read in order to provide access to the page in the file system cache",
+    "measurementUnit": "Percent",
+    "interpretation": "Pinned pages keep a stable physical address in the cache. This method is used by LAN Redirector, LAN Server for small transfers, and disk file systems. For high performance, pin read hits should be close to 100%.",
+    "troubleshootingSteps": [
+      "Investigate low pin read hit percentages in conjunction with high disk read activity; low hits often indicate cache thrashing or insufficient memory for the file cache. [web:154][web:164][web:167][web:170]",
+      "Improve hit rates by adding RAM, tuning cache behavior, and optimizing application access patterns to increase reuse of recently pinned pages instead of repeatedly touching cold data. [web:144][web:164][web:167][web:170]"
+    ]
+  },
+  {
+    "measurement": "Pin read rate",
+    "description": "The frequency of reading data into the file system cache preparatory to writing the data back to disk",
+    "measurementUnit": "Reads/Sec",
+    "interpretation": "Pages read this way are pinned in memory; their physical address in the file system cache will not change while pinned.",
+    "troubleshootingSteps": [
+      "Monitor pin read rate with disk throughput and cache metrics; very high rates with heavy disk I/O may indicate workloads that aggressively pin data and could benefit from batching or write-back tuning. [web:154][web:164][web:167][web:170]",
+      "If pin read rates are unexpectedly low for workloads that should benefit (for example, LAN/server scenarios), verify that cache settings and drivers are not forcing direct or uncached I/O paths. [web:144][web:148][web:154][web:167]"
+    ]
+  },
+  {
+    "measurement": "Interrupt time",
+    "description": "Indicates the time spent by the processor for receiving and servicing the hardware interrupts during the last polling interval.",
+    "measurementUnit": "Percent",
+    "interpretation": "This indirectly reflects activity from devices that generate interrupts such as system clocks, input devices, network and disk controllers, and other peripherals. Very high values can indicate that a disk or network adapter needs upgrading or replacing.",
+    "troubleshootingSteps": [
+      "When interrupt time or 'System Interrupts' CPU usage is high, check device health and activity (disk, NIC, USB, audio, etc.), and update or roll back problematic drivers. [web:165][web:168][web:171]",
+      "Temporarily disable or unplug nonessential peripherals to isolate the offending device; if a particular controller consistently drives high interrupt CPU time even with current drivers, consider replacing or upgrading the hardware. [web:165][web:168][web:171]"
+    ]
+  }
+]

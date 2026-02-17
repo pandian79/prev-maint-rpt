@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Cluster node status",
+    "description": "Indicates the current state of this node.",
+    "measurementUnit": null,
+    "interpretation": "Values: Up (100), Down (70), Paused (50), Joining (30), Unknown (10).",
+    "troubleshootingSteps": [
+      "If status is 'Down', investigate Event ID 1135 in the System log to see if the node was removed due to missed heartbeats (network issue) or if the Cluster Service crashed.[web:332][web:464][web:471]",
+      "Ensure the node can communicate with other nodes on UDP/TCP port 3343 and that no firewall rules or antivirus software are blocking cluster traffic.[web:464][web:466][web:470]",
+      "If status is 'Paused', the node was likely paused for maintenance; right-click the node in Failover Cluster Manager and select 'Resume', or use `Resume-ClusterNode` in PowerShell.[web:462]",
+      "If status is 'Joining' or stuck in that state, check for Quorum issues (e.g., witness inaccessible) or restart the Cluster Service on that node (`Stop-Service ClusSvc`, then `Start-Service ClusSvc`).[web:465][web:467][web:470]",
+      "If a node is in 'Quarantine' (a special state often reported as Down or Paused in older tools), use `Start-ClusterNode -ClearQuarantine` to force it back online after resolving the underlying stability issue.[web:469]"
+    ]
+  }
+]

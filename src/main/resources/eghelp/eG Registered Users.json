@@ -1,0 +1,50 @@
+[
+  {
+    "measurement": "Total users",
+    "description": "Indicates the total number of users who are currently registered with the eG Enterprise system.",
+    "unit": "Number",
+    "interpretation": "This is the overall size of the user base known to the eG Enterprise system at the current time. It is useful for capacity planning, license tracking, and understanding the scale of adoption across the organization."
+  },
+  {
+    "measurement": "New users",
+    "description": "Indicates the number of users who registered with the eG Enterprise system during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This measures recent user growth. A higher value indicates active onboarding of new users during the current interval. The detailed diagnosis can be used to see exactly which user accounts were created so that administrators can verify and audit new registrations."
+  },
+  {
+    "measurement": "Expired users",
+    "description": "Indicates the number of user subscriptions that have expired.",
+    "unit": "Number",
+    "interpretation": "This shows how many user accounts are no longer valid because their subscriptions have lapsed. A rising count may indicate that renewals are not being processed in a timely manner or that there is churn in the user base. Detailed diagnosis helps identify which subscriptions have expired so that they can be renewed or deprovisioned as appropriate."
+  },
+  {
+    "measurement": "Nearing expiry users",
+    "description": "Indicates the number of user subscriptions that are expected to expire within the next 7 days.",
+    "unit": "Number",
+    "interpretation": "This is an early-warning indicator for upcoming subscription expirations. Monitoring this value helps administrators proactively notify users or account owners to renew access, thereby avoiding unexpected loss of functionality. The detailed diagnosis lists the specific users whose subscriptions are about to expire."
+  },
+  {
+    "measurement": "Active users",
+    "description": "Indicates the number of user subscriptions that have not expired.",
+    "unit": "Number",
+    "interpretation": "This represents the count of users who currently have valid, non-expired subscriptions. It effectively reflects how many users are entitled to log in and use the eG Enterprise system at this moment."
+  },
+  {
+    "measurement": "Active local users",
+    "description": "Indicates the number of local users who have registered with the eG Enterprise system.",
+    "unit": "Number",
+    "interpretation": "Local users are those whose login credentials are stored directly in the eG database and validated by it during login. This measure helps distinguish accounts managed internally by eG from those managed in external identity systems, and it is useful when reviewing password policies and access controls applied to locally managed users."
+  },
+  {
+    "measurement": "Active domain users",
+    "description": "Indicates the number of domain users who have registered with the eG Enterprise system.",
+    "unit": "Number",
+    "interpretation": "Domain users authenticate against an external directory, typically an Active Directory (AD) server integrated with the eG manager. Their credentials are validated by the directory, not by eG itself. This measure shows how many users rely on domain-based single sign-on and helps assess dependency on external identity infrastructure."
+  },
+  {
+    "measurement": "Configured domains",
+    "description": "Indicates the number of AD domains that have been configured on the eG manager.",
+    "unit": "Number",
+    "interpretation": "This indicates how many Active Directory domains are integrated with the eG manager for authentication and user management. The detailed diagnosis reveals which domains are configured, enabling administrators to verify that all required domains are present and to audit domain integrations."
+  }
+]

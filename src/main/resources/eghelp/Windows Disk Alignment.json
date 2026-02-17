@@ -1,0 +1,13 @@
+[
+  {
+    "measurement": "Disk partition alignment status",
+    "description": "Indicates whether this disk partition is aligned or not.",
+    "measurementUnit": null,
+    "interpretation": "Partition is aligned=100, Partition is not aligned=0. Misaligned partitions can degrade disk performance, especially on SSDs and advanced-format/RAID storage. Detailed diagnosis shows caption, device ID, logical partition name, and block size of the partition.",
+    "troubleshootingSteps": [
+      "Verify alignment using platform tools (for example, wmic/diskpart on Windows to inspect starting offsets, or parted/fdisk/gdisk on Linux) and confirm that partition start offsets are multiples of 1 MB/4096 sectors or appropriate device boundaries.[web:193][web:197][web:199][web:201]",
+      "If a partition is not aligned and performance is a concern, back up its data, recreate or resize/move the partition with correct alignment settings (using modern partitioning tools that default to MiB/optimal alignment), and then restore the data.[web:191][web:192][web:194][web:196][web:198][web:200][web:201]",
+      "On systems with SSDs, 4K sector drives, or RAID volumes, prioritize fixing misalignment because it can cause write amplification and significantly reduced I/O performance; test performance before and after realignment to validate improvement.[web:190][web:193][web:195][web:199][web:201]"
+    ]
+  }
+]

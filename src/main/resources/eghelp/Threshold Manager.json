@@ -1,0 +1,44 @@
+[
+  {
+    "measurement": "Threshold manager status",
+    "description": "Indicates the current status of the threshold manager process.",
+    "unit": "Running/Sleeping/Error/Not started/Interrupted (internally 0/1/2/3/4)",
+    "interpretation": "This shows whether the threshold manager is actively running, idle, in error, not yet started, or was interrupted. A healthy system should normally report Running or occasionally Sleeping; Error, Not started, or Interrupted indicate problems that can prevent thresholds from being computed. Graphs display the numeric codes (0–4) even though the UI shows the textual states."
+  },
+  {
+    "measurement": "Time taken for thresholding",
+    "description": "Indicates the total time taken by the threshold manager to compute thresholds.",
+    "unit": "Minutes",
+    "interpretation": "This is the duration of the most recent threshold computation cycle. It should remain low; a steady increase means threshold computation is taking too long, often because thresholds are being computed for many tests, measures, and descriptors, which can delay the availability of updated thresholds."
+  },
+  {
+    "measurement": "Successful threshold tests",
+    "description": "Indicates the number of tests for which thresholds were computed successfully.",
+    "unit": "Number",
+    "interpretation": "This counts how many tests had their thresholds computed without error in the last computation run. Detailed diagnosis can be used to list the specific tests that were successfully thresholded, confirming that key metrics are covered."
+  },
+  {
+    "measurement": "Failed threshold tests",
+    "description": "Indicates the number of tests for which threshold computation failed.",
+    "unit": "Number",
+    "interpretation": "The desired value is 0. Any non‑zero value means at least some tests did not get thresholds computed, which can prevent problem conditions from being detected or states from being calculated. Detailed diagnosis identifies which tests failed so you can investigate and fix the cause."
+  },
+  {
+    "measurement": "Time since last threshold update",
+    "description": "Indicates the elapsed time since the last threshold computation.",
+    "unit": "Minutes",
+    "interpretation": "This shows how long it has been since thresholds were last recomputed. Thresholding is usually scheduled daily, so an unexpectedly large value suggests a scheduled threshold computation cycle may have been missed or blocked."
+  },
+  {
+    "measurement": "Is threshold manager a separate process?",
+    "description": "Indicates whether or not the threshold manager is running as a separate process.",
+    "unit": "Yes/No (internally 1/0)",
+    "interpretation": "Yes (1) means the threshold manager runs in its own Java process, offloading work and memory from the core 32‑bit eG manager and improving scalability. No (0) means it runs inside the core manager process, which is simpler but constrained by the single‑process heap limit. Graphs show the numeric values even though the UI shows Yes/No."
+  },
+  {
+    "measurement": "Slow threshold tests",
+    "description": "Indicates the number of tests for which the threshold computation was slow.",
+    "unit": "Number",
+    "interpretation": "This counts tests whose threshold computation exceeded an expected time. A high value points to specific tests that are expensive to threshold; detailed diagnosis lists these tests so you can review their metrics, history windows, or configuration to speed up computation."
+  }
+]

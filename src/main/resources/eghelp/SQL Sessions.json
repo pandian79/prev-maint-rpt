@@ -1,0 +1,54 @@
+[
+  {
+    "measurement": "Logins",
+    "description": "Indicates the total number of logins per second.",
+    "unit": "Login/Sec",
+    "interpretation": "A high value indicates an increase in the rate of users logging in to the SQL Server. While some variation is normal, an unusual or sudden increase in login rate can signal abnormal application behavior, such as frequent reconnects due to errors or misconfigured connection pooling.[web:201][web:202][web:204]",
+    "troubleshootingSteps": [
+      "Baseline normal login/sec rates for your workloads and set alerts for significant deviations above the baseline.[web:202][web:207]",
+      "If logins/sec spikes unexpectedly, investigate whether applications are repeatedly opening and closing connections instead of using connection pooling.[web:204]",
+      "Check for errors or timeouts in application logs that might be causing frequent reconnect attempts.",
+      "Correlate login spikes with changes in traffic patterns, deployments, or scheduled jobs to identify the root cause.",
+      "Use DMVs and monitoring tools to identify which applications, hosts, or logins are responsible for the increased login activity."
+    ]
+  },
+  {
+    "measurement": "Logouts",
+    "description": "Indicates the total number of logouts per second.",
+    "unit": "Logout/Sec",
+    "interpretation": "A high value indicates an increase in the rate of users logging out of SQL Server. An unusually large number of logins and logouts often occurs when applications are repeatedly connecting and disconnecting due to errors or lack of effective pooling.[web:201][web:202][web:204]",
+    "troubleshootingSteps": [
+      "Compare logouts/sec with logins/sec; high values for both may indicate connection churn rather than stable pooled connections.[web:202][web:204]",
+      "Review application connection management practices to ensure that connection pooling is enabled and configured correctly.[web:204]",
+      "Check for recurring errors in the SQL error log or application logs that could be causing connections to drop and reconnect frequently.",
+      "Monitor overall connection counts to ensure that connection churn is not causing resource exhaustion on the server.",
+      "Engage application owners to adjust connection lifetimes or pooling parameters if patterns of excessive logins/logouts persist."
+    ]
+  },
+  {
+    "measurement": "Current connections",
+    "description": "Indicates the number of user connections to the server at an instant.",
+    "unit": "Number",
+    "interpretation": "Each user connection consumes memory and some server resources. A large number of concurrent user connections can reduce throughput and increase contention. Tracking this measure over time helps DBAs establish reasonable expectations and set limits for concurrent users.[web:201][web:202][web:207][web:209]",
+    "troubleshootingSteps": [
+      "Monitor current connections over time to establish normal ranges and detect unusual growth or sudden spikes.[web:202][web:207]",
+      "If current connections are consistently high, check whether applications are leaking connections (not closing them) or not using pooling effectively.",
+      "Correlate high connection counts with resource pressure (CPU, memory, I/O) to see if the server is being overloaded.",
+      "Use DMVs (for example, sys.dm_exec_connections, sys.dm_exec_sessions) to identify which databases, logins, or client hosts account for most connections.[web:203][web:205]",
+      "Consider implementing connection limits, pooling adjustments, or application-level throttling if excessive concurrent connections begin to impact performance."
+    ]
+  },
+  {
+    "measurement": "Logical connections",
+    "description": "Indicates the number of logical connections to the server.",
+    "unit": "Number",
+    "interpretation": "Logical connections are used primarily to support Multiple Active Result Sets (MARS). For MARS-enabled workloads, a single physical connection can correspond to multiple logical connections. When MARS is not used, the ratio between physical and logical connections is 1:1, and each new application connection increases logical connections by one.[web:201][web:202][web:209]",
+    "troubleshootingSteps": [
+      "Compare logical connection counts with physical connection counts to understand whether MARS is being used heavily in your environment.[web:202][web:209]",
+      "If logical connections are high relative to current connections, review MARS usage patterns to ensure they are necessary and not causing unexpected resource consumption.",
+      "Monitor session and transaction activity for MARS-based applications to detect potential blocking or deadlock patterns related to multiple active result sets.",
+      "Work with developers to assess whether MARS can be reduced or replaced with alternative designs (for example, separate connections or more granular queries) if it leads to complexity or performance issues.",
+      "Ensure that monitoring and capacity planning take into account both physical and logical connections, especially in environments with heavy MARS usage."
+    ]
+  }
+]

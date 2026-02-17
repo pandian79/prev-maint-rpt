@@ -1,0 +1,314 @@
+[
+  {
+    "measurement": "Total Page views",
+    "description": "Indicates the total number of times pages were viewed by users from this city.",
+    "unit": "Number",
+    "interpretation": "This is a good measure of the traffic from a specific city. Sudden, but significant spikes in the page view count could be a cause for concern, as it could be owing to a malicious virus attack or an unscrupulous attempt to hack your web site/web application.",
+    "troubleshootingSteps": [
+      "Investigate sudden spikes in total page views from this city to rule out bots, scraping, or attack traffic using web server and WAF logs.",
+      "Correlate traffic surges with marketing campaigns, releases, or configuration changes to distinguish expected from unexpected behavior.",
+      "Compare per‑city page views to identify whether spikes are localized to one city or part of a global pattern.",
+      "If spikes are malicious, apply IP/user‑agent blocking, rate limiting, or CAPTCHA challenges focused on this city’s traffic sources."
+    ]
+  },
+  {
+    "measurement": "Apdex score",
+    "description": "Indicates the apdex score of the web site/web application based on the experience of users from this city.",
+    "unit": "Number",
+    "interpretation": "Apdex converts many measurements into a single number on a 0‑to‑1 scale (0 = no users satisfied, 1 = all users satisfied). The Apdex formula is ApdexT = (Satisfied Count + Tolerating Count / 2) / Total Samples. Ideally, the value of this measure should be 1.0; a value less than 1.0 indicates that the experience of users from this city has been less than satisfactory.",
+    "troubleshootingSteps": [
+      "Decompose the Apdex score into satisfied, tolerating, and frustrated counts for this city to understand which segment dominates.",
+      "Correlate low Apdex scores with Average page load time and error rates for users in this city to find degraded paths.",
+      "Identify the slowest or most error‑prone URLs for this city via detailed diagnostics and prioritize fixes there.",
+      "Review whether the Apdex threshold T is appropriate for users in this region (e.g., higher latency regions may need realistic expectations). "
+    ]
+  },
+  {
+    "measurement": "Average page load time",
+    "description": "Indicates the average time that pages accessed by users from this city took to load completely on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the average interval between the time that a user initiates a request and the completion of the page load in the browser, including Ajax requests until they are completely processed. Comparing this value across cities helps identify whether slowness is city‑specific, after which you can drill into slow pages and compare Average front end time, Average network time, and Average server time to determine if the issue is front end, network, or backend‑related.",
+    "troubleshootingSteps": [
+      "Compare Average page load time across cities to identify whether this city is significantly slower than others for the same pages.",
+      "Use detailed diagnostics for this city to find which pages are slow, then verify whether they are also slow for other cities.",
+      "Break down slow pages by Average front end time, Average network time, and Average server time to locate the dominant bottleneck.",
+      "For city‑specific slowness, investigate regional network routing, local ISPs, or edge locations serving that city."
+    ]
+  },
+  {
+    "measurement": "Unique user session",
+    "description": "Indicates the number of distinct users who are currently accessing the web site/web application from this city.",
+    "unit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Verify that session identification (cookies, tokens, or user IDs) behaves consistently for users in this city, especially with CDNs or proxies in front.",
+      "Correlate changes in unique sessions with authentication logs and marketing campaigns to detect anomalies (sudden drops or spikes). ",
+      "Compare unique sessions versus Total Page views for this city to derive pages per session and identify abnormal usage patterns.",
+      "Check for city‑specific login or session‑stickiness issues on load balancers that could distort session counts."
+    ]
+  },
+  {
+    "measurement": "Page views per minute",
+    "description": "Indicates the number of times the pages were viewed per minute by users from this city.",
+    "unit": "Number",
+    "interpretation": "An unusually high value for this measure may require investigation.",
+    "troubleshootingSteps": [
+      "Monitor for time windows when page views per minute from this city are anomalously high and confirm whether the traffic is legitimate.",
+      "Compare traffic patterns with CPU, bandwidth, and error metrics to see if the infrastructure is stressed for this city.",
+      "Identify top IPs and user agents contributing to high page‑view rates from this city to detect scraping or attack patterns.",
+      "Tune rate limiting or WAF rules if a small number of sources from this city generate disproportionate traffic."
+    ]
+  },
+  {
+    "measurement": "Normal page view percentage",
+    "description": "Indicates the percentage of page views that delivered a satisfactory experience to users from this city.",
+    "unit": "Percent",
+    "interpretation": "This measure indicates the percentage of page views in which users from this city have neither experienced any slowness nor encountered any JavaScript errors. Ideally it should be 100%. A value slightly less than 100% indicates user experience has not been optimal; a value less than 50% indicates serious problems, prompting comparison of Slow page view percentage and JavaScript error page view percentage to see whether slow pages or JavaScript errors are the main cause.",
+    "troubleshootingSteps": [
+      "Track Normal page view percentage alongside Slow page view percentage and JavaScript error page view percentage for this city to pinpoint main drivers of poor UX.",
+      "If slow pages dominate, use the detailed diagnosis of Slow page views – Tolerating & Frustrated to locate where time is lost (front end, network, or backend). ",
+      "If JavaScript errors dominate, analyze detailed diagnostics of JavaScript error page view percentage to find specific errors and affected pages for this city.",
+      "Correlate drops in Normal page view percentage with deployments or configuration changes affecting only certain regions or POPs."
+    ]
+  },
+  {
+    "measurement": "Slow page view percentage",
+    "description": "Indicates the percentage of pages that were slow in loading when accessed by users in this city.",
+    "unit": "Percent",
+    "interpretation": "Ideally, the value of this measure should be 0. A value over 50% implies that over half of the page views are slow. Detailed diagnosis of the Slow page views – Tolerating & Frustrated measure helps identify slow pages and isolate whether slowness is due to the front end, network, or backend.",
+    "troubleshootingSteps": [
+      "Use detailed diagnostics of Slow page views – Tolerating & Frustrated for this city to list the slowest pages and their counts.",
+      "Compare Average front end time, Average network time, and Average server time for those pages to determine which layer is responsible.",
+      "Check whether slow page percentages spike during particular times of day, suggesting peak‑time capacity or ISP issues in this city.",
+      "Prioritize optimization of pages whose slow views are both frequent and business‑critical for users in this city."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page view percentage",
+    "description": "Indicates the percentage of page views that have encountered JavaScript errors.",
+    "unit": "Percent",
+    "interpretation": "Ideally, the value of this measure should be 0. A value over 50% implies that over half of the page views of this type are experiencing JavaScript errors. Detailed diagnostics identify error pages and the JavaScript errors that have occurred, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Inspect JavaScript error diagnostics for this city to determine the most frequent errors and the pages they occur on.",
+      "Check whether specific browsers or versions popular in this city are more affected, indicating compatibility problems.",
+      "Fix high‑impact JavaScript errors first on high‑traffic pages used by this city, then monitor error rate reduction.",
+      "Introduce robust client‑side error handling and fallbacks to mitigate user impact when JavaScript errors occur."
+    ]
+  },
+  {
+    "measurement": "Satisfied page views",
+    "description": "Indicates the number of times pages were viewed by users in this city without any slowness.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF; if it does not exceed this cutoff, the view is deemed satisfactory. Ideally, this measure should equal Total Page views; if much lower than Tolerating and Frustrated page views, it clearly indicates below‑par experience for users in this city.",
+    "troubleshootingSteps": [
+      "Compare Satisfied page views with Total Page views for this city to derive the proportion of satisfactory experiences over time.",
+      "Investigate periods where Satisfied views drop while Tolerating or Frustrated views rise for this city, and relate them to deployments or incidents.",
+      "Review and tune SLOW TRANSACTION CUTOFF so it reflects realistic SLAs for this application and region.",
+      "Use diagnostics from Tolerating and Frustrated views to address the root causes preventing views from being classified as satisfied."
+    ]
+  },
+  {
+    "measurement": "Slow page views - Tolerating & Frustrated",
+    "description": "Indicates the number of page views that were slow when accessed from this city.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF. Ideally, pages should load quickly, so the desired value is 0. A high value indicates that users frequently experienced slowness when accessing pages, and detailed diagnostics help identify which views were slow and why.",
+    "troubleshootingSteps": [
+      "List the URLs with the highest counts of slow page views from this city and group them by feature or service.",
+      "Check if slow views correlate with backend spikes (CPU, DB queries, external API latency) during the same intervals.",
+      "Investigate per‑URL timing breakdowns to see whether network, server, or rendering is responsible for slow views in this city.",
+      "Implement caching, query optimization, or front‑end improvements and validate that slow view counts drop for this city."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page views",
+    "description": "Indicates the number of times JavaScript errors occurred when accessing pages from this city.",
+    "unit": "Number",
+    "interpretation": "Ideally, the value of this measure should be 0. A high value indicates many JavaScript errors when viewing pages, and detailed diagnostics reveal error pages and specific JavaScript errors for targeted troubleshooting.",
+    "troubleshootingSteps": [
+      "Aggregate JavaScript error page views by error type and URL for this city to identify the most disruptive issues.",
+      "Determine whether errors are linked to localized content, scripts, or third‑party integrations that might only affect this city.",
+      "Fix or guard against the most frequent errors, then monitor error counts from this city to confirm reduction.",
+      "Configure alerts on spikes in JavaScript error page views for this city to catch regressions early."
+    ]
+  },
+  {
+    "measurement": "Tolerating page views",
+    "description": "Indicates the number of tolerating page views experienced by users in this city.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page exceeds the SLOW TRANSACTION CUTOFF but is less than 4 times that cutoff, the page view is considered tolerating. Ideally, this value should be 0; if it is higher than Satisfied page views, it is a concern and indicates overall experience in this city is less than satisfactory.",
+    "troubleshootingSteps": [
+      "Monitor the ratio of Tolerating to Satisfied page views for this city to detect gradual performance degradation.",
+      "Analyze tolerating views by URL and timing breakdown to identify which component (front end, network, backend) keeps them out of the satisfied band.",
+      "Optimize moderately slow pages (e.g., via caching, compression, or SQL tuning) to convert tolerating views into satisfied ones for this city.",
+      "Use A/B or canary releases to validate that changes reduce tolerating views without negatively impacting users elsewhere."
+    ]
+  },
+  {
+    "measurement": "Frustrated page views",
+    "description": "Indicates the number of frustrated page views experienced by users in this city.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page is over 4 times the SLOW TRANSACTION CUTOFF, the page view is considered frustrated. Ideally, this value should be 0; a value higher than Satisfied page views means that the experience of users in this city has been less than satisfactory.",
+    "troubleshootingSteps": [
+      "Identify which pages generate the most frustrated views from this city and treat them as critical incidents to resolve.",
+      "Correlate frustrated views with server errors, timeouts, or saturation events (CPU, DB, queues) in data centers serving this city.",
+      "Check for regional network outages or ISP problems that might cause extreme delays for this city only.",
+      "Consider rolling back or disabling recent changes affecting these pages for this city until performance is restored."
+    ]
+  },
+  {
+    "measurement": "Average browser render time",
+    "description": "Indicates the time taken to complete the download of remaining resources, including images, and to finish rendering the pages in the browser for users in this city.",
+    "unit": "ms",
+    "interpretation": "A high value indicates that page rendering is taking too long, potentially due to in‑optimal HTML document architecture, complex CSS (deeply nested rules, slow selectors, complex effects), and large images. When Average page load time is abnormally high, comparing this measure with Average browser initial request time, Average network time, Average server time, and Average content download time helps identify whether rendering is the main bottleneck.",
+    "troubleshootingSteps": [
+      "Use browser developer tools to profile rendering, layout, and paint times for pages used by this city.",
+      "Simplify DOM structure, reduce heavy CSS, and optimize or lazy‑load large images to cut render time.",
+      "Check if city‑specific content (e.g., localized banners, fonts, or third‑party widgets) causes extra render work for this city.",
+      "Monitor Average browser render time before and after UI changes, especially those targeted at this region."
+    ]
+  },
+  {
+    "measurement": "Average content download time",
+    "description": "Indicates the time taken by the browser to make the complete HTML document (DOM) available for JavaScript to apply rendering logic on the pages accessed by users in this city.",
+    "unit": "ms",
+    "interpretation": "This is the time between the responseStart and documentContentLoadedEventStart events. It equals the sum of Average DOM download time and Average DOM processing time. If this time is unusually long, you must compare those two components to see whether server/cache/local responsiveness or DOM processing is responsible.",
+    "troubleshootingSteps": [
+      "Split Average content download time into Average DOM download time and Average DOM processing time for this city to see which dominates.",
+      "Reduce HTML size via minification and removal of unused markup and inline scripts to lower download time for this city.",
+      "Ensure compression (gzip/brotli) for HTML responses is effective for users in this city via the nearest CDN edge.",
+      "Optimize server rendering and templates for heavily used pages by users in this city to reduce server‑side generation time."
+    ]
+  },
+  {
+    "measurement": "Average DOM download time",
+    "description": "Indicates the time taken to download the complete HTML document for requests received from users in this city.",
+    "unit": "ms",
+    "interpretation": "This is the time elapsed between the responseStart and responseEnd events. Higher document download time lengthens the time to make the document available for rendering and negatively impacts overall user experience, so a low value is desired.",
+    "troubleshootingSteps": [
+      "Check network throughput and latency between this city and your servers/CDN to see if regional bandwidth is limited.",
+      "Reduce HTML payload size and eliminate unnecessary inline assets to speed up downloads for users in this city.",
+      "Review CDN configuration to ensure HTML is delivered from a nearby edge node for this city.",
+      "Monitor DOM download time by ISP or subnet for this city to identify specific carriers with problems."
+    ]
+  },
+  {
+    "measurement": "Average DOM processing time",
+    "description": "Indicates the time taken by the browser to build the Document Object Model (DOM) for the pages requested by the users in this city and make it available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "An unusually high value indicates DOM building is taking longer than normal and delays page rendering, adversely impacting user experience when this page group is accessed. Ideally, the value should be low.",
+    "troubleshootingSteps": [
+      "Reduce DOM complexity for pages heavily used by this city by decreasing node count and depth of nesting.",
+      "Avoid heavy synchronous JavaScript during initial parsing that might block DOM construction for users here.",
+      "Refactor templates for city‑specific pages (e.g., localized content) that might be generating overly large DOMs.",
+      "Audit third‑party tags and widgets that inject large DOM fragments affecting users in this city."
+    ]
+  },
+  {
+    "measurement": "Average server time",
+    "description": "Indicates the interval between the start of processing of a request from a user in this city to when response is received.",
+    "unit": "ms",
+    "interpretation": "Average server time is the time between requestStart and responseStart. Ideally, it should be low; high values hurt the Apdex score. The main driver is the request processing ability of the web or application server. Slowdowns due to insufficient resources or misconfiguration increase this metric. For IE 11, Navigation Timing may mis‑report requestStart, so detailed Business Transaction metrics can be used as a workaround.",
+    "troubleshootingSteps": [
+      "Monitor backend CPU, memory, thread pools, and database performance during periods of high Average server time for this city.",
+      "Use APM/BTM traces to inspect end‑to‑end transactions from this city, pinpointing slow spans such as DB calls or external services.",
+      "Optimize or scale backend components serving traffic from this city (e.g., add capacity, tune queries, or improve caching).",
+      "Watch for configuration issues (GC settings, connection pool sizes, timeouts) that might impact certain traffic patterns, including regional ones."
+    ]
+  },
+  {
+    "measurement": "Average network time",
+    "description": "Indicates the elapsed time since a user in this city initiates a request to the web site/web application and the start of fetching the response document from it.",
+    "unit": "ms",
+    "interpretation": "This is the time between navigationStart and requestStart and includes both DNS lookup and TCP connection times. It equals the sum of Average DNS lookup time and Average TCP connection time. Ideally, it should be low; very high values delay page loading and degrade service quality. For IE 11, Navigation Timing may mis‑report requestStart, so some values can be inaccurate.",
+    "troubleshootingSteps": [
+      "Break Average network time into Average DNS lookup time and Average TCP connection time to identify the main contributor for this city.",
+      "Check routing paths and latency from major ISPs in this city to your data centers/CDN edges.",
+      "Use additional PoPs or adjust CDN geo‑routing so that traffic from this city terminates at closer endpoints.",
+      "Enable connection reuse and modern protocols (HTTP/2 or HTTP/3) to reduce per‑request connection overhead for this city."
+    ]
+  },
+  {
+    "measurement": "Average DNS lookup time",
+    "description": "Indicates the time taken by the browser used by a user in this city to perform the domain lookup for connecting to the web site/web application.",
+    "unit": "ms",
+    "interpretation": "A high value affects not only DNS lookup, but also Average network time and Average page load time, which can have a disastrous effect on user experience.",
+    "troubleshootingSteps": [
+      "Review DNS provider performance for queries originating from this city, ensuring low latency and high availability.",
+      "Avoid deep CNAME chains, especially for domains heavily used by this city, to minimize extra lookups.",
+      "Tune DNS TTL values to balance cache hit rates versus responsiveness to changes for users in this city.",
+      "Monitor DNS errors and timeouts per region to detect city‑specific DNS instability early."
+    ]
+  },
+  {
+    "measurement": "Average TCP connection time",
+    "description": "Indicates the time taken by the browser used by a user in this city to establish a TCP connection with the server.",
+    "unit": "ms",
+    "interpretation": "A bad network connection between the browser client and the server can delay TCP connections. As a result, Average network time increases, impacting page load time and overall user experience.",
+    "troubleshootingSteps": [
+      "Monitor TCP connection metrics at load balancers and servers serving this city for signs of saturation or SYN backlog issues.",
+      "Use a CDN or additional regional endpoints to reduce RTT and connection setup time for users in this city.",
+      "Promote persistent connections and TLS session resumption so users in this city do not pay full handshake costs repeatedly.",
+      "Investigate firewall or middle‑box performance if connection time spikes are intermittent and region‑specific."
+    ]
+  },
+  {
+    "measurement": "Average browser initial request time",
+    "description": "Indicates the interval between when a request was received from users in this city, when it followed a redirect, to when it was processed in the AppCache.",
+    "unit": "ms",
+    "interpretation": "This is the time between navigationStart and domainLookupStart and includes time spent waiting on the browser, in AppCache, and following redirects. It equals the sum of Average AppCache time, Average redirection time, and Average browser wait time. Abnormal values indicate that requests are delayed before DNS starts, so comparing those components reveals whether redirection, AppCache, or browser waiting is responsible.",
+    "troubleshootingSteps": [
+      "Decompose Average browser initial request time into Average AppCache time, Average redirection time, and Average browser wait time for this city.",
+      "Reduce or eliminate unnecessary redirects that affect users from this city, especially chained redirects.",
+      "Optimize or replace AppCache (e.g., with Service Workers) if AppCache time is a major part of the delay.",
+      "Lower the number of simultaneous requests or improve bundling so that requests from this city spend less time queued on the browser."
+    ]
+  },
+  {
+    "measurement": "Average SSL handshake time",
+    "description": "Indicates the time taken by requests from this city to complete the SSL handshake.",
+    "unit": "ms",
+    "interpretation": "An SSL handshake occurs when a browser makes a secure HTTPS request and negotiates keys and certificates with the server. This negotiation adds to Average network time and increases page load time; DNS, TCP, and SSL handshakes together add multiple round trips. Using HTTP/2 and proper caching can reduce SSL setup overhead.",
+    "troubleshootingSteps": [
+      "Ensure TLS configuration uses efficient ciphers and modern protocols to reduce handshake time for this city.",
+      "Enable and validate TLS session resumption and session tickets so repeat visitors from this city benefit from shorter handshakes.",
+      "Terminate TLS at nearby CDN edges or regional load balancers to minimize RTT during the handshake for this city.",
+      "Monitor SSL handshake time per region and adjust certificate chains or intermediate CAs if validation is slow."
+    ]
+  },
+  {
+    "measurement": "Average AppCache time",
+    "description": "Indicates the time taken to check whether/not the requests from this region can be serviced by the AppCache.",
+    "unit": "ms",
+    "interpretation": "HTML5 AppCache lets applications run offline by caching specified resources. A high value means requests are spending too much time in AppCache, causing page load latency. Common issues include missing or incorrect manifest media type, serving the manifest from a different origin, path‑relative URL mistakes, and frequent manifest changes that force synchronous re‑downloads of all resources.",
+    "troubleshootingSteps": [
+      "Serve the manifest file with media type text/cache‑manifest and from the same origin as the host page to ensure AppCache works correctly.",
+      "Validate that relative URLs in the manifest are relative to the manifest file location, not to the HTML document, to avoid stalled appcaching.",
+      "Avoid unnecessary changes to the manifest file to prevent repeated full re‑downloads of resources for this region.",
+      "Consider loading the Application Cache from a simple HTML file in an iframe to avoid synchronous downloads blocking page load."
+    ]
+  },
+  {
+    "measurement": "Average redirection time",
+    "description": "Indicates the time that requests from this city spent in redirection before fetching the pages.",
+    "unit": "ms",
+    "interpretation": "This is the elapsed time between redirectStart and redirectEnd. Redirects, while useful for things like mobile sites, HTTPS enforcement, latest content, and geo‑specific pages, add latency because they trigger extra DNS and HTTP requests. Multiple, invalid, or looping redirects can significantly slow down page load and cause errors.",
+    "troubleshootingSteps": [
+      "Identify pages for users in this city that incur multiple redirects and consolidate them into a single direct redirect where possible.",
+      "Remove obsolete or invalid redirects that lead to 404s or unnecessary hops affecting this city’s users.",
+      "Avoid redirect loops by ensuring redirect chains do not circle back to the originating URL.",
+      "Follow recommended redirect best practices (minimal redirects, clean up old rules) and monitor Average redirection time for this city."
+    ]
+  },
+  {
+    "measurement": "Average browser wait time",
+    "description": "Indicates the time that requests from this city spent on the browser, waiting for another request to complete.",
+    "unit": "ms",
+    "interpretation": "This is the sum of the time between consecutive events from navigationStart to requestStart. Because browsers limit active connections per domain, additional requests may wait in a queue. High browser wait time prolongs the initial request time and hurts responsiveness; it should be compared with Average AppCache time and Average redirection time when initial request time is high.",
+    "troubleshootingSteps": [
+      "Reduce the number of concurrent resource requests by bundling or inlining critical resources for pages frequented by this city.",
+      "Leverage HTTP/2 multiplexing to allow many resources to be fetched without hitting per‑domain connection limits.",
+      "Use domain sharding carefully if still on HTTP/1.1 to increase concurrency for assets heavily used by users in this city.",
+      "Encourage or test modern browsers that support higher parallel requests where appropriate for this city’s user base."
+    ]
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "Measurement": "Buffer cache hit ratio",
+    "Description": "Indicates the percentage of pages that are served from the server's buffer cache (i.e., without requiring a read from the disk).",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "This value is the ratio of the total number of cache hits to the total number of cache lookups since the server was started. Because reading from the cache is much less expensive than reading from disk, this ratio should ideally be high. Generally, one can increase the buffer cache hit ratio by increasing the amount of memory available to the SQL Server."
+  },
+  {
+    "Measurement": "Page reads",
+    "Description": "Indicates the number of physical database page reads that are issued per second.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": "Because physical I/O is expensive, one may be able to minimize the cost, either by using a larger data cache, intelligent indexes, more efficient queries, or by changing the database design."
+  },
+  {
+    "Measurement": "Page writes",
+    "Description": "Indicates the number of database page writes that are issued per second.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": "Page writes are generally expensive. Reducing page-write activity is important for optimal tuning. One way to do this is to ensure that you do not run out of free buffers in the free buffer pool. If you do, page writes will occur while waiting for an unused cache buffer to flush."
+  },
+  {
+    "Measurement": "Target pages",
+    "Description": "Indicates the ideal number of pages that should be in the buffer pool for optimal performance",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Total pages",
+    "Description": "Indicates the current total number of pages in the buffer pool. This value includes the number of pages in the database pool, free pool, and stolen list.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "For optimum performance, the total pages must be close to the target pages value."
+  },
+  {
+    "Measurement": "Free pages",
+    "Description": "Indicates the total number of pages currently in all free lists",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure will not be available for Microsoft SQL Server 2012."
+  },
+  {
+    "Measurement": "Stolen pages",
+    "Description": "Indicates the number of buffer pool pages used to satisfy other server memory requests",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure will not be available for Microsoft SQL Server 2012."
+  },
+  {
+    "Measurement": "Lazy writes rate",
+    "Description": "Indicates the number of lazy writes per second.",
+    "MeasurementUnit": "Writes/Sec",
+    "Interpretation": "Lazy writes are buffers written by the lazy writer. The lazy writer is a system process that flushes out batches of dirty, aged buffers and makes them available to user processes. The lazy writer eliminates the need to perform frequent checkpoints in order to create available buffers. Keeping the number of lazy writes low can enhance performance. A supply of buffers available for immediate use keeps the number of lazy writes low. If no free buffers are available, existing buffers must be reused and dirty buffers must be written to disk before reuse, causing waits and degrading performance."
+  },
+  {
+    "Measurement": "Page life expectancy",
+    "Description": "Indicates the number of seconds a page will stay in the buffer pool without references.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "A high value of this measure indicates that your page stays longer in the buffer pool, thereby leading to higher performance by reducing direct disk accesses. A value too low indicates that pages are being flushed from the buffer pool too quickly. The target on an OLTP system should be at least 300 seconds (5min). When under 300 seconds, this may indicate poor index design or a potential shortage of memory."
+  },
+  {
+    "Measurement": "Free list stalls",
+    "Description": "Indicates the number of requests per second that had to wait for a free page.",
+    "MeasurementUnit": "Stalls/Sec",
+    "Interpretation": "Free list stall rates of 3 or 4 per second indicate too little SQL memory available."
+  }
+]

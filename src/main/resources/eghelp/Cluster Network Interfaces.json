@@ -1,0 +1,22 @@
+[
+  {
+    "measurement": "Network interfaces that are up",
+    "description": "Indicates the number of network interfaces that are currently up and running in the cluster.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Network interfaces that are down",
+    "description": "Indicates the number of network interfaces in the cluster that are currently not running.",
+    "measurementUnit": "Number",
+    "interpretation": "Each node in a failover cluster requires network connectivity with the other nodes. Problems with a network adapter or other network device (either physical problems or configuration problems) can interfere with connectivity. Therefore, ideally, the value of this measure should be 0.",
+    "troubleshootingSteps": [
+      "Check physical connectivity: Ensure cables are connected, switch ports are active, and the network adapter is not disabled or failed in the OS.",
+      "Verify network configuration: Check IP settings, subnet masks, and VLAN tagging to ensure the interface can communicate with other cluster nodes.",
+      "Review cluster network settings: Use Failover Cluster Manager or PowerShell (Get-ClusterNetworkInterface) to verify the interface is correctly assigned to the cluster network and not in a 'Failed' state.",
+      "Inspect hardware and drivers: Update network adapter drivers and firmware; check for hardware faults or replace faulty NICs if necessary.",
+      "Check firewall and security software: Ensure Windows Firewall or third-party security software is not blocking cluster communication ports (UDP 3343, TCP 3343, etc.)."
+    ]
+  }
+]

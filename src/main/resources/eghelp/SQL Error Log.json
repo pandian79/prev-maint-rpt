@@ -1,0 +1,123 @@
+[
+  {
+    "measurement": "Deadlocks",
+    "description": "The current number of deadlocks on the Microsoft SQL server.",
+    "unit": "Number",
+    "interpretation": "This measure shows how many deadlocks have been captured in the SQL error log. If the value is 0, either tracing is not enabled and deadlocks are not being logged, or tracing is enabled and no deadlocks have occurred, which is healthy. A non-zero value indicates that one or more deadlocks have occurred and warrants investigation.",
+    "troubleshootingSteps": [
+      "If the value is 0 but you suspect deadlocks, enable deadlock tracing (for example, DBCC TRACEON(1222, -1) or use Extended Events / system_health to capture xml_deadlock_report) so that deadlock details are written to the log or collected in sessions.[web:165][web:171]",
+      "When the value is non-zero, review the deadlock graphs (from Extended Events, system_health, or Profiler) to identify the sessions, resources, and queries involved in each deadlock.[web:163][web:167][web:171]",
+      "Standardize the order in which application code accesses tables and resources so that concurrent transactions acquire locks in a consistent sequence, reducing the chance of circular waits.[web:165][web:168]",
+      "Check isolation levels and overly long or aggressive transactions; shorten transaction scopes, avoid holding locks while waiting for user input, and consider using row-version-based isolation (for example, READ_COMMITTED_SNAPSHOT) where appropriate.[web:167][web:166]",
+      "For recurring deadlocks on specific objects, add or tune indexes to reduce scan ranges and lock footprints, and consider adjusting lock escalation or using appropriate lock hints with care.[web:167][web:164]"
+    ]
+  },
+  {
+    "measurement": "Informational messages",
+    "description": "The number of informational messages that were currently captured by the error log.",
+    "unit": "Number",
+    "interpretation": "This counts messages with severity levels 0 to 10, which are informational rather than actual errors. A non-zero value is expected and generally not a cause for concern by itself.[web:172]",
+    "troubleshootingSteps": [
+      "Periodically review informational messages to understand configuration changes, routine operations, and other benign events recorded in the error log.[web:172]",
+      "If the count grows very quickly, check for overly verbose logging (for example, frequent informational messages from jobs or applications) and reduce noise where possible.",
+      "Correlate informational messages with higher-severity errors and warnings to gain context when investigating incidents."
+    ]
+  },
+  {
+    "measurement": "User errors",
+    "description": "The number of user errors that were captured currently by the error log.",
+    "unit": "Number",
+    "interpretation": "This counts errors with severity levels 11 to 16, which typically arise from user problems such as bad queries, constraint violations, or permission issues. These are generally correctable by users or developers.[web:172]",
+    "troubleshootingSteps": [
+      "Inspect representative user error entries in the error log to identify common patterns (for example, frequent deadlock victim 1205s, conversion errors, or constraint violations).",
+      "Work with developers to fix application logic that repeatedly triggers user errors, such as invalid input handling or incorrect query syntax.[web:166]",
+      "Provide guidance or training to users if errors are primarily due to misuse of tools or ad-hoc querying.",
+      "Monitor trends; a sudden increase in user errors after a deployment may indicate regressions that need to be rolled back or patched."
+    ]
+  },
+  {
+    "measurement": "Software errors",
+    "description": "The number of software errors captured by the error log currently.",
+    "unit": "Number",
+    "interpretation": "This counts errors with severity levels 17 to 19. Severity 17 indicates that SQL Server has run out of a configurable resource (such as locks), severity 18 indicates non-fatal internal software problems, and severity 19 indicates that a nonconfigurable resource limit has been exceeded.[web:172]",
+    "troubleshootingSteps": [
+      "Investigate each software error in the error log to determine whether it relates to resource exhaustion (locks, memory, worker threads) or internal engine issues.[web:148][web:172]",
+      "For severity 17 and 19 errors, review relevant configuration limits (for example, max server memory, lock escalation behavior, max worker threads) and workload characteristics that may be exhausting resources.[web:166]",
+      "Check for known bugs or issues in the current SQL Server build and apply cumulative updates or service packs where appropriate.[web:148]",
+      "If internal software problems (severity 18) recur, open a support case with Microsoft, providing error log excerpts and system information."
+    ]
+  },
+  {
+    "measurement": "Fatal or system errors",
+    "description": "The number of hardware or system-level errors currently experienced by the target Microsoft SQL server.",
+    "unit": "Number",
+    "interpretation": "This counts errors with severity levels 20 to 25, typically associated with hardware or serious system problems. Severity 20–21 indicate serious issues affecting one or more processes; severity 22–23 indicate damaged tables, indexes, or suspect databases; severity 24 indicates hardware problems; severity 25 indicates other system errors.[web:172]",
+    "troubleshootingSteps": [
+      "Treat any increase in these errors as urgent; immediately review the error log entries to identify affected databases, objects, and operations.[web:148][web:172]",
+      "For severity 22–23, run DBCC CHECKDB to assess the extent of corruption and follow recommended repair or restore procedures from clean backups.[web:148]",
+      "For severity 24–25, investigate hardware: check disk and controller logs, OS event logs, and storage system health; replace failing components as needed.[web:148]",
+      "After resolving hardware or corruption issues, validate database integrity (DBCC CHECKDB) and consider additional monitoring to catch future problems early.",
+      "Document incidents and root causes and, if necessary, engage vendor or Microsoft support for deeper analysis."
+    ]
+  },
+  {
+    "measurement": "Other errors",
+    "description": "The number of other errors in the Microsoft SQL server.",
+    "unit": "Number",
+    "interpretation": "This captures error log entries that do not fit neatly into the standard severity-based categories above. The significance depends on the specific messages recorded.",
+    "troubleshootingSteps": [
+      "Sample recent \"other\" error entries from the error log to understand their exact nature and severity.",
+      "Classify recurring messages into appropriate categories (configuration, connectivity, application logic, etc.) and address underlying causes.",
+      "If these errors correspond to specific features or extensions, review their documentation and update or reconfigure them as needed.",
+      "Monitor the trend over time; a rising count may indicate emerging issues that warrant more detailed investigation."
+    ]
+  },
+  {
+    "measurement": "Warning messages",
+    "description": "Indicates the number of warning messages found in the SQL error logs during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This counts warning-level messages that are not full errors but can signal emerging or potential problems, such as impending resource shortages or configuration concerns.",
+    "troubleshootingSteps": [
+      "Regularly review warning messages in the error log to identify recurring patterns (for example, low disk space, failed log backups, or high-availability warnings).",
+      "Address resource-related warnings promptly by adding capacity, adjusting configuration, or revising maintenance jobs before they escalate into errors.",
+      "Correlate warning spikes with changes in workload or configuration to identify triggering events.",
+      "Promote critical recurring warnings into explicit monitoring alerts so they are not overlooked."
+    ]
+  },
+  {
+    "measurement": "File_Size",
+    "description": "Indicates the current size of the SQL error log file.",
+    "unit": "MB",
+    "interpretation": "This shows how large the main SQL error log file has grown. Very large error logs can be difficult to manage and may indicate high error or warning rates.",
+    "troubleshootingSteps": [
+      "Monitor the error log size and set thresholds beyond which the log should be cycled or archived.",
+      "If the error log grows quickly, identify and resolve the underlying errors or warnings contributing to its growth, rather than only truncating the file.",
+      "Implement regular error log cycling (for example, using sp_cycle_errorlog or Agent jobs) to keep individual log files to a manageable size.",
+      "Ensure that log retention policies and backups/archives are in place so historic logs remain available for forensic analysis if required."
+    ]
+  },
+  {
+    "measurement": "Growth rate",
+    "description": "Indicates the rate at which the SQL error log file is growing.",
+    "unit": "MB/Sec",
+    "interpretation": "A high or steadily increasing growth rate indicates that the SQL error log is expanding rapidly and may soon occupy excessive disk space. This often corresponds to bursts of errors, warnings, or verbose logging.",
+    "troubleshootingSteps": [
+      "When growth rate is high, immediately inspect the most recent error log entries to determine which messages are being written repeatedly.",
+      "Resolve or mitigate the root cause of repeated errors or warnings (for example, failing jobs, connection issues, or configuration errors) to slow log growth.[web:166][web:172]",
+      "Perform a log switch and archive or delete older error logs once root causes are under control, ensuring there is sufficient disk space for new logs.",
+      "Consider adjusting auditing and logging settings if they are excessively verbose and not aligned with operational needs."
+    ]
+  },
+  {
+    "measurement": "Login success",
+    "description": "Indicates the number of successful logins to the server during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This measure reflects how many successful connections were established. It is a useful indicator of overall server health and activity. Detailed diagnosis can show login time, SPID, and message. For valid metrics, both failed and successful login auditing must be enabled in the server’s Security properties.",
+    "troubleshootingSteps": [
+      "Monitor successful logins over time to understand typical connection patterns and detect unusual spikes or drops that may indicate application or connectivity issues.[web:166]",
+      "Ensure that login auditing is configured to capture both failed and successful logins if you rely on this metric for security and health monitoring.",
+      "Correlate login success counts with failed login counts and error messages to detect authentication issues, brute-force attempts, or misconfigured applications.",
+      "If login patterns change significantly after a deployment or configuration change, verify that connection strings, drivers, and authentication settings are correct."
+    ]
+  }
+]

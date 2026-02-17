@@ -1,0 +1,32 @@
+[
+  {
+    "Measurement": "Is database partitioning supported?",
+    "Description": "Indicates whether/not database partitioning feature is supported.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Note": "By default, this measure reports the Measure Value listed in the table below to indicate whether/not database partitioning feature is supported. The graph of this measure however, represents the same using the corresponding numeric equivalents only.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ]
+    }
+  },
+  {
+    "Measurement": "Partitioned tables",
+    "Description": "Indicates the number of tables that were partitioned.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure lists the name of the tables that were partitioned and the date until which the partition has been created."
+  },
+  {
+    "Measurement": "Non-partitioned tables",
+    "Description": "Indicates the number of tables on which partitions have not been created.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The tables that were existing on the database may not be partitioned if the eG backend database / eG manager is upgraded from a lower version (that does not support database partitioning feature(. However, the tables created on the database after the upgrade will be partitioned if the database supports database partitioning feature."
+  },
+  {
+    "Measurement": "Partition configuration missing tables",
+    "Description": "Indicates the number of partitioned tables for which the date until which the partition has been created is missing.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure lists the name of the tables on which partitions have not been created. By default, the date until which partitions were created for each table that is partitioned is maintained in the [PARTITIONED_TABLES] section of the eg_dbase.ini file available in the <eg_install_dir>/manager/config folder. If this date is unavailable for one/more tables, then, the counter of this measure will be incremented. Also, if this date has not been specified, then, even though the table has been partitioned, the data will be stored at random locations in the eG database. Hence, the cleanup process will require more data seeks to the database may take too long to complete. The detailed diagnosis of this measure lists the name of the tables for which the date until which the partition has been created is missing."
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "measurement": "Is paper available (Critical warning)",
+    "description": "Indicates the availability of paper in all trays.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that there is no paper in any of the trays. A value of 1 means that paper is available in at least one tray.",
+    "troubleshootingSteps": [
+      "If the value is 0, check each tray and load paper where required.",
+      "Verify that the printer correctly detects tray paper levels and that any tray‑specific sensors are functioning.",
+      "If paper is present but the value remains 0, inspect for sensor faults, incorrect tray configuration, or firmware issues.",
+      "After resolving paper shortages or sensor problems, confirm that the metric changes to 1 on the next poll."
+    ]
+  },
+  {
+    "measurement": "Toner capacity (Non-critical warning)",
+    "description": "Indicates the status of the toner with respect to its capacity.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that toner capacity is low. A value of 1 indicates that there is adequate toner in the printer.",
+    "troubleshootingSteps": [
+      "When the value is 0, plan to replace or refill the toner cartridge before print quality degrades or printing stops.",
+      "Check printer status pages or the control panel for more precise toner level readings and any related warnings.",
+      "Ensure that genuine or supported toner cartridges are used so that capacity sensing works reliably.",
+      "After replacing toner, verify that the printer reports adequate capacity and that the metric returns to 1."
+    ]
+  },
+  {
+    "measurement": "Is toner available (Critical warning)",
+    "description": "Indicates whether a toner is available for printing or not.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that either the toner cartridge is not physically present in the printer or the printer is out of toner. A value of 1 confirms that the toner cartridge is physically present and available for printing.",
+    "troubleshootingSteps": [
+      "If the value is 0, first verify that a toner cartridge is installed correctly and is not empty.",
+      "Inspect the printer for messages about missing or depleted toner and follow the manufacturer’s replacement procedure.",
+      "Check for protective seals or packaging left on a newly installed cartridge that might prevent detection.",
+      "Once the cartridge is properly installed and has toner, confirm that the metric switches to 1."
+    ]
+  },
+  {
+    "measurement": "Paper flow status (Critical warning)",
+    "description": "Indicates whether the flow of paper into and out of the printer is smooth.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that there is a paper jam. A value of 1 indicates that paper flow is smooth.",
+    "troubleshootingSteps": [
+      "When the value is 0, follow the printer’s jam‑clear instructions to remove any stuck paper from all accessible paths.",
+      "Check rollers and feed components for wear, debris, or damage that could cause recurring jams.",
+      "Verify that the correct media type and size are loaded and that trays and guides are adjusted properly.",
+      "After clearing jams and adjusting hardware, confirm that the metric returns to 1 during normal printing."
+    ]
+  },
+  {
+    "measurement": "Is online (Critical warning)",
+    "description": "Indicates whether the printer is online or offline.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that the printer is offline. A value of 1 denotes that the printer is online.",
+    "troubleshootingSteps": [
+      "If the value is 0, check the printer control panel to ensure it is not manually set to offline or paused.",
+      "Verify network connectivity, IP configuration, and that the printer responds to ping or SNMP if applicable.",
+      "Review print server or spooler status to ensure the queue and port are not disabled or misconfigured.",
+      "After restoring connectivity and online status, confirm that the measure reports 1 and print jobs succeed."
+    ]
+  },
+  {
+    "measurement": "Is door closed (Critical warning)",
+    "description": "Indicates the overall status of the doors/covers present in the printer. Available only for printers with doors/covers.",
+    "unit": "Boolean",
+    "interpretation": "A value of 0 indicates that one or more doors/covers are open. A value of 1 indicates that all doors/covers are closed.",
+    "troubleshootingSteps": [
+      "If the value is 0, inspect all printer doors and covers (front, rear, side, cartridge access, duplex unit) and close them securely.",
+      "Check for broken or misaligned door sensors or latches that may falsely report an open state.",
+      "Review the printer’s status display for specific guidance on which door or cover is open.",
+      "Once all doors are properly closed and any hardware issues corrected, verify that the metric changes to 1."
+    ]
+  }
+]

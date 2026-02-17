@@ -1,0 +1,68 @@
+[
+  {
+    "Measurement": "Web availability",
+    "Description": "This measurement indicates whether the server was able to respond successfully to the query made by the test.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Web availability failures could be caused by several factors such as the web server process(es) being down, the web server being misconfigured, a network failure, etc. Temporary unavailability may also occur if the web server is overloaded. Web availability is determined based on the response code returned by the server. A response code between 200 to 300 indicates that the server is available."
+  },
+  {
+    "Measurement": "Total response time",
+    "Description": "This measurement indicates the time taken by the server to respond to the requests it receives.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "Response time being high denotes a problem. Poor response times may be due to the server being overloaded or misconfigured. If the URL accessed involves the generation of dynamic content by the server, backend problems (e.g., an overload at the application server or a database failure) can also result in an increase in response time."
+  },
+  {
+    "Measurement": "TCP connection availability",
+    "Description": "This measure indicates whether the test managed to establish a TCP connection to the server.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Failure to establish a TCP connection may imply that either the web server process is not up, or that the process is not operating correctly. In some cases of extreme overload, the failure to establish a TCP connection may be a transient condition. As the load subsides, the server may start functioning properly again."
+  },
+  {
+    "Measurement": "TCP connect time",
+    "Description": "This measure quantifies the time for establishing a TCP connection to the web server host.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "Typically, the TCP connection establishment must be very small (of the order of a few milliseconds). Since TCP connection establishment is handled at the OS-level, rather than by the application, an increase in this value signifies a system-level bottleneck on the host that supports the web server."
+  },
+  {
+    "Measurement": "Server response time",
+    "Description": "This measure indicates the time period between when the connection was established and when the server sent back a HTTP response header to the client.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "While the total response time may depend on several factors, the server response time is typically a very good indicator of a server bottleneck (e.g., because all the available server threads or processes are in use)."
+  },
+  {
+    "Measurement": "Response code",
+    "Description": "The response code returned by the server for the simulated request.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A value between 200 and 300 indicates a good response. A 4xx value indicates a problem with the requested content (e.g., page not found). A 5xx value indicates a server error."
+  },
+  {
+    "Measurement": "Content length",
+    "Description": "The size of the content returned by the server.",
+    "MeasurementUnit": "KB",
+    "Interpretation": "Typically the content length returned by the server for a specific URL should be the same across time. Any change in this metric may indicate the need for further investigation on the server side."
+  },
+  {
+    "Measurement": "Content validity",
+    "Description": "This measure validates whether the server was successful in executing the request made to it.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "A value of 100% indicates that the content returned by the test is valid. A value of 0% indicates that the content may not be valid. This capability for content validation is especially important for multi-tier web applications. For example, a user may not be able to login to the web site but the server may reply back with a valid HTML page where an error message such as 'Invalid Login' is reported. In this case, availability will be 100% (since we got a valid HTML response). If the test is configured such that the content parameter should exclude the string 'Invalid Login', then in the above scenario content validity would have a value 0."
+  },
+  {
+    "Measurement": "DNS availability",
+    "Description": "Indicates whether the DNS server was able to respond successfully to the request made to it.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "A value of 100 indicates that the DNS server is available and successfully responded to the request, while 0 indicates that the DNS server is unavailable or not responding. DNS availability issues can be caused by network failures or by the DNS server being reachable at the network level but not responding to DNS queries. This measure is only reported when the URL is domain-based; IP-based URLs do not allow DNS availability to be evaluated."
+  },
+  {
+    "Measurement": "Data transfer time",
+    "Description": "Indicates the time taken for a data transfer between the drive and the host system.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "Data transfer time being high denotes a problem."
+  },
+  {
+    "Measurement": "DNS response time",
+    "Description": "Indicates the amount of time taken by the DNS server to respond to a request made to it. This measure will appear only if the Report DNS Time parameter is set to Yes.",
+    "MeasurementUnit": "Seconds",
+    "Interpretation": "A low value is preferred for this measure. A sudden or gradual increase in the value of this measure may indicate deterioration in user experience."
+  }
+]

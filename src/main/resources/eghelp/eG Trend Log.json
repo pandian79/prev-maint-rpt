@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Recent messages",
+    "description": "Indicates the number of messages matching the specified SEARCHPATTERN that were recently logged in the specified ALERTFILE.",
+    "unit": "Number",
+    "interpretation": "This shows how many log entries in the selected alert file match the configured search pattern over the most recent measurement period. A non-zero value indicates that one or more events of interest occurred; a sudden increase can signal new or worsening issues related to trend computation. The detailed diagnosis reveals the matching messages so you can understand the specific errors that occurred while trends were being computed.",
+    "troubleshootingSteps": [
+      "Use the detailed diagnosis to inspect each matching log entry, including timestamps and full error text, to see exactly what failed during trend computation.",
+      "Confirm that the SEARCHPATTERN is defined precisely enough to capture only trend-related error messages, avoiding unrelated noise.",
+      "Correlate spikes in this measure with recent configuration changes, new test definitions, or upgrades that may have impacted the trend computation logic.",
+      "If the same error appears repeatedly, investigate and correct the underlying configuration, data quality, or scheduling issues causing trend calculations to fail.",
+      "After applying fixes, continue monitoring this metric to verify that the number of recent messages drops back to normal or zero, indicating stable trend computation."
+    ]
+  }
+]

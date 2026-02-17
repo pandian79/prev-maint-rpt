@@ -1,0 +1,26 @@
+[
+  {
+    "measurement": "Script execution availability",
+    "description": "Indicates whether the script execution succeeded or failed.",
+    "measurementUnit": "Percent",
+    "interpretation": "100 means the script executed successfully; 0 means the script execution failed.",
+    "troubleshootingSteps": [
+      "Check the script’s exit code, logs, and any monitoring error messages to determine whether the failure is due to syntax errors, missing dependencies, permissions, or timeouts.[web:234][web:238][web:240][web:242][web:246][web:248]",
+      "Verify execution context (account, privileges, execution policy) and security controls such as antivirus, application control, or Group Policy that may block or sandbox script execution.[web:235][web:236][web:238][web:242][web:246][web:248]",
+      "Run the script manually on the target system to confirm it works outside the monitoring tool; if it succeeds manually but fails in automation, compare environments, paths, and parameters and adjust the monitoring configuration.[web:234][web:238][web:240][web:242][web:246][web:248]",
+      "If failures are widespread and involve WMI-based or OS-integrated scripts, check WMI health and Windows Scripting Host components and repair or update them if they are corrupted or outdated.[web:238][web:239][web:241][web:243][web:245][web:247]"
+    ]
+  },
+  {
+    "measurement": "WMI service availability",
+    "description": "Indicates whether or not the WMI service is up and running.",
+    "measurementUnit": "Percent",
+    "interpretation": "100 means the WMI service is up and running; 0 means the WMI service is down.",
+    "troubleshootingSteps": [
+      "Confirm that the Windows Management Instrumentation (Winmgmt) service is installed, set to start automatically, and currently running using Services or PowerShell (Get-Service winmgmt). Start it if it is stopped.[web:239][web:241][web:243][web:247]",
+      "Test WMI connectivity locally with tools such as WBEMTEST or simple queries (for example, select * from Win32_OperatingSystem in root\\cimv2) to verify that the repository responds without errors.[web:238][web:239][web:241][web:245][web:247]",
+      "If WMI is unresponsive or corrupted, follow a repair procedure: restart the WMI service, salvage or reset the WMI repository, and re-register WMI components and providers as documented, then reboot and retest.[web:239][web:241][web:243][web:245][web:247]",
+      "Check firewall rules, DCOM settings, and remote permissions if WMI is available locally but remote WMI calls fail from monitoring tools or management consoles.[web:239][web:241][web:247]"
+    ]
+  }
+]

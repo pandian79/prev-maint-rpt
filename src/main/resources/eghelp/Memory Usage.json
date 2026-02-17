@@ -1,0 +1,43 @@
+[
+  {
+    "Measurement": "Total memory",
+    "Description": "Indicates the total physical memory of the system.",
+    "MeasurementUnit": "GB",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Used memory",
+    "Description": "Indicates the used physical memory of the system.",
+    "MeasurementUnit": "GB",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Free memory",
+    "Description": "Memory that does not contain any valuable data, and that will be used first when processes, drivers or Operating System need more memory. This does not include standby memory.",
+    "MeasurementUnit": "GB",
+    "Interpretation": "This measure typically indicates the amount of memory available for use by applications running on the target host. On Unix operating systems (AIX and Linux), the operating system tends to use parts of the available memory for caching files, objects, etc. When applications require additional memory, this is released from the operating system cache. Hence, to understand the true free memory that is available to applications, the eG agent reports the sum of the free physical memory and the operating system cache memory size as the value of the Free physical memory measure while monitoring AIX and Linux operating systems."
+  },
+  {
+    "Measurement": "Memory utilized",
+    "Description": "Indicates the percent usage of physical memory.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Ideally, the value of this measure should be low. While sporadic spikes in memory usage could be caused by one/more rogue processes on the system, a consistent increase in this value could be a cause for some serious concern, as it indicates a gradual, but steady erosion of valuable memory resources. If this unhealthy trend is not repaired soon, it could severely hamper system performance, causing anything from a slowdown to a complete system meltdown. You can use the detailed diagnosis of this measure to figure out which processes on the host are consuming memory excessively."
+  },
+  {
+    "Measurement": "Cleanup automation status",
+    "Description": "Indicates the current status of automatic action.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Note": "By default, this measure reports the Measure Value listed in the table below. In the graph of this measure however, the value of this measure is represented using their numeric equivalents only.",
+      "Mappings": [
+        { "MeasureValue": "Not Required", "NumericValue": 1 },
+        { "MeasureValue": "Started", "NumericValue": 2 },
+        { "MeasureValue": "Running", "NumericValue": 3 },
+        { "MeasureValue": "Completed", "NumericValue": 4 },
+        { "MeasureValue": "Not Enabled", "NumericValue": 5 },
+        { "MeasureValue": "Failed", "NumericValue": 6 }
+      ],
+      "Details": "Use the detailed diagnosis of this measure to find out what are the automation actions triggered when the memory utilization exceeds the value specified against the Automation Memory Limit parameter."
+    }
+  }
+]

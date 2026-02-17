@@ -1,0 +1,93 @@
+[
+  {
+    "measurement": "Status",
+    "description": "Indicates whether/not the disk quota set for this user on this disk partition has been violated, and if so, which limit has been violated.",
+    "measurementUnit": null,
+    "interpretation": "OK=0 (quota not exceeded), Warning=1 (soft/warning limit exceeded), Exceeded=2 (hard limit exceeded). Warning or Exceeded indicates excessive utilization of space by this user and may require cleanup, quota tuning, or additional capacity.",
+    "troubleshootingSteps": [
+      "When Status is 'Warning' or 'Exceeded', identify which files and directories owned by the user are consuming the most space using quota reports or disk-usage tools (for example, du on Unix, or quota reports/File Server tools on Windows).[web:72][web:73][web:75][web:81][web:82]",
+      "Ask or instruct the user to delete, archive, or compress unnecessary data (old logs, temp files, cache, large media files) to bring usage back under the warning or hard limit.[web:71][web:72][web:73][web:77]",
+      "If the user’s workload legitimately requires more space, increase that user’s quota limit for the partition or move part of the data to another volume with more capacity.[web:72][web:73][web:76][web:78][web:82][web:83]",
+      "Review and, if needed, redesign quota policies (warning thresholds, hard limits, per-role tiers) to better match real usage patterns and avoid constant violations.[web:76][web:78][web:79][web:81][web:82][web:83]"
+    ]
+  },
+  {
+    "measurement": "Disk used",
+    "description": "Indicates the amount of disk space that is currently used by this user on this partition.",
+    "measurementUnit": "GB",
+    "interpretation": "By comparing this value across descriptors, you can figure out which user is making the most use of which disk partition.",
+    "troubleshootingSteps": [
+      "Generate per-user disk-usage reports to identify users with unusually high 'Disk used' values on any partition.[web:72][web:73][web:75][web:80][web:81][web:82]",
+      "Drill down into that user’s directories and files to find large or numerous items (logs, temp files, old backups, dumps) that can be deleted or archived.[web:71][web:72][web:73][web:77]",
+      "If a single user’s consumption consistently grows, consider moving their data to a dedicated volume or increasing their quota while adjusting capacity plans.[web:72][web:73][web:76][web:78][web:82][web:83]"
+    ]
+  },
+  {
+    "measurement": "Quota used",
+    "description": "Indicates the percentage of the quota set for this user on this partition that is currently in use.",
+    "measurementUnit": "Percent or 'No limit'",
+    "interpretation": "Calculated as (Disk used / Quota limit)*100. Values near 100% indicate abnormal or heavy use of space on this partition by the user. A reported value of -6 means no limit has been set and the console shows 'No limit'.",
+    "troubleshootingSteps": [
+      "Alert on high 'Quota used' percentages (for example, above 85–90%) so users and admins can clean up data before hard limits are hit.[web:75][web:76][web:78][web:81][web:82][web:83]",
+      "Work with the user to delete, archive, or compress data to reduce usage below the warning threshold, focusing on large or obsolete files.[web:71][web:72][web:73][web:77]",
+      "Where high quota usage is expected due to legitimate workloads, raise the user’s quota or redistribute data/storage to avoid frequent quota violations.[web:72][web:73][web:76][web:78][web:82][web:83]",
+      "If 'No limit' (-6) is reported but space contention occurs, define appropriate quota and warning levels so heavy users cannot exhaust the partition.[web:75][web:76][web:78][web:81][web:82][web:83]"
+    ]
+  },
+  {
+    "measurement": "Limit remaining",
+    "description": "Indicates the amount of disk quota that is yet to be used by this user on this disk partition.",
+    "measurementUnit": "GB or 'No limit'",
+    "interpretation": "A high value is desired. A reported value of -6 means no limit has been set; in that case, the console displays 'No limit'.",
+    "troubleshootingSteps": [
+      "Monitor 'Limit remaining' and alert when it drops below a small buffer (for example, a few GB or a small percentage of the quota), so action can be taken before writes fail.[web:72][web:75][web:76][web:78][web:81][web:82][web:83]",
+      "When the remaining limit is low, identify and remove or archive nonessential data for that user to reclaim space.[web:71][web:72][web:73][web:77]",
+      "If low remaining limit reflects normal growth for that user’s workload, increase the quota or move some of the user’s data to another partition with more space.[web:72][web:73][web:76][web:78][web:82][web:83]",
+      "If 'No limit' is configured yet partitions run low on free space, enforce quotas and set sensible warning/hard thresholds to prevent a single user from consuming all capacity.[web:75][web:76][web:78][web:81][web:82][web:83]"
+    ]
+  },
+  {
+    "measurement": "Quota limit",
+    "description": "Indicates the disk quota specified for this user on this partition.",
+    "measurementUnit": "GB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Review quota limits periodically to ensure they align with user roles and historical usage, adjusting up or down as needed.[web:76][web:78][web:79][web:81][web:82][web:83]",
+      "If users frequently hit their hard limit, either increase the quota for valid workloads or enforce cleanup and archiving policies for excess data.[web:72][web:73][web:76][web:78][web:81][web:82]",
+      "Ensure that global or template-based quota settings are applied correctly to new and existing users to avoid misconfigured extremely low or high limits.[web:72][web:75][web:76][web:78][web:83]"
+    ]
+  },
+  {
+    "measurement": "Warning level",
+    "description": "Indicates the disk space usage limit set for this disk partition when used by this user, beyond which an event will be logged in the event log warning administrators of an impending disk space crunch.",
+    "measurementUnit": "GB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Set warning levels at an appropriate percentage of the quota (for example, 75–90% depending on environment) so there is enough time to react before the hard limit is reached.[web:76][web:78][web:79][web:81][web:82]",
+      "Verify that alerts or event-log notifications tied to the warning level are enabled and routed to the right administrators or ticketing system.[web:75][web:76][web:78][web:80][web:83]",
+      "Tune warning thresholds if you receive too many or too few alerts, balancing noise against the risk of running out of space.[web:76][web:78][web:81][web:82][web:83]"
+    ]
+  },
+  {
+    "measurement": "Is user over the warning limit?",
+    "description": "Indicates whether/not the usage of this disk partition by this user has exceeded the specified ‘warning’ limit.",
+    "measurementUnit": null,
+    "interpretation": "Yes=1, No=0. A value of Yes indicates the disk quota is about to be used up and warrants investigation and possible cleanup or quota adjustment.",
+    "troubleshootingSteps": [
+      "When this measure is 'Yes', immediately review that user’s disk usage to identify large or unnecessary files and perform cleanup or archiving.[web:72][web:73][web:75][web:77][web:81][web:82]",
+      "Notify the user that they are over the warning limit and provide guidelines or automated tools for cleaning up their data.[web:72][web:76][web:78][web:83]",
+      "If multiple users are frequently over the warning limit, reassess warning thresholds and overall storage capacity planning for the partition.[web:75][web:76][web:78][web:79][web:81][web:82][web:83]"
+    ]
+  },
+  {
+    "measurement": "Is user over the hard limit?",
+    "description": "Indicates whether/not the usage of this disk partition by this user has exceeded the specified ‘hard’ limit.",
+    "measurementUnit": null,
+    "interpretation": "Yes=1, No=0. A value of Yes indicates the hard disk quota limit has been exceeded, and the user may be unable to create or extend files.",
+    "troubleshootingSteps": [
+      "If the user is over the hard limit, expect write failures; work with the user to delete or archive data immediately so usage drops below the hard limit.[web:72][web:73][web:77][web:79][web:81][web:82]",
+      "Where the overage reflects legitimate growth, increase the user’s hard limit or move part of their data to another storage location to restore functionality.[web:72][web:73][web:76][web:78][web:81][web:82][web:83]",
+      "Investigate recurring hard-limit breaches for process or application behaviors (e.g., runaway logging, unrotated temp data) and enforce better housekeeping or policies.[web:71][web:72][web:73][web:76][web:79][web:81][web:82]"
+    ]
+  }
+]

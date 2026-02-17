@@ -1,0 +1,115 @@
+[
+  {
+    "measurement": "Physical reads",
+    "description": "Indicates the rate at which the queries directly executed on and read from the physical disk.",
+    "unit": "Reads/Sec",
+    "interpretation": "A high value could indicate that direct disk accesses are occurring too frequently, which implies poor cache usage. Resizing or tuning the cache to accommodate more queries can help reduce direct disk reads.",
+    "troubleshootingSteps": [
+      "Correlate high physical reads with buffer/cache hit ratios and disk latency to confirm that queries are frequently bypassing cache.",
+      "Use query profiling tools (such as STATISTICS IO or execution plans) to identify queries with high physical read counts and focus tuning efforts on them.",
+      "Ensure appropriate indexing to avoid unnecessary full table scans or large range scans that drive physical reads.",
+      "Increase memory or adjust buffer/cache configuration so more frequently accessed data pages can remain resident and reduce disk access.",
+      "Archive or partition cold data so that active datasets fit more easily into memory, minimizing reads from slow storage."
+    ]
+  },
+  {
+    "measurement": "Average physical reads",
+    "description": "Indicates the average number of reads performed by the queries that executed directly on the physical disk.",
+    "unit": "Number",
+    "interpretation": "A high value indicates that one or more queries are reading too frequently from the physical disk, which is unhealthy and usually due to poor cache usage. Detailed diagnosis can reveal which queries are not executing from cache and how many times each reads directly from disk, helping you identify the worst offenders.",
+    "troubleshootingSteps": [
+      "Use the detailed diagnosis to list queries with the highest average physical reads and prioritize them for optimization.",
+      "Analyze execution plans for these queries to replace table scans with index seeks where possible, and to reduce unnecessary I/O.",
+      "Check whether these queries repeatedly access cold or archival data and consider moving such data to separate structures or using filtered indexes.",
+      "Evaluate parameterization and query patterns so that similar queries can share execution plans and make better use of cached pages.",
+      "After tuning, re-measure average physical reads to confirm that disk pressure from these queries has decreased."
+    ]
+  },
+  {
+    "measurement": "Logical reads",
+    "description": "Indicates the rate of data reads performed by queries to the cache.",
+    "unit": "Reads/Sec",
+    "interpretation": "A high value is generally desirable and indicates that most data reads are served from cache rather than disk. A low value suggests ineffective cache usage, often caused by insufficient or poorly tuned cache.",
+    "troubleshootingSteps": [
+      "Compare logical read rates with physical reads; aim for a pattern where logical reads are high and physical reads are relatively low for the same workload.[web:120]",
+      "If logical reads are low and physical reads are high, increase cache/memory allocation or reduce competing memory usage so more data can be cached.",
+      "Ensure that frequently accessed tables and indexes fit into memory where possible by archiving old data or partitioning large tables.",
+      "Tune queries to access only the necessary rows and columns, avoiding redundant reads that evict useful pages from cache."
+    ]
+  },
+  {
+    "measurement": "Average logical reads",
+    "description": "Indicates the average number of data reads performed by queries to the cache.",
+    "unit": "Number",
+    "interpretation": "A high value is typically desirable, reflecting effective cache use. A low value may indicate ineffective cache usage, often due to improper cache size. Detailed diagnosis can list the top-5 queries by logical reads, helping identify the most I/O-intensive cached queries.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify the top queries by logical reads and verify whether their workload is expected (for example, reporting or analytics).",
+      "For queries with very high logical reads and poor performance, examine execution plans and indexing to reduce redundant page accesses.",
+      "Consider adding covering indexes or rewriting queries to avoid repeatedly scanning large cached ranges when only a subset of data is needed.",
+      "Monitor CPU usage in tandem with logical reads, since high logical reads can correspond to high CPU utilization on busy systems."
+    ]
+  },
+  {
+    "measurement": "Logical writes",
+    "description": "Indicates the rate at which the cached queries performed writes.",
+    "unit": "Writes/Sec",
+    "interpretation": "A high value is expected for write-heavy workloads and indicates that many writes are being handled through the cache rather than hitting disk immediately. A very low value relative to workload can point to ineffective cache usage or overly aggressive flushing.",
+    "troubleshootingSteps": [
+      "Correlate logical writes with transaction log and data file I/O to ensure that write activity is being buffered effectively and not causing excessive synchronous disk writes.",
+      "Review write-heavy queries or batch operations to ensure they are using set-based operations efficiently rather than many small row-by-row updates.",
+      "Check checkpoint and flush policies so that cached writes are persisted at appropriate intervals without overwhelming storage.",
+      "Balance cache size so that it can absorb expected write bursts while still providing room for read caching."
+    ]
+  },
+  {
+    "measurement": "Average logical writes",
+    "description": "Indicates the average number of times data writes were performed by a query to the cache.",
+    "unit": "Number",
+    "interpretation": "A high value is desirable for write-heavy workloads and indicates that writes are being processed through cache. A low value suggests that write operations may not be benefiting fully from caching. Detailed diagnosis can show the top-5 queries by logical writes to pinpoint the most I/O-intensive cached write operations.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify queries with the highest logical writes and confirm whether they are expected bulk-load or batch processes.",
+      "Optimize high-write queries by batching changes, minimizing unnecessary updates, and ensuring appropriate indexing to reduce write amplification.",
+      "Review transaction design to avoid excessively long transactions that generate large numbers of writes and hold locks for extended periods.",
+      "Confirm that cache and log configurations can handle peak write loads without causing contention or flush storms."
+    ]
+  },
+  {
+    "measurement": "CPU time",
+    "description": "Indicates the percentage of time for which the cached queries hogged the CPU.",
+    "unit": "Percent",
+    "interpretation": "A high value indicates excessive CPU usage by cached queries. Detailed diagnosis can identify the most CPU-intensive queries so they can be tuned.",
+    "troubleshootingSteps": [
+      "Identify the top CPU-consuming queries using detailed diagnostics or performance DMVs, and prioritize them for tuning.",
+      "Examine execution plans for CPU-heavy queries to remove unnecessary computations, joins, and sorts, and to ensure appropriate indexes are used.",
+      "Check for scalar or row-by-row operations in application code or stored procedures that could be rewritten as more efficient set-based operations.",
+      "Correlate CPU time with logical reads and writes; high CPU with high logical I/O often points to queries scanning more data than necessary.[web:129]",
+      "If CPU is consistently saturated despite tuning, consider scaling up CPU resources or scaling out the database workload."
+    ]
+  },
+  {
+    "measurement": "Maximum elapsed time",
+    "description": "Indicates the maximum time taken by the cached queries for execution.",
+    "unit": "Secs",
+    "interpretation": "A very high value suggests that the database is slow at processing certain queries or that some queries are inherently long-running. Common causes include improper indexing, fragmented tables, and poorly structured queries. Long-running queries consume more resources and can degrade overall database performance. Detailed diagnosis helps quickly identify these resource-intensive queries for fine-tuning.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to find the specific queries with the highest elapsed times and review their frequency and business importance.",
+      "Compare CPU time vs elapsed time for these queries to distinguish between CPU-bound and I/O- or wait-bound issues.",
+      "Optimize indexes and statistics for tables used by slow queries, and eliminate unnecessary full scans or large sorts.",
+      "Rewrite complex queries to reduce join complexity, break heavy operations into smaller steps, or pre-aggregate data where appropriate.",
+      "Monitor lock waits, blocking, and other wait types that may contribute to high elapsed times even when CPU time is moderate."
+    ]
+  },
+  {
+    "measurement": "Recently executed queries",
+    "description": "Indicates the number of queries that executed in the cache since the last measurement period.",
+    "unit": "Number",
+    "interpretation": "A consistent rise in this value indicates that more queries are successfully executing from cache rather than accessing disk directly, reflecting optimal cache usage and reduced direct disk I/O.",
+    "troubleshootingSteps": [
+      "Track this measure alongside physical and logical reads to confirm that as cached executions increase, physical disk reads remain controlled or decrease.",
+      "If this value is unexpectedly low for a busy system, investigate whether frequent plan eviction, memory pressure, or configuration issues are preventing effective use of the cache.",
+      "Review query patterns to ensure they are sufficiently parameterized to promote plan and cache reuse instead of generating many unique ad-hoc queries.",
+      "After memory or cache configuration changes, verify that the number of recently executed cached queries increases and overall I/O performance improves.",
+      "Use this metric along with cache hit ratios to fine-tune cache size and workload distribution for better overall efficiency."
+    ]
+  }
+]

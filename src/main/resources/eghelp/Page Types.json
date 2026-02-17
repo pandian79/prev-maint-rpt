@@ -1,0 +1,329 @@
+[
+  {
+    "measurement": "Total Page views",
+    "description": "Indicates the total number of times pages of this type were viewed by users to the web site/web application.",
+    "unit": "Number",
+    "interpretation": "This is a good measure of the traffic to a specific page type. Sudden, but significant spikes in the page view count could be a cause for concern, as it could be owing to a malicious virus attack or an unscrupulous attempt to hack your web site/web application. An abnormally high value for this measure may not always be a cause for concern, because after Real User Monitor agent stops or agent‑collector disconnections, locally stored metrics can be cumulated and reported in the current period, making Total Page views appear to surge.",
+    "troubleshootingSteps": [
+      "Investigate sudden spikes in Total Page views for this page type using web server, CDN, and WAF logs to distinguish real user traffic from bots or attacks.",
+      "Correlate spikes with monitoring agent restarts or agent‑collector reconnections to detect artificial inflation caused by delayed metric uploads.",
+      "Compare page‑type view trends with overall site traffic to see whether the spike is limited to this page type or part of a broader pattern.",
+      "If malicious or non‑human traffic is confirmed, apply rate limiting, IP/user‑agent blocking, or CAPTCHA challenges targeted at traffic hitting this page type."
+    ]
+  },
+  {
+    "measurement": "Apdex score",
+    "description": "Indicates the total number of times pages of this type were viewed by users to the web site/web application.",
+    "unit": "Number",
+    "interpretation": "Apdex converts many measurements into a single number on a 0‑to‑1 scale (0 = no users satisfied, 1 = all users satisfied). The Apdex formula is ApdexT = (Satisfied Count + Tolerating Count / 2) / Total Samples. A score of 1.0 means all responses were satisfactory, while 0.0 means none were satisfactory. Ideally, the value of this measure should be 1.0; values less than 1.0 indicate that the experience of users with this page type has been less than satisfactory.",
+    "troubleshootingSteps": [
+      "Break down the Apdex score for this page type into satisfied, tolerating, and frustrated samples to understand which group dominates.",
+      "Correlate low Apdex with Average page load time and error metrics specifically for this page type.",
+      "Identify slow or error‑prone URLs within this page type via detailed diagnostics and prioritize fixes for those with highest traffic and worst Apdex.",
+      "Review and adjust the Apdex threshold T if necessary so that it matches realistic performance expectations for this page type."
+    ]
+  },
+  {
+    "measurement": "Average page load time",
+    "description": "Indicates the average time taken by the pages of this type to load completely on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the average interval between the time that a user initiates a request and the completion of page load in the browser. For Ajax requests, it ends when the response has been completely processed. Comparing this metric across page types reveals whether a particular type is significantly slower. Comparing Average front end time, Average network time, and Average server time for that page type helps determine whether slowness is due to front end, network, or backend issues; further breakdown with Average browser initial request time and Average content download time refines the diagnosis.",
+    "troubleshootingSteps": [
+      "Compare Average page load time across different page types to identify which types are notably slower.",
+      "For this page type, decompose timing into front end, network, and server components to find the main contributor to slowness.",
+      "If network time dominates, investigate DNS, TCP connection, and SSL handshake performance for requests to this page type.",
+      "If server time dominates, profile backend operations (DB queries, external services, application logic) executed during requests to this page type."
+    ]
+  },
+  {
+    "measurement": "Unique user session",
+    "description": "Indicates the number of distinct users who are currently accessing pages of this type in the web site/web application.",
+    "unit": "Number",
+    "interpretation": "HttpOnly is a flag that can be set on cookies to prevent their contents from being accessed by JavaScript, often for session cookies as a security measure. If the HttpOnly flag is set for the session cookies of the monitored web site, the Real User Monitor JavaScript cannot read the session identifier from cookies and therefore cannot report the count of unique sessions for this page type.",
+    "troubleshootingSteps": [
+      "Verify whether session cookies are marked HttpOnly and understand that this prevents RUM from counting unique sessions for this page type.",
+      "If unique session counts are required, consider alternative session identifiers that are safe yet readable by RUM scripts (e.g., non‑sensitive IDs).",
+      "Cross‑check unique session estimates for this page type with server‑side session logs or analytics tools.",
+      "Document the implications of HttpOnly for observability so stakeholders do not misinterpret missing or low unique session data."
+    ]
+  },
+  {
+    "measurement": "Page views per minute",
+    "description": "Indicates the number of times the pages of this type were viewed per minute.",
+    "unit": "Number",
+    "interpretation": "An unusually high value for this measure may require investigation.",
+    "troubleshootingSteps": [
+      "Monitor Page views per minute for this page type and detect spikes relative to historical baselines and expected traffic.",
+      "Identify top referrers, IPs, and user agents contributing to high view rates of this page type to detect scraping or attack traffic.",
+      "Correlate spikes with infrastructure metrics (CPU, memory, bandwidth) to ensure capacity is adequate for bursts focused on this page type.",
+      "Apply rate‑limiting or WAF rules for suspicious sources excessively hitting this page type."
+    ]
+  },
+  {
+    "measurement": "Normal page view percentage",
+    "description": "Indicates the percentage of page views of this type that delivered a satisfactory experience to users.",
+    "unit": "Percent",
+    "interpretation": "This measure indicates the percentage of page views of this type in which users have neither experienced any slowness nor encountered JavaScript errors. Ideally, it should be 100%. Values slightly below 100% imply that user experience for this page type is not optimal; values below 50% indicate serious problems where most views are slow or error‑prone. Comparing Slow page view percentage and JavaScript error page view percentage for this type reveals whether slow pages or JavaScript errors are primarily responsible.",
+    "troubleshootingSteps": [
+      "Track Normal page view percentage together with Slow page view percentage and JavaScript error page view percentage for this page type.",
+      "If slow pages dominate, use Slow page views – Tolerating & Frustrated diagnostics to identify which pages of this type are slow and where time is lost (front end, network, or backend). ",
+      "If JavaScript errors dominate, use JavaScript error page view percentage diagnostics to identify the specific errors and affected pages of this type.",
+      "Monitor changes in this percentage after deployments or configuration changes related to this page type to verify improvements or catch regressions."
+    ]
+  },
+  {
+    "measurement": "Slow page view percentage",
+    "description": "Indicates the percentage of page views of this type that are slow in loading.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that more than half of the page views of this type are slow. Detailed diagnosis of Slow page views – Tolerating & Frustrated helps identify slow pages and isolate whether slowness is due to the front end, the network, or the backend.",
+    "troubleshootingSteps": [
+      "Use Slow page views – Tolerating & Frustrated diagnostics to list the slowest pages within this page type and their frequency.",
+      "Analyze timing breakdowns for those pages (network vs server vs rendering) to determine which layer needs optimization.",
+      "Check whether slow percentages correlate with particular user segments (region, device, browser) accessing this page type.",
+      "Prioritize optimization for pages whose slow views are both frequent and business‑critical within this page type."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page view percentage",
+    "description": "Indicates the percentage of page views of this type that have encountered JavaScript errors.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that over half of the page views of this type experience JavaScript errors. Detailed diagnostics can be used to identify error pages and to determine what JavaScript error has occurred on which page, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Inspect JavaScript error diagnostics scoped to this page type to identify the most common errors and their stack traces.",
+      "Determine whether errors are associated with specific browsers, devices, or localized content variants of this page type.",
+      "Fix or guard against the most frequent and impactful errors first, then monitor this percentage for improvement.",
+      "Introduce graceful fallbacks and robust error handling on critical functionality within this page type to reduce user impact."
+    ]
+  },
+  {
+    "measurement": "Satisfied page views",
+    "description": "Indicates the number of times pages of this type were viewed without any slowness.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF configured for the test; if not, it is deemed satisfactory. Ideally, Satisfied page views for this type should equal Total Page views. If this value is much lower than Tolerating and Frustrated page views, it clearly indicates that user experience with this page type has been below‑par.",
+    "troubleshootingSteps": [
+      "Compare Satisfied page views with Total Page views for this page type to understand the share of truly good experiences.",
+      "Monitor periods when Satisfied views drop while Tolerating and Frustrated views rise for this page type and correlate with changes or incidents.",
+      "Review and adjust SLOW TRANSACTION CUTOFF to ensure it aligns with realistic performance targets for this page type.",
+      "Use diagnostics for Tolerating and Frustrated views to fix issues preventing more views from being classified as satisfied."
+    ]
+  },
+  {
+    "measurement": "Slow page views - Tolerating & Frustrated",
+    "description": "Indicates the number of page views of this type that were slow.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF. Ideally, pages should load quickly, so 0 is the desired value. High values show that users frequently experience slowness when accessing this page type; detailed diagnostics indicate which views are slow and why.",
+    "troubleshootingSteps": [
+      "Identify specific URLs within this page type that have the highest counts of slow views and group them by functional area.",
+      "Determine whether slowness is global for the page type or limited to certain regions, devices, or browsers.",
+      "Optimize server responses, caching strategies, and front‑end payloads for the most problematic pages within this type.",
+      "Track slow view counts after optimizations to ensure that performance for this page type improves over time."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page views",
+    "description": "Indicates the number of times JavaScript errors occurred when viewing pages of this type.",
+    "unit": "Number",
+    "interpretation": "Ideally, this value should be 0. A high value indicates that many JavaScript errors occur when viewing pages, and detailed diagnostics help identify the error pages and the specific JavaScript errors that have occurred.",
+    "troubleshootingSteps": [
+      "Aggregate JavaScript error page views by error type and page within this page type to determine which issues are most severe.",
+      "Investigate whether certain user environments (browser, device, locale) are disproportionately affected when viewing this page type.",
+      "Implement fixes for the most frequent errors, and re‑measure this metric for this page type after deployment.",
+      "Configure monitoring and alerts for spikes in JavaScript error page views on this page type to catch regressions quickly."
+    ]
+  },
+  {
+    "measurement": "Tolerating page views",
+    "description": "Indicates the number of tolerating page views of this type.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page exceeds the SLOW TRANSACTION CUTOFF but is less than 4 times that cutoff, the view is considered a Tolerating page view. Ideally, this value should be 0. Values higher than Satisfied page views imply that overall user experience with this page type is less than satisfactory.",
+    "troubleshootingSteps": [
+      "Monitor the ratio of Tolerating to Satisfied page views for this page type to identify gradual performance degradation.",
+      "Analyze timing breakdowns for tolerating views to see whether front end, network, or backend is keeping them just outside the satisfied band.",
+      "Optimize moderately slow components (e.g., compress assets, cache responses, streamline DOM) to move tolerating views into the satisfied category.",
+      "Use A/B or canary testing focused on this page type to validate the impact of performance improvements on tolerating views."
+    ]
+  },
+  {
+    "measurement": "Frustrated page views",
+    "description": "Indicates the number of frustrated page views of this type.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page is greater than 4 times the SLOW TRANSACTION CUTOFF, the view is considered a Frustrated page view. Ideally, this value should be 0. Values higher than Satisfied page views indicate that user experience with this page type has been significantly unsatisfactory.",
+    "troubleshootingSteps": [
+      "Identify which specific pages in this page type contribute most to frustrated views and prioritize them for urgent remediation.",
+      "Correlate spikes in frustrated views with backend errors, timeouts, or saturation events impacting this page type.",
+      "Consider network conditions (e.g., mobile or high‑latency environments) frequently used by visitors to this page type and optimize accordingly.",
+      "Roll back or guard new features or heavy content on this page type if their introduction coincides with increased frustrated views."
+    ]
+  },
+  {
+    "measurement": "Average browser initial request time",
+    "description": "Indicates the interval between when a request was received by pages of this type, when it followed a redirect, to when it was processed in the AppCache.",
+    "unit": "ms",
+    "interpretation": "This is the time between navigationStart and domainLookupStart and includes time spent waiting in the browser, following redirects, and checking AppCache. It equals the sum of Average AppCache time, Average redirection time, and Average browser wait time. High values indicate that requests to this page type are delayed before DNS starts, so comparing component measures shows whether redirection, AppCache, or browser waiting is mainly responsible.",
+    "troubleshootingSteps": [
+      "Decompose Average browser initial request time into Average AppCache time, Average redirection time, and Average browser wait time for this page type.",
+      "Reduce redirects for this page type, especially unnecessary chains, to lower initial request time.",
+      "Optimize or replace AppCache behavior for this page type if AppCache time is a significant contributor.",
+      "Minimize the number of concurrent requests so that key requests for this page type spend less time waiting in the browser queue."
+    ]
+  },
+  {
+    "measurement": "Average browser render time",
+    "description": "Indicates the time taken to complete the download of remaining resources, including images, and to finish rendering the pages of type in the browser.",
+    "unit": "ms",
+    "interpretation": "High values indicate that rendering pages of this type is taking too long, often due to in‑optimal HTML document architecture, complex CSS (deeply nested rules, slow selectors, complex effects), and large images. When Average page load time is high, comparing this measure with Average browser initial request time, Average network time, Average server time, and Average content download time helps determine whether rendering is the main bottleneck for this page type.",
+    "troubleshootingSteps": [
+      "Use browser dev tools to profile layout, paint, and composite times for this page type.",
+      "Simplify HTML and CSS, reduce heavy visual effects, and optimize or lazy‑load images used on this page type.",
+      "Adopt responsive design and asset strategies so that users on constrained devices or networks see lighter versions of these pages.",
+      "Monitor Average browser render time specifically for this page type after UI changes to ensure no regressions."
+    ]
+  },
+  {
+    "measurement": "Average content download time",
+    "description": "Indicates the time taken by the browser to make the complete HTML document (DOM) available for JavaScript to apply rendering logic on the pages of this type.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and documentContentLoadedEventStart. It equals the sum of Average DOM download time and Average DOM processing time. If content download takes unusually long for this page type, comparing these two measures shows whether the delay is due to server/cache/local responsiveness or extended DOM processing.",
+    "troubleshootingSteps": [
+      "Split Average content download time into Average DOM download time and Average DOM processing time for this page type to see which is dominant.",
+      "Reduce HTML size for these pages via minification and elimination of unused markup and inline scripts.",
+      "Ensure compression (gzip/brotli) is enabled and effective for HTML responses of this page type.",
+      "If DOM processing time dominates, focus on simplifying DOM structure and reducing heavy JavaScript during parsing."
+    ]
+  },
+  {
+    "measurement": "Average DOM download time",
+    "description": "Indicates the time taken to download the complete HTML document for this page type on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and responseEnd. Higher values increase the time needed to make the document available for rendering, thereby affecting overall user experience for this page type. A low value is desired at all times.",
+    "troubleshootingSteps": [
+      "Check network latency and bandwidth for typical users visiting this page type to detect slow paths.",
+      "Reduce HTML payload size by removing unnecessary inline resources and simplifying templates for this page type.",
+      "Ensure that CDN edges delivering this page type are geographically close to users.",
+      "Monitor this metric over time and by segment (region, device) to locate groups affected by high DOM download times."
+    ]
+  },
+  {
+    "measurement": "Average DOM processing time",
+    "description": "Indicates the time taken by the browser to build the Document Object Model (DOM) for the pages of this type and make it available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "An unusually high value clearly indicates that DOM building is taking longer than normal for this page type. This delays rendering and adversely impacts user experience. Ideally, the value of this measure should be low.",
+    "troubleshootingSteps": [
+      "Reduce DOM complexity and depth on pages of this type, removing unnecessary wrappers and elements.",
+      "Limit heavy synchronous JavaScript that runs during initial DOM construction for this page type.",
+      "Break large pages into smaller logical sections or use lazy loading so initial DOM is smaller.",
+      "Audit third‑party components and tags included only on this page type that may generate large or inefficient DOMs."
+    ]
+  },
+  {
+    "measurement": "Average server time",
+    "description": "Indicates the interval between the start of processing of a request on the browser for this page type to when the response is received.",
+    "unit": "ms",
+    "interpretation": "Average server time is the time between requestStart and responseStart. Ideally, it should be low because high values hurt the Apdex score. It is driven by the request processing ability and configuration of the web or application server. Backend slowdowns due to insufficient resources or misconfiguration increase this metric. For IE 11, Navigation Timing may mis‑report requestStart, and Business Transactions traces are recommended as a workaround to measure true server time per transaction.",
+    "troubleshootingSteps": [
+      "Monitor backend CPU, memory, database, and external service performance during periods of high Average server time for this page type.",
+      "Use APM/BTM traces to inspect end‑to‑end transactions for this page type and identify slow spans (queries, remote calls, etc.).",
+      "Scale or tune backend components such as application servers and databases that are heavily used by this page type.",
+      "Investigate server configuration (thread pools, connection pools, caching, GC) to ensure it is optimized for traffic to this page type."
+    ]
+  },
+  {
+    "measurement": "Average network time",
+    "description": "Indicates the elapsed time since a user initiates a request to this page type and the start of fetching the response document from it.",
+    "unit": "ms",
+    "interpretation": "Average network time is the interval between navigationStart and requestStart and includes the time for DNS lookup and TCP connection. It equals the sum of Average DNS lookup time and Average TCP connection time. Ideally, it should be low; high values delay page loading and degrade service quality. Navigation Timing issues in IE 11 can cause inaccuracies for that browser.",
+    "troubleshootingSteps": [
+      "Break down Average network time into Average DNS lookup time and Average TCP connection time for requests to this page type.",
+      "Evaluate network paths from major user regions to the servers or CDN edges serving this page type and optimize routing or POP placement.",
+      "Use CDNs and adequate PoPs to reduce latency for users accessing this page type.",
+      "Enable connection reuse and modern protocols (HTTP/2/3) to minimize per‑request setup costs for this page type."
+    ]
+  },
+  {
+    "measurement": "Average DNS lookup time",
+    "description": "Indicates the time taken by this page type to perform the domain lookup for connecting to the web site/web application.",
+    "unit": "ms",
+    "interpretation": "High values negatively affect DNS lookup and also increase Average network time and Average page load time for this page type, harming user experience.",
+    "troubleshootingSteps": [
+      "Review DNS configuration and provider performance for domains used by this page type.",
+      "Reduce CNAME chains and unnecessary DNS redirects particularly for assets and APIs used by this page type.",
+      "Tune DNS TTLs to improve cache effectiveness for frequent visitors of this page type.",
+      "Monitor DNS error and timeout rates for this page type’s domains to detect intermittent resolution issues."
+    ]
+  },
+  {
+    "measurement": "Average TCP connection time",
+    "description": "Indicates the time taken by this page type to establish a TCP connection with the server.",
+    "unit": "ms",
+    "interpretation": "Poor network conditions between the browser client and server can delay TCP connections, increasing Average network time and harming overall page load time and user experience for this page type.",
+    "troubleshootingSteps": [
+      "Check load balancer and server connection metrics (SYN queue, connection limits) during high TCP connection time for this page type.",
+      "Ensure users requesting this page type are routed to the nearest data center or CDN edge to reduce RTT.",
+      "Use persistent connections and TLS session resumption to avoid repeated full handshakes for repeated requests to this page type.",
+      "Investigate middle‑boxes (firewalls, proxies) for bottlenecks on paths frequently used by visitors of this page type."
+    ]
+  },
+  {
+    "measurement": "Average SSL handshake time",
+    "description": "Indicates the time taken by requests to this page type to complete the SSL handshake.",
+    "unit": "ms",
+    "interpretation": "An SSL handshake happens when a browser makes a secure HTTPS request and negotiates keys and certificates with the server. This negotiation adds to Average network time and increases page load time; together, DNS lookup, TCP handshake, and SSL handshake can add three round trips. Using HTTP/2 and effective caching can reduce SSL setup to one round trip.",
+    "troubleshootingSteps": [
+      "Optimize TLS configuration (protocol version, cipher suites) to minimize handshake time for this page type.",
+      "Enable TLS session resumption and confirm that clients accessing this page type reuse sessions where possible.",
+      "Terminate TLS at nearby CDN edges to reduce latency during SSL handshakes for this page type.",
+      "Monitor SSL handshake time per region and device for traffic to this page type to identify problematic segments."
+    ]
+  },
+  {
+    "measurement": "Average AppCache time",
+    "description": "Indicates the time taken to check whether/not the requests to this page type can be serviced by the AppCache.",
+    "unit": "ms",
+    "interpretation": "HTML5 AppCache allows offline use by caching resources. High AppCache time indicates that requests to this page type spend too long in AppCache, introducing page load latencies and worsening user‑perceived performance. Common issues include missing or incorrect manifest media type, serving the manifest from the wrong origin, path‑relative URL errors, and frequent manifest changes triggering full synchronous downloads.",
+    "troubleshootingSteps": [
+      "Make sure the manifest file for resources needed by this page type is served with media type text/cache‑manifest and from the same origin as the host page.",
+      "Verify that relative URLs in the manifest are relative to the manifest file location, not the HTML document, to avoid stalled appcaching.",
+      "Avoid unnecessary manifest changes to prevent repeated full downloads of resources used by this page type.",
+      "Load the Application Cache from a simple HTML file in an iframe to avoid synchronous downloads blocking page load for this page type."
+    ]
+  },
+  {
+    "measurement": "Average redirection time",
+    "description": "Indicates the time that requests to pages of this type spent in redirection before fetching the pages.",
+    "unit": "ms",
+    "interpretation": "This is the elapsed time between redirectStart and redirectEnd. Redirects (for mobile sites, secure pages, latest content, geo‑specific pages, canonical URLs) can add latency, since each redirect triggers additional DNS lookups and HTTP requests. Multiple, invalid, or looping redirects substantially increase load time and may cause errors.",
+    "troubleshootingSteps": [
+      "Identify redirect chains affecting this page type and reduce them to a single redirect wherever possible.",
+      "Clean up obsolete or invalid redirects pointing to or from this page type that cause 404s or unnecessary hops.",
+      "Ensure redirect logic related to this page type (e.g., locale or device redirects) is efficient and not creating redundant chains.",
+      "Monitor Average redirection time for this page type after any redirect configuration changes to confirm improvements."
+    ]
+  },
+  {
+    "measurement": "Average browser wait time",
+    "description": "Indicates the time that requests to this page type spent on the browser, waiting for another request to complete.",
+    "unit": "ms",
+    "interpretation": "This is the sum of time between consecutive events from navigationStart to requestStart. Because browsers limit active connections per domain, extra requests may wait until earlier ones complete. High browser wait time prolongs initial request time and hurts responsiveness. When Average browser initial request time is high, comparing this measure with Average AppCache time and Average redirection time helps determine whether browser‑side queuing is the main cause.",
+    "troubleshootingSteps": [
+      "Reduce the number of simultaneous resource requests on pages of this type by bundling and minifying scripts and styles, and lazy‑loading non‑critical assets.",
+      "Leverage HTTP/2 multiplexing so multiple resources for this page type can be fetched without hitting strict per‑connection limits.",
+      "Use domain sharding carefully (if on HTTP/1.1) to increase effective concurrency for heavy asset loads on this page type.",
+      "Recommend browsers that support higher parallel connections (such as modern Firefox or Chrome) to users heavily interacting with this page type."
+    ]
+  },
+  {
+    "measurement": "Average INP - Interaction to Next Paint - time",
+    "description": "Measures a page's overall responsiveness to user interactions by observing the latency of all click, tap, and keyboard interactions that occur throughout the lifespan of a user's visit to a page.",
+    "unit": "ms",
+    "interpretation": "INP measures the responsiveness of your website by tracking the time between user input and UI updates. This metric consists of three key components:Input Delay: waiting for background tasks on the page that prevent the event handler from running. Processing Time: running event handlers in JavaScript. Presentation Delay: handling other queued up interactions, recalculating the page layout, and painting page content. A good INP score is less than 200 milliseconds, while an INP over 500 milliseconds is considered poor and may negatively impact your search rankings. The best way to reduce INP is minimizing how much CPU processing that happens on your page. For that, consider doing the following: Reduce the Input Delay component: To reduce the Input Delay component of INP, reduce and break up background CPU activity on the main thread. Check if any background activity is blocking user interactions. If third-party code is responsible for background tasks, check if the code is configurable to reduce the amount of work or if it's possible to only load the third-party script when necessary. Reduce the processing component: How you then optimize that CPU activity will depend heavily on your app. You need to investigate where the browser is spending most of its time and optimize those parts. You can avoid unnecessary rerenders of your components to speed up your website. If a lot of CPU activity consists of layout work, check if you can reduce relayouts. If you need to do heavy JavaScript processing in response to user input, consider updating the UI before starting the CPU task. Reduce the presentation delay: The amount of presentation delay can depend on the complexity of the page and how much of the page is updating.If rendering the page contents is slow, consider only showing important \"above the fold\" content first to deliver the next frame more quickly.",
+    "troubleshootingSteps": [
+	  "Profile slow interactions with the Performance panel in Chrome DevTools to identify long tasks on the main thread and see whether input delay, processing time, or presentation delay contributes most to INP.",
+	  "Reduce input delay by minimizing non‑critical CPU work on the main thread during user interactions, for example by deferring analytics, heavy computations, or non‑urgent DOM work until after the next paint or using requestIdleCallback or setTimeout to chunk long tasks.[web:54][web:56][web:59]",
+	  "Audit third‑party scripts (ads, tags, widgets) and remove unused ones, lazy‑load them, or configure them to do less work so they do not block event handlers from running promptly.[web:55][web:59][web:65]",
+	  "Lower processing time by optimizing JavaScript handlers: avoid unnecessary re‑renders, memoize expensive computations, debounce or throttle frequently fired events, and move heavy logic into Web Workers where possible.[web:54][web:58][web:60]",
+	  "Reduce layout and style work caused by interactions by minimizing layout thrashing (read‑after‑write patterns), batching DOM mutations, and avoiding unnecessary style recalculations when updating the UI.[web:54][web:56]",
+	  "Tackle presentation delay by limiting how much of the page updates in response to a single interaction, prioritizing above‑the‑fold and critical UI changes first and deferring non‑critical visual updates to later frames.[web:54][web:56]",
+	  "Use Core Web Vitals tooling (Search Console, Web Vitals extension, RUM) to identify which pages and specific elements have the slowest INP, then focus fixes on those high‑impact interactions first.[web:58][web:60][web:61]"
+	]
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "Measurement": "Free entries in system page table",
+    "Description": "The number of page table entries not currently in use by the system.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The maximum number of System PTEs that a server can have is set when the server boots. In heavily-used servers, you can run out of system PTEs. You can use the registry to increase the number of system PTEs, but that encroaches into the paged pool area, and you could run out of paged pool memory. Running out of either one is bad, and the goal should be to tune your server so that you run out of both at the exact same time. Typically, the value of this metric should be above 3000. This measure will not be available for non-Windows platforms."
+  },
+  {
+    "Measurement": "Pages read from disk",
+    "Description": "The average number of times per second the disk was read to resolve hard fault paging.",
+    "MeasurementUnit": "Reads/Sec",
+    "Interpretation": "This measure will not be available for non-Windows platforms."
+  },
+  {
+    "Measurement": "Pages written to disk",
+    "Description": "The average number of times per second the pages are written to disk to free up the physical memory.",
+    "MeasurementUnit": "Writes/Sec",
+    "Interpretation": "This measure will not be available for non-Windows platforms."
+  },
+  {
+    "Measurement": "Memory page ins",
+    "Description": "The number of times per second that a process needed to access a piece of memory that was not in its working set, meaning that the system had to retrieve it from the page file.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Memory page outs",
+    "Description": "The number of times per second the system decided to trim a process's working set by writing some memory to disk in order to free up physical memory for another process.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": "This value is a critical measure of the memory utilization on a server. If this value never increases, then there is sufficient memory in the system. Instantaneous spikes of this value are acceptable, but if the value itself starts to rise over time or with load, it implies that there is a memory shortage on the server."
+  },
+  {
+    "Measurement": "Non-paged pool kernel memory size",
+    "Description": "The total size of the kernel memory nonpaged pool.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "The kernel memory nonpaged pool is an area of system memory (that is, physical memory used by the operating system) for kernel objects that cannot be written to disk, but must remain in physical memory as long as the objects are allocated. Typically, there should be no more than 100 MB of non-paged pool memory being used. This measure will not be available for non-Windows platforms."
+  },
+  {
+    "Measurement": "Memory paged pool size",
+    "Description": "The total size of the Paged Pool.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "If the Paged Pool starts to run out of space (when it's 80% full by default), the system will automatically take some memory away from the System File Cache and give it to the Paged Pool. This makes the System File Cache smaller. However, the system file cache is critical, and so it will never reach zero. Hence, a significant increase in the paged pool size is a problem. This metric is a useful indicator of memory leaks in a system. A memory leak occurs when the system allocates more memory to a process than the process gives back to the pool. Any type of process can cause a memory leak. If the amount of paged pool data keeps increasing even though the workload on the server remains constant, it is an indicator of a memory leak. This measure will not be available for non-Windows platforms."
+  },
+  {
+    "Measurement": "Committed memory in use",
+    "Description": "The committed bytes as a percentage of the Commit Limit.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Whenever this measure exceeds 80–90%, application requests to allocate memory in the virtual memory (page file). This ratio can be reduced by increasing the Physical memory or the Page file."
+  },
+  {
+    "Measurement": "Pool nonpaged failures",
+    "Description": "The number of times allocations have failed from non paged pool.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Generally, a non-zero value indicates a shortage of physical memory."
+  },
+  {
+    "Measurement": "Pool paged failures",
+    "Description": "The number of times allocations have failed from paged pool.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A non-zero value indicates a shortage of physical memory."
+  },
+  {
+    "Measurement": "Copy read hits",
+    "Description": "The percentage of copy read calls satisfied by reads from the Cache out of all read calls.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Any value over 80% is excellent."
+  },
+  {
+    "Measurement": "Copy reads",
+    "Description": "Indicates the rate at which read operations from pages of the file system cache involve a copy read.",
+    "MeasurementUnit": "Reads/Sec",
+    "Interpretation": "A copy read is a file read operation that is satisfied by a memory copy from a page in the cache to the application's buffer. The LAN redirector uses this method for retrieving information from the cache, as does the LAN server for small transfers. This method is also used by the disk file systems."
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "measurement": "Service availability",
+    "description": "Indicates the availability of this service.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value of 100 indicates that the specified service has been configured and is currently executing. A value of 0 indicates that the specified service has been configured on the server but is not running at this time.",
+    "troubleshootingSteps": [
+      "If availability is 0, open Services (services.msc) and verify startup type, logon account, and dependencies for the service, then attempt a manual start to see the error returned.[web:587][web:589]",
+      "Check the Windows Event Viewer (System and Application logs) for service‑related errors at the time it stopped or failed to start.[web:570][web:598]",
+      "Configure the service’s Recovery tab to automatically restart on first and second failures to minimize downtime.[web:589][web:597]",
+      "For critical services, implement external monitoring with automatic restart actions via scripts, scheduled tasks, or monitoring tools (e.g., SAM, CloudMonix, custom PowerShell).[web:588][web:590][web:593][web:596][web:599]"
+    ]
+  },
+  {
+    "measurement": "Service state",
+    "description": "Indicates the current state of this service.",
+    "measurementUnit": null,
+    "interpretation": "Possible values: Running (1), StartPending (2), Stopped (3), StopPending (4), Paused (5), PausePending (6). Graphs use the numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the state is Stopped (3) when it should be Running, start the service manually and review any immediate error messages or exit codes.[web:587][web:589]",
+      "If the state is StartPending (2) or StopPending (4) for an extended period, query the service PID (sc queryex) and forcibly end the process (taskkill), then restart the service.[web:591][web:594][web:597][web:600]",
+      "If the service frequently transitions between Running and Stopped, enable and tune Recovery options (Restart the Service, Run a Program) and investigate the underlying application crash or dependency failures.[web:589][web:591][web:597]",
+      "If the service is Paused (5) or PausePending (6) unexpectedly, verify whether an admin tool or dependency is controlling it and check documentation or logs for intentional throttling behavior.[web:587]"
+    ]
+  }
+]

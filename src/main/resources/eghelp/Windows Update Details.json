@@ -1,0 +1,96 @@
+[
+  {
+    "measurement": "Windows update status",
+    "description": "Indicates whether/not the updates are pending.",
+    "measurementUnit": null,
+    "interpretation": "No=0, Yes=1. Indicates if there are Windows updates pending for installation.",
+    "troubleshootingSteps": [
+      "If the value is Yes, open Windows Update or your patch management tool to review the list of pending updates and their categories, then schedule installation during an appropriate maintenance window.",
+      "If updates remain pending for long periods, check Windows Update troubleshooting guidance, including logs, error codes, and update history, to resolve installation failures or download issues.[web:219][web:222][web:223][web:232]",
+      "Verify that Windows Update services and dependencies (such as Windows Update, BITS, and Cryptographic Services) are running and correctly configured if updates do not progress from pending state.[web:222][web:223]",
+      "In managed environments (WSUS/SCCM/Intune), ensure the device is correctly targeted by update policies and that it can reach update servers and required endpoints.[web:219][web:231]"
+    ]
+  },
+  {
+    "measurement": "Is a system reboot pending?",
+    "description": "Indicates whether the Windows system is rebooted or not.",
+    "measurementUnit": null,
+    "interpretation": "No=0, Yes=1. Yes typically means a reboot is required to complete updates or configuration changes.",
+    "troubleshootingSteps": [
+      "If the value is Yes, plan and perform a system reboot as soon as operationally possible so that pending updates and configuration changes can be fully applied.[web:219][web:221][web:222][web:229]",
+      "If the metric still shows Yes after a reboot, check known 'pending reboot' locations (such as specific registry keys and pending file rename operations) and clear or fix stuck states according to vendor guidance.[web:219][web:220][web:221][web:226][web:229]",
+      "Avoid repeatedly installing new updates without allowing required reboots, as this can lead to long update windows, rollback issues, or inconsistent patch states.[web:219][web:221][web:222][web:232]"
+    ]
+  },
+  {
+    "measurement": "Windows update service status",
+    "description": "Indicates the current status of the Windows update service.",
+    "measurementUnit": null,
+    "interpretation": "Unknown=0, Running=1, Start pending=2, Continue pending=3, Pause pending=4, Stop pending=5, Paused=6, Stopped=7. Graphs use the numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the status is Stopped, Paused, or a long-lasting pending state, open the Services console or use PowerShell to ensure the Windows Update service and its dependencies are set to appropriate startup types and can be started successfully.[web:219][web:222][web:223][web:232]",
+      "Investigate repeated failures to start (for example, due to access issues, corrupted components, or third-party security software), and run Windows Update troubleshooters, SFC/DISM, or repair installs as needed.[web:222][web:223][web:232]",
+      "In enterprise setups using WSUS or other patch tools, verify that local policies or management agents have not disabled or overridden the Windows Update service unintentionally.[web:219][web:231]"
+    ]
+  },
+  {
+    "measurement": "Total updates available",
+    "description": "Indicates the total number of Windows updates available for the system.",
+    "measurementUnit": "Number",
+    "interpretation": "Detailed diagnosis lists each available update and its category.",
+    "troubleshootingSteps": [
+      "When the total number is high, prioritize installation of security, critical, and important updates first, then handle remaining updates in batches to minimize risk and downtime.[web:219][web:222][web:227][web:231]",
+      "Use WSUS, Windows Update, or APIs/PowerShell to list pending updates and filter by category or severity to support risk-based patching and compliance reporting.[web:225][web:228][web:231]"
+    ]
+  },
+  {
+    "measurement": "Critical updates available",
+    "description": "Indicates the number of critical updates available for the system.",
+    "measurementUnit": "Number",
+    "interpretation": "Critical updates fix specific, non-security-related critical bugs that can cause serious performance or compatibility issues if not addressed.",
+    "troubleshootingSteps": [
+      "Treat any non-zero count of critical updates as high priority; schedule and deploy them as soon as practical, especially on servers and critical workloads.[web:224][web:227][web:230]",
+      "If critical updates fail to install, capture error codes, review logs, and use Microsoft's update troubleshooting procedures before reattempting deployment.[web:219][web:222][web:232]"
+    ]
+  },
+  {
+    "measurement": "Important updates available",
+    "description": "Indicates the number of important updates available for the system.",
+    "measurementUnit": "Number",
+    "interpretation": "Important updates typically include security updates and other high-impact fixes that protect confidentiality, integrity, and availability of data and system resources.",
+    "troubleshootingSteps": [
+      "Maintain a policy that important updates are applied within defined SLAs, especially for Internet-facing or sensitive systems, to reduce exposure to known vulnerabilities.[web:224][web:227][web:230][web:233]",
+      "If many important updates accumulate, plan phased rollouts with testing on pilot groups before broad deployment to catch regressions early.[web:219][web:222][web:231]"
+    ]
+  },
+  {
+    "measurement": "Moderate updates available",
+    "description": "Indicates the number of moderate security updates available for the system.",
+    "measurementUnit": "Number",
+    "interpretation": "Moderate updates fix vulnerabilities whose exploitation is significantly mitigated by default configuration, auditing, or exploitation difficulty.",
+    "troubleshootingSteps": [
+      "Bundle moderate updates into regular patch cycles, prioritizing them below critical/important but ensuring they are not indefinitely deferred, as threat landscapes can change.[web:224][web:227][web:230][web:233]",
+      "Review affected components and apply additional mitigations (configuration hardening, access controls) if immediate patching is not possible on certain systems.[web:224][web:227][web:230]"
+    ]
+  },
+  {
+    "measurement": "Low updates available",
+    "description": "Indicates the number of low security updates available for the system.",
+    "measurementUnit": "Number",
+    "interpretation": "Low updates fix vulnerabilities whose exploitation is extremely difficult or whose impact is minimal.",
+    "troubleshootingSteps": [
+      "Schedule low-severity updates for standard maintenance windows, applying them after higher-priority patches to keep systems fully supported and consistent.[web:224][web:227][web:230][web:233]",
+      "Document any low-severity updates you choose to defer (for example on highly sensitive legacy systems) and revisit the decision periodically.[web:224][web:227]"
+    ]
+  },
+  {
+    "measurement": "Optional updates available",
+    "description": "Indicates the number of optional updates available for the system.",
+    "measurementUnit": "Number",
+    "interpretation": "Optional updates include feature packs and standard non-security updates and do not carry a severity rating.",
+    "troubleshootingSteps": [
+      "Review optional updates for relevance (feature packs, drivers, non-security fixes) and deploy only those that are needed for functionality, stability, or compatibility.[web:224][web:227][web:230]",
+      "Test optional updates affecting drivers or core components on a subset of systems before broad rollout to avoid unexpected regressions.[web:219][web:222][web:231]"
+    ]
+  }
+]

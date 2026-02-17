@@ -1,0 +1,44 @@
+[
+  {
+    "measurement": "No of active threads",
+    "description": "Indicates the number of threads in the utility thread pool that are currently processing a utility task.",
+    "unit": "Number",
+    "interpretation": "This is the count of utility threads that are busy doing work right now. If it equals the value of the \"No of threads in the pool\" measure, every thread is occupied and there are no spare threads to handle additional utility tasks, so increasing the pool size may be necessary to avoid contention."
+  },
+  {
+    "measurement": "Recently completed tasks",
+    "description": "Indicates the number of tasks that were recently completed by the threads in the utility thread pool.",
+    "unit": "Number",
+    "interpretation": "This shows the volume of utility tasks finished in the latest measurement period, giving a quick indication of recent throughput for the utility pool."
+  },
+  {
+    "measurement": "Thread pool core size",
+    "description": "Reports the core size of the utility thread pool.",
+    "unit": "Number",
+    "interpretation": "This is the baseline number of utility threads the pool tries to maintain. It determines how many threads are kept available for work before the pool starts scaling up or shrinking based on load."
+  },
+  {
+    "measurement": "No of peak threads",
+    "description": "Indicates the high watermark of threads in the utility thread pool.",
+    "unit": "Number",
+    "interpretation": "This records the maximum number of utility threads that have existed in the pool during the current JVM run, which is useful for capacity planning and checking whether the configured pool limits are sufficient."
+  },
+  {
+    "measurement": "No of threads in the pool",
+    "description": "Indicates the number of threads in the utility thread pool currently.",
+    "unit": "Number",
+    "interpretation": "This is the current total size of the utility pool, including both active and idle threads. If it equals the \"No of active threads\" value, all threads are in use and none are free for new utility tasks, suggesting the pool size may need to be increased."
+  },
+  {
+    "measurement": "No of tasks",
+    "description": "Indicates the number of tasks currently being processed by the threads in the pool.",
+    "unit": "Number",
+    "interpretation": "This is the number of in‑flight utility tasks. Comparing it with the \"No of threads in the pool\" measure helps you see whether there are enough threads to handle the current utility workload or if the pool is under‑provisioned."
+  },
+  {
+    "measurement": "Pool utilization",
+    "description": "Indicates the percentage of the pool size that is actively engaged in processing utility tasks.",
+    "unit": "Percent",
+    "interpretation": "This shows how much of the utility thread pool is busy. Values close to 100% mean almost all threads are occupied and future tasks may have to wait; to avoid thread contention in that situation, you may need to increase the pool size."
+  }
+]

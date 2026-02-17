@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Network connection status",
+    "description": "Indicates the current network connection status of each Ethernet port in this cluster.",
+    "measurementUnit": null,
+    "interpretation": "Values: Up (100), Unavailable (70), Failed (50), Unreachable (30), Unknown (10). The detailed diagnosis lists the name of the network, the name of the adapter, the ID of the network adapter and the IP address.",
+    "troubleshootingSteps": [
+      "If status is 'Unavailable', 'Failed', or 'Unreachable', check physical layer connectivity (cables, switch ports) and verify that the network adapter is enabled in the OS.[web:445][web:447][web:449]",
+      "Use PowerShell (`Get-ClusterNetworkInterface`) or Failover Cluster Manager to pinpoint the specific adapter or node causing the issue; cross-reference with Event ID 1135 in the System log to see if a node was removed due to communication failure.[web:337][web:317][web:446]",
+      "Verify network configuration (IP addresses, subnet masks, VLANs) to ensure they match the cluster requirements and that there are no duplicate IPs or misconfigured NIC teams.[web:350][web:445][web:449]",
+      "Check firewall settings (ports 3343 UDP/TCP) and security software to ensure they are not blocking heartbeat or inter-node communication.[web:337][web:351][web:449]",
+      "If the status is 'Unknown', ensure the Cluster Service is running on all nodes and that WMI is functioning correctly to report status.[web:351][web:444]"
+    ]
+  }
+]

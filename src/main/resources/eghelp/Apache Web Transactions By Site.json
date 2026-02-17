@@ -1,0 +1,194 @@
+[
+  {
+    "Measurement": "Requests",
+    "Description": "Indicates the rate of requests to this web site.",
+    "MeasurementUnit": "Requests/Sec",
+    "Interpretation": "Compare the value of this measure across the web sites to identify the web site that is receiving more number of requests."
+  },
+  {
+    "Measurement": "Errors",
+    "Description": "Indicates the percentage of error requests to this web site.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Compare the value of this measure across the web sites to identify the web site that is receiving more number of errors."
+  },
+  {
+    "Measurement": "Aborts",
+    "Description": "Indicates the percentage of abort requests to this web site.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Data transmitted",
+    "Description": "Indicates the rate at which the data is transmitted to this web site.",
+    "MeasurementUnit": "KB/sec",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Avg response time",
+    "Description": "Indicates the average time taken by this web site for responding to the requests it is receiving.",
+    "MeasurementUnit": "Seconds",
+    "Interpretation": "Compare the value of this measure across the web sites to determine which web site is slow in responding to the requests."
+  },
+  {
+    "Measurement": "Total requests processed",
+    "Description": "Indicates the total number of requests that are currently processed by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure is a good indicator of current load on each web site. The detailed diagnosis of this measure reveals, for each web site, the client IP address, server name/IP/port, site name, data sent and received in KB, time taken to process the requests in seconds, host number, protocol version, method type, HTTP status, Win32 status, log timestamp, local host date and time, user agent, cookie, referrer, and protocol substatus. Ideally, a high value is desired for this measure."
+  },
+  {
+    "Measurement": "Requests processed successfully",
+    "Description": "Indicates the number of requests that are successfully processed by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure is a good indicator of the effective load handled by each web site. The detailed diagnosis of this measure reveals, for each web site, the client IP address, server name/IP/port, site name, data sent and received in KB, time taken to process the requests in seconds, host number, protocol version, method type, HTTP status, Win32 status, log timestamp, local host date and time, user agent, cookie, referrer, and protocol substatus. Ideally, a high value is desired for this measure."
+  },
+  {
+    "Measurement": "Total redirection requests",
+    "Description": "Indicates the total number of requests that are redirected from this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A site returns 300 series response codes when it redirects requests to other pages. Redirection is performed for various reasons, for example when the client browser has to request a different page on the server or repeat the request using a proxy server. These codes help the client ensure that a redirection to a different resource or URL should take place to complete the requests and access the desired resource."
+  },
+  {
+    "Measurement": "Moved permanently",
+    "Description": "Indicates the number of requests that are permanently moved from this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "When a request is permanently moved from the site, it returns the HTTP status code 301. This action is performed when the requested site has been permanently moved to a new URL."
+  },
+  {
+    "Measurement": "Object moved",
+    "Description": "Indicates the number of requests that are temporarily moved from this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A 302 Found message is an HTTP response status code indicating that the requested resource has been temporarily moved to a different URL. Because this location might change in the future, a client that receives a 302 response code should continue to use the original URL for future requests."
+  },
+  {
+    "Measurement": "Not modified",
+    "Description": "Indicates the number of 304 redirection response codes returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The HTTP 304 response code indicates that there is no need to retransmit the requested resources and acts as an implicit redirection to a cached resource. It means the requested resource is already in the cache and has not been modified since it was cached, so the client can use the cached copy instead of downloading it again when the request is safe (e.g., GET or HEAD) or conditional (using If-None-Match or If-Modified-Since headers)."
+  },
+  {
+    "Measurement": "Temporary redirect",
+    "Description": "Indicates the number of 307 response codes currently returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The HTTP 307 Temporary Redirect status response code indicates that the resource requested has been temporarily moved to the URL given by the Location header."
+  },
+  {
+    "Measurement": "Total requests with 4xx responses",
+    "Description": "Represents the total number of HTTP 4xx (client error) codes currently returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The 4xx HTTP status codes indicate that an error occurred and the client browser appears to be at fault, for example when it requests a page that does not exist or does not provide valid authentication information."
+  },
+  {
+    "Measurement": "Bad requests",
+    "Description": "Indicates the number of HTTP 400 (bad requests) codes currently returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The web site returns the HTTP 400 code when the request cannot be understood by the server due to malformed syntax, implying that the client should not repeat the request without modifications."
+  },
+  {
+    "Measurement": "Total access denied requests",
+    "Description": "Indicates the total number of requests that are currently denied access to this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Logon failed",
+    "Description": "Indicates the number of requests that are currently denied access to this web site due to login failure.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The login failure error occurs when the logon attempt is unsuccessful, probably because of an invalid user name or password."
+  },
+  {
+    "Measurement": "Logon failed due to server configuration",
+    "Description": "Indicates the number of login attempts to this web site failed due to lack of authentication to server configuration.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The HTTP 401.2 status code indicates a problem in the authentication configuration settings on the server."
+  },
+  {
+    "Measurement": "Authorization failed requests",
+    "Description": "Indicates the number of requests to this web site failed due to authorization failures.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. Authorization errors are reported when requests are not permitted by an access control list on a resource or filter or by an ISAPI/CGI application."
+  },
+  {
+    "Measurement": "Forbidden errors",
+    "Description": "Indicates the number of forbidden errors currently encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The web site can encounter forbidden errors for various reasons, for example when it receives too many requests from the same client."
+  },
+  {
+    "Measurement": "Not found errors",
+    "Description": "Indicates the number of 404 errors returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The 404 error is reported when the server has not found anything matching the Request-URL and is commonly used when the server does not wish to reveal exactly why the request has been refused or when no other response is applicable."
+  },
+  {
+    "Measurement": "Method not allowed",
+    "Description": "Indicates the number of 405 response codes returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The 405 Method Not Allowed response code indicates that the method specified in the Request-Line is known by the origin server but is not supported by the target resource, so administrators should include an Allow header listing valid methods."
+  },
+  {
+    "Measurement": "Client browser not accept the MIME type",
+    "Description": "Indicates the number of 406 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The HTTP 406 Not Acceptable error code indicates that the server cannot produce a response matching the acceptable values defined in the request’s content negotiation headers and is unwilling to supply a default representation."
+  },
+  {
+    "Measurement": "Request timed out",
+    "Description": "Indicates the number of 408 error codes returned by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The 408 Request Timeout error indicates that the request sent to the web site server took longer than the server was prepared to wait, meaning the connection with the site timed out."
+  },
+  {
+    "Measurement": "Precondition failed",
+    "Description": "Indicates the number of 412 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. This code is returned when a precondition specified in one or more request headers evaluates to false on the server, allowing the client to ensure that the method is not applied to an unintended version of the resource."
+  },
+  {
+    "Measurement": "Total internal server errors",
+    "Description": "Indicates the total number of server related errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. Server error messages are reported for a wide variety of server-side issues, and administrators should consult event viewer logs for detailed causes."
+  },
+  {
+    "Measurement": "Module or ISAPI errors",
+    "Description": "Indicates the number of 500.0 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. These errors indicate that a module or ISAPI extension has failed while processing requests."
+  },
+  {
+    "Measurement": "Application is shutting down errors",
+    "Description": "Indicates the number of 500.11 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The web site reports the 500.11 HTTP error code when an application on the server is shutting down, so the received request cannot be processed."
+  },
+  {
+    "Measurement": "Application is busy restarting errors",
+    "Description": "Indicates the number of 500.12 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. This error occurs when an ASP page is requested while IIS is in the process of restarting the application, and it usually disappears on refresh."
+  },
+  {
+    "Measurement": "Web server busy errors",
+    "Description": "Indicates the number of 500.13 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. These errors indicate that the web server is too busy to handle additional requests at that moment."
+  },
+  {
+    "Measurement": "Internal ASP errors",
+    "Description": "Indicates the number of 500.100 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. These errors often occur when a required DLL for Microsoft Data Access Components is not registered, so administrators should ensure the DLL is properly registered."
+  },
+  {
+    "Measurement": "Service unavailable errors",
+    "Description": "Indicates the number of 503 errors encountered by this web site.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, the value of this measure should be zero. The 503 errors occur when the application pool or service is stopped or when there is a mismatch in user identity settings; restarting the pool/service and correcting account settings usually resolves them."
+  },
+  {
+    "Measurement": "Remote hosts",
+    "Description": "Indicates the number of distinct remote client hosts that have sent requests to this web site during the measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A higher value suggests that a larger and more diverse set of clients is accessing the site, which can be useful for understanding traffic distribution and detecting unusual surges in unique sources."
+  }
+]

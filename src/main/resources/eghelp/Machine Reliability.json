@@ -1,0 +1,16 @@
+[
+  {
+    "measurement": "Machine stability index",
+    "description": "Indicates the percentage of machines that were stable.",
+    "measurementUnit": "Percent",
+    "interpretation": "A higher value (close to 100%) means the machine is highly stable, with few or no significant issues. A low value may indicate frequent application crashes, OS hangs, driver failures, unexpected reboots, and system errors in Event Viewer; such machines require immediate attention to maintain or restore stability. Detailed diagnosis shows date/time, event ID, type, source, application, path, and message for events impacting stability.",
+    "troubleshootingSteps": [
+      "Open Reliability Monitor (reliability history) and look for recent drops in the stability index, focusing on days with many critical events or application failures.[web:559][web:562][web:565][web:568]",
+      "Use Event Viewer (System and Application logs) around the timestamps of crashes or hangs to identify recurring error IDs (e.g., driver faults, disk warnings, kernel-power events).?[web:560][web:564][web:567][web:570]",
+      "Update or roll back problematic device drivers (GPU, storage, chipset, network) and ensure BIOS/firmware and Windows updates are current.[web:557][web:558][web:560][web:563]",
+      "Run system integrity checks such as `sfc /scannow` and `DISM /Online /Cleanup-Image /RestoreHealth` to repair corrupted system files.[web:557][web:559][web:565]",
+      "Check hardware health: run memory diagnostics, check disk SMART status, monitor temperatures, and verify PSU stability if freezes or spontaneous reboots occur.[web:559][web:560][web:561]",
+      "Reduce startup and background applications that may conflict or overload the system, and test in Safe Mode or Clean Boot to isolate problematic software.[web:559][web:567][web:570]"
+    ]
+  }
+]

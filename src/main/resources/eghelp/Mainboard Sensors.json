@@ -1,0 +1,35 @@
+[
+  {
+    "measurement": "Voltage utilized",
+    "description": "Indicates the current voltage of this mainboard.",
+    "measurementUnit": "Volts",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Check the 3.3V, 5V, and 12V rails in BIOS/UEFI or monitoring software; significant deviations (e.g., > ±5–10%) or large fluctuations usually point to a failing power supply (PSU) or faulty motherboard VRMs.[web:294][web:295][web:297][web:298][web:301][web:304]",
+      "If software readings are erratic (very low or high values like 1V on a 12V rail), verify them with a multimeter or cross-reference with BIOS values, as sensors often report false data.[web:295][web:296][web:297][web:307]",
+      "Inspect VRM heatsinks and Load-Line Calibration (LLC) settings if CPU/core voltages are unstable under load, and reset BIOS to defaults to rule out unstable overclocking settings.[web:260][web:294][web:299][web:302]"
+    ]
+  },
+  {
+    "measurement": "Temperature utilized",
+    "description": "Indicates the current temperature of this mainboard.",
+    "measurementUnit": "Celsius",
+    "interpretation": "The value should be within the optimal range. A sudden or gradual increase may impact server functioning and needs immediate attention.",
+    "troubleshootingSteps": [
+      "Ensure proper case airflow by cleaning dust filters, managing cables, and verifying that intake/exhaust fans are oriented correctly to cool the motherboard components (VRM, chipset).[web:302][web:305][web:306]",
+      "Check that chipset and VRM heatsinks are securely attached; for older boards, consider replacing dried-out thermal pads or paste if temperatures are excessively high (e.g., >80–90°C for motherboard sensors).[web:299][web:302][web:305]",
+      "If high temperatures persist, verify that the case ambient temperature is not too high and consider adding spot cooling (such as a dedicated fan) over the VRM or chipset area.[web:305][web:306]"
+    ]
+  },
+  {
+    "measurement": "Total revolutions",
+    "description": "Indicates the average speed of the fans in this mainboard.",
+    "measurementUnit": "RPM",
+    "interpretation": "Fan speeds must be within permissible ranges; a sudden increase or decrease is cause for concern.",
+    "troubleshootingSteps": [
+      "If a fan reads 0 RPM but the system is hot, physically inspect the fan for obstructions, cable disconnections, or motor failure, and replace it if dead.[web:299][web:300][web:302][web:306]",
+      "If fans ramp up randomly or run at full speed constantly, adjust fan curves in BIOS/UEFI (switching between DC and PWM modes as appropriate) or reset fan profiles to defaults.[web:299][web:300][web:302][web:303][web:306]",
+      "Verify that fan headers are capable of driving the connected fans (especially if using splitters/hubs) and test fans on different headers to rule out a faulty motherboard controller.[web:300][web:302][web:303]"
+    ]
+  }
+]

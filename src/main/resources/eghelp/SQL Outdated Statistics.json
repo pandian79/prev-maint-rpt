@@ -1,0 +1,14 @@
+[
+  {
+    "Measurement": "Outdated statistics by day",
+    "Description": "Indicates the number of outdated stats per day.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "T"
+  },
+  {
+    "Measurement": "Outdated statistics by row modified",
+    "Description": "Indicates the number of outdated stats per row modified.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Monitoring this percentage helps DBAs: Predict when stats will auto-update. Decide if manual updates are needed. Maintain optimal query performance."
+  }
+]

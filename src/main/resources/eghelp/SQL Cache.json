@@ -1,0 +1,41 @@
+[
+  {
+    "measurement": "Cache hit ratio",
+    "description": "Indicates the percentage of pages found in the cache without having to read from disk.",
+    "unit": "Percent",
+    "interpretation": "This ratio is the total number of cache hits divided by the total number of cache lookups since SQL Server was started. Because reading from cache is much less expensive than reading from disk, a high value is desirable. Increasing memory available to the database engine typically improves this ratio. Detailed diagnosis, if enabled, can show the cache hit ratio for each cache type.",
+    "troubleshootingSteps": [
+      "Establish a baseline for an acceptable cache hit ratio in your environment (for example, aiming for consistently high values such as the mid‑90s or above).",
+      "If the ratio drops or remains low, check overall memory usage and look for signs of memory pressure on the database server.",
+      "Increase the memory allocated to the database engine where possible, or reduce memory competition from other processes on the host.",
+      "Ensure frequently accessed data and indexes are sized and organized appropriately so they can remain in cache (for example, by archiving old data or partitioning large tables).",
+      "Review query patterns and indexes so that queries access data efficiently, minimizing unnecessary scans that push other useful pages out of cache."
+    ]
+  },
+  {
+    "measurement": "Objects in cache",
+    "description": "Indicates the number of objects currently found in the cache.",
+    "unit": "Number",
+    "interpretation": "A higher number of cached objects generally improves server performance, as it reduces the need to read requested objects from disk. Detailed diagnosis, if enabled, can show object counts by cache type.",
+    "troubleshootingSteps": [
+      "Monitor trends in the number of cached objects and correlate drops with configuration changes, memory pressure, or restarts.",
+      "If the count is consistently low while the workload is active, check whether the plan cache or data cache is being frequently flushed due to memory pressure or configuration settings.",
+      "Review settings or practices that may force frequent recompilation or prevent cache reuse (for example, excessive use of ad‑hoc queries with literals instead of parameterized statements).",
+      "Increase available memory or adjust cache‑related configuration so that commonly used objects can remain cached longer.",
+      "Use execution plan and cache inspection tools to confirm that critical procedures and queries are benefiting from caching."
+    ]
+  },
+  {
+    "measurement": "Log cache hit ratio",
+    "description": "Indicates the percentage of log cache reads satisfied from the log cache.",
+    "unit": "Percent",
+    "interpretation": "A high log cache hit ratio indicates that the log cache is performing well, with most log reads served from memory. A low value suggests that the server may need tuning, as more operations are forced to read from disk rather than cache.",
+    "troubleshootingSteps": [
+      "Monitor the log cache hit ratio alongside transaction log I/O latency to determine whether log operations are suffering from disk bottlenecks.",
+      "If the ratio is low, review log file placement to ensure it resides on fast storage with sufficient throughput.",
+      "Check memory configuration for the database engine so that adequate memory is available for log caching as well as data pages.",
+      "Investigate transaction patterns (for example, very large or long‑running transactions) that may cause more log reading and writing than necessary.",
+      "Consider optimizing backup, replication, or other log‑intensive operations to reduce unnecessary log reads and writes."
+    ]
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "measurement": "Processes running",
+    "description": "Number of instances of a process(es) currently executing on a host.",
+    "unit": "Number",
+    "interpretation": "This value indicates whether too many or too few processes corresponding to an application are executing on the host, which can signal misconfiguration, crashes, or runaway process spawning.",
+    "troubleshootingSteps": [
+      "Define expected minimum and maximum instance counts for key applications (for example, 1 web worker master with N children) and alert when the measure goes outside this range.",
+      "If too few instances are running, check whether the process has crashed or been stopped, review application and system logs, and restart services as needed.",
+      "If too many instances are running, investigate for runaway scripts, misconfigured services, or orphaned child processes continually being spawned.",
+      "Correlate instance count changes with deployment events, configuration changes, or scheduler/cron jobs to identify the source of abnormal process creation.",
+      "Use OS tools (such as task manager, top/ps, or process explorers) to verify the list of processes matching the pattern and confirm that they are all legitimate."
+    ]
+  },
+  {
+    "measurement": "CPU utilization",
+    "description": "Percentage of CPU used by executing process(es) corresponding to the pattern specified.",
+    "unit": "Percent",
+    "interpretation": "A very high value could indicate that processes corresponding to the specified pattern are consuming excessive CPU resources, potentially degrading overall system performance.",
+    "troubleshootingSteps": [
+      "Establish a normal CPU utilization baseline for the process pattern and set thresholds to alert when sustained usage significantly exceeds that baseline.",
+      "When CPU is high, inspect per‑process CPU usage with OS tools to identify which specific instance or thread is consuming the most CPU.",
+      "Review recent code or configuration changes for the application that might introduce tight loops, inefficient algorithms, or excessive polling.",
+      "Check for external load spikes (for example, increased user traffic or batch jobs) and, if needed, scale out or throttle work to reduce CPU pressure.",
+      "Capture profiling data or stack traces from high‑CPU processes to locate hot paths and optimize or fix them."
+    ]
+  },
+  {
+    "measurement": "Memory utilization",
+    "description": "For one or more processes corresponding to a specified set of patterns, this value represents the ratio of the resident set size of the processes to the physical memory of the host system, expressed as a percentage.",
+    "unit": "Percent",
+    "interpretation": "A sudden increase in memory utilization for a process(es) may be indicative of memory leaks in the application or configuration issues that cause excessive caching or buffering.",
+    "troubleshootingSteps": [
+      "Monitor memory utilization trends over time and alert on sustained growth that does not return to baseline after load subsides.",
+      "Use system tools to inspect per‑process memory (RSS, private bytes) and identify which instances are growing fastest.",
+      "Review application logs and configuration for settings related to caches, queues, and buffers that might be retaining data longer than necessary.",
+      "If a memory leak is suspected, reproduce the issue in a test environment with profilers or leak‑detection tools to find unbounded allocations.",
+      "When memory growth threatens system stability, consider restarting the affected process during a controlled maintenance window while you work on a permanent fix."
+    ]
+  }
+]

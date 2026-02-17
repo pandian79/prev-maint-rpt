@@ -1,0 +1,50 @@
+[
+  {
+    "measurement": "Has the system been rebooted?",
+    "description": "Indicates whether the server has been rebooted during the last measurement period or not.",
+    "unit": "Boolean",
+    "interpretation": "A value of 1 means that the server was rebooted during the last measurement period; 0 means it was not rebooted. By locating time intervals where this value changes from 0 to 1, administrators can determine when the server was rebooted.",
+    "troubleshootingSteps": [
+      "Review periods where the value switches from 0 to 1 to identify exact reboot windows.",
+      "Correlate reboot times with planned maintenance schedules, OS updates, or unexpected crashes.",
+      "Check system and event logs around reboot times to confirm whether the reboot was intentional or due to a failure.",
+      "If frequent unplanned reboots occur, investigate underlying hardware, driver, or OS stability issues."
+    ]
+  },
+  {
+    "measurement": "Uptime during the last measure period",
+    "description": "Indicates the time period that the system has been up since the last time this test ran.",
+    "unit": "Secs",
+    "interpretation": "If the server has not been rebooted and the agent has been running continuously, this value equals the measurement period. If the server was rebooted during the period, this value will be less than the measurement period (for example, with a 300‑second period and a reboot 120 seconds ago, the metric would report 120 seconds). Shorter measurement periods improve the accuracy of pinpointing reboot times.",
+    "troubleshootingSteps": [
+      "Compare this value with the configured measurement period to detect reboots within the interval.",
+      "Use unusually low values (relative to the period) as triggers to inspect system logs for recent restarts.",
+      "Tune the measurement period shorter if you need more precise visibility into reboot timing.",
+      "Correlate drops in uptime during the last period with application interruptions or service outages seen by users."
+    ]
+  },
+  {
+    "measurement": "Total uptime of the system",
+    "description": "Indicates the total time that the server has been up since its last reboot.",
+    "unit": "Mins",
+    "interpretation": "This measure reflects how long the server has been continuously running. Administrators may want alerts when a server has been up for a very long time without a reboot, so that planned reboots can be scheduled for patching, maintenance, or to clear resource leaks.",
+    "troubleshootingSteps": [
+      "Set thresholds on total uptime to notify administrators when servers exceed acceptable continuous run times.",
+      "Use high uptime values as a prompt to review patch levels and plan maintenance windows for reboots.",
+      "Correlate very long uptimes with performance metrics (memory usage, handle counts) to detect potential leaks or degradation.",
+      "Document reboot policies so that high‑uptime alerts lead to predictable, controlled maintenance actions."
+    ]
+  },
+  {
+    "measurement": "Is under maintenance?",
+    "description": "Indicates whether the server is under maintenance or not.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "The measure reports \"Yes\" or \"No\" to indicate whether the target server is in a maintenance state. In graphs, the value is represented numerically, with Yes mapped to 1 and No to 0. This helps distinguish genuine outages from scheduled maintenance periods when interpreting availability and performance data.",
+    "troubleshootingSteps": [
+      "Verify that maintenance windows are correctly configured so that the measure shows \"Yes\" during planned work.",
+      "Use this measure to filter out maintenance periods when analyzing incident timelines and SLA breaches.",
+      "If the server appears unavailable but this measure is \"No\", investigate unplanned downtime rather than assuming maintenance.",
+      "Ensure operations teams update or automate maintenance flags to keep monitoring data aligned with real maintenance activities."
+    ]
+  }
+]

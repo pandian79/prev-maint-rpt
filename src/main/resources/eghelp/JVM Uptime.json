@@ -1,0 +1,26 @@
+[
+  {
+    "Measurement": "Has the JVM been restarted?",
+    "Description": "Indicates whether or not the JVM has restarted during the last measurement period.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "If the value of this measure is No, it indicates that the JVM has not restarted. The value Yes on the other hand implies that the JVM has indeed restarted. By default, this measure reports the value Yes or No to indicate whether a JVM has restarted. The graph of this measure however, represents the same using the numeric equivalents - 0 or 1.",
+      "Mappings": [
+        { "State": "Yes", "Value": 1 },
+        { "State": "No", "Value": 0 }
+      ]
+    }
+  },
+  {
+    "Measurement": "Uptime during the last measure period",
+    "Description": "Indicates the time period that the JVM has been up since the last time this test ran.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "If the JVM has not been restarted during the last measurement period and the agent has been running continuously, this value will be equal to the measurement period. If the JVM was restarted during the last measurement period, this value will be less than the measurement period of the test. For example, if the measurement period is 300 secs, and if the JVM was restarted 120 secs back, this metric will report a value of 120 seconds. The accuracy of this metric is dependent on the measurement period - the smaller the measurement period, greater the accuracy."
+  },
+  {
+    "Measurement": "Total uptime of the JVM",
+    "Description": "Indicates the total time that the JVM has been up since its last reboot.",
+    "MeasurementUnit": "",
+    "Interpretation": "This measure displays the number of years, months, days, hours, minutes and seconds since the last reboot. Administrators may wish to be alerted if a JVM has been running without a reboot for a very long period. Setting a threshold for this metric allows administrators to determine such conditions."
+  }
+]

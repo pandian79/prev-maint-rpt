@@ -1,0 +1,26 @@
+[
+  {
+    "Measurement": "Has the system been rebooted?",
+    "Description": "Indicates whether the server has been rebooted during the last measurement period or not.",
+    "MeasurementUnit": "",
+    "Interpretation": "If the value of this measure is Yes, it means that the server was rebooted during the last measurement period. By checking the time periods when this metric changes from No to Yes, an administrator can determine the times when this server was rebooted. The Detailed Diagnosis of this measure, if enabled, lists the TIME, SHUTDOWN DATE, REBOOT DATE, SHUTDOWN DURATION, and IS MAINTENANCE."
+  },
+  {
+    "Measurement": "Uptime during the last measure period",
+    "Description": "Indicates the time period that the system has been up since the last time this test ran.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "If the server has not been rebooted during the last measurement period and the agent has been running continuously, this value will be equal to the measurement period. If the server was rebooted during the last measurement period, this value will be less than the measurement period of the test. For example, if the measurement period is 300 secs, and if the server was rebooted 120 secs back, this metric will report a value of 120 seconds. The accuracy of this metric is dependent on the measurement period - the smaller the measurement period, greater the accuracy."
+  },
+  {
+    "Measurement": "Total uptime of the system",
+    "Description": "Indicates the total time that the server has been up since its last reboot.",
+    "MeasurementUnit": "",
+    "Interpretation": "This measure displays the number of years, months, days, hours, minutes and seconds since the last reboot. Administrators may wish to be alerted if a server has been running without a reboot for a very long period. Setting a threshold for this metric allows administrators to determine such conditions."
+  },
+  {
+    "Measurement": "Is under maintenance?",
+    "Description": "Indicates whether the system is currently in a scheduled maintenance window in eG Maintenance Policy.",
+    "MeasurementUnit": "",
+    "Interpretation": "A value of Yes indicates that the system is intentionally taken under maintenance and any outages or performance degradation during this period should be treated as expected behavior rather than faults. A value of No indicates that the system is in normal operating mode and any downtime or anomalies should be investigated as potential issues."
+  }
+]

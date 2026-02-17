@@ -1,0 +1,26 @@
+[
+  {
+    "Measurement": "Table locks acquired",
+    "Description": "Indicates the total number of table locks acquired during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A higher value suggests increased locking activity on tables, which may be normal under heavy workload but can also point to potential contention if combined with long lock durations or many waiting sessions."
+  },
+  {
+    "Measurement": "Maximum duration of table locks",
+    "Description": "Indicates the maximum time any table lock was held during the last measurement period.",
+    "MeasurementUnit": "Seconds",
+    "Interpretation": "A high value can indicate that some transactions are holding locks for too long, which may lead to blocking, timeouts, or degraded application responsiveness. Investigate long‑running queries or poorly designed transactions when this value is consistently high."
+  },
+  {
+    "Measurement": "Waiting for table locks",
+    "Description": "Indicates the number of sessions currently waiting for table locks to be released.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A non‑zero or increasing value suggests lock contention. If this remains high, it may indicate blocking chains or hot tables/indexes that require tuning, query optimization, or changes in transaction isolation/locking strategy."
+  },
+  {
+    "Measurement": "Maximum waiting duration for table locks",
+    "Description": "Indicates the maximum time any session has been waiting for a table lock during the last measurement period.",
+    "MeasurementUnit": "Seconds",
+    "Interpretation": "A high value means some sessions are experiencing long waits for locks, which can cause user‑visible slowdowns and timeouts. Persistent high wait durations warrant reviewing blocking sessions and problematic queries holding locks."
+  }
+]

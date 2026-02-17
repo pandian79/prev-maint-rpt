@@ -1,0 +1,103 @@
+[
+  {
+    "measurement": "Has memory exhaustion happened?",
+    "description": "Indicates whether or not any memory exhaustion happened on this desktop.",
+    "measurementUnit": null,
+    "interpretation": "No (0) or Yes (1). A value of 1 indicates that system memory resources were exhausted, typically causing severe slowdowns, app failures, or crashes. Detailed diagnosis lists applications, PIDs, and their memory usage.",
+    "troubleshootingSteps": [
+      "Check Task Manager (Processes and Performance tabs) to confirm whether RAM and commit usage are near 100%, and identify top memory-consuming processes.[web:577][web:580]",
+      "Use tools like RAMMap or Process Explorer to see detailed breakdown of committed memory and which components (processes, drivers, cache) consume it.[web:573][web:580][web:581]",
+      "Close or reconfigure applications with unusually high memory growth, and disable unnecessary startup/background apps to reduce baseline usage.[web:577][web:580][web:583]",
+      "If memory exhaustion is recurrent without obvious user-space culprits, investigate kernel memory (paged/non-paged pools) and suspect driver leaks.[web:573][web:576][web:584]",
+      "Increase physical RAM or adjust pagefile settings if the workload legitimately requires more memory than currently available.[web:577][web:581]"
+    ]
+  },
+  {
+    "measurement": "System commit limit",
+    "description": "Indicates the maximum amount of virtual memory that can be committed without extending the paging file(s) on this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "Represents RAM plus current pagefile capacity. If the system commit charge approaches this limit, Windows may need to grow the pagefile or fail allocations, impacting performance.",
+    "troubleshootingSteps": [
+      "Ensure the system drive has enough free disk space so Windows can grow the pagefile when needed.[web:581]",
+      "Manually configure a larger pagefile size if workloads commonly push commit close to the limit.[web:581]",
+      "Consider adding more physical RAM if high commit levels are normal for your usage.[web:577][web:580]"
+    ]
+  },
+  {
+    "measurement": "System commit charge",
+    "description": "Indicates the total amount of virtual memory that all processes have requested and that the system has committed to providing on this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "If system commit charge approaches commit limit, performance issues or allocation failures can occur.",
+    "troubleshootingSteps": [
+      "Monitor Commit (Committed) values in Task Manager; if the first number frequently nears the second (limit), identify which processes are driving growth.[web:573][web:581][web:584]",
+      "Use RAMMap and PoolMon/WPA to determine whether commit is driven by user processes, file cache, or kernel pools (paged/non-paged).?[web:573][web:579][web:584]",
+      "Terminate or reconfigure misbehaving applications or services whose committed memory grows steadily over time.[web:577][web:580]",
+      "Scan for buggy drivers if commit grows while user process memory does not, as this suggests kernel-mode leaks.[web:573][web:576][web:584]"
+    ]
+  },
+  {
+    "measurement": "Process commit charge",
+    "description": "Indicates the total amount of virtual memory that a specific process has requested and that the system has committed to providing on this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "Helps identify individual processes that consume excessive virtual memory.",
+    "troubleshootingSteps": [
+      "In Task Manager or Process Explorer, inspect the process’s committed/private bytes and watch for continuous growth indicating a leak.[web:580][web:583]",
+      "Profile the application (heap analysis, profilers) to locate unbounded caches or data structures causing the commit growth.",
+      "Update or roll back the application to a version without the leak, or contact the vendor if the leak is in third-party software.[web:585]"
+    ]
+  },
+  {
+    "measurement": "Paged pool usage",
+    "description": "Indicates the amount of paged pool used by this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "Unusually high paged pool usage may indicate a memory leak or inefficient memory usage by drivers or system components. Detailed diagnosis shows top paged pools per desktop.",
+    "troubleshootingSteps": [
+      "If paged pool exceeds a significant fraction of commit (for example >10%), use PoolMon or WPA to identify the pool tags consuming the most memory.[web:573][web:575][web:579]",
+      "Once a leaking pool tag is known, map it to the related driver or component and update, reconfigure, or remove that driver.[web:572][web:576][web:582]",
+      "Keep network and storage drivers up to date, as they are common sources of paged pool leaks.[web:572][web:576]"
+    ]
+  },
+  {
+    "measurement": "Non paged pool usage",
+    "description": "Indicates the amount of non paged pool used by this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "High non-paged pool usage often indicates kernel-mode memory leaks, typically in drivers. Detailed diagnosis shows top non-paged pools per desktop.",
+    "troubleshootingSteps": [
+      "If non-paged pool grows abnormally (e.g., multiple GB instead of a few hundred MB), use PoolMon or WPA to find the leaking pool tag and associated driver.[web:573][web:576][web:579]",
+      "Update or remove problematic third-party drivers (often network, security, or monitoring tools) that correspond to the leaking tag.[web:576][web:582][web:585]",
+      "As a mitigation, disable specific features like NDU (Network Data Usage monitoring) if documented as causing non-paged leaks on your hardware.[web:576][web:577]"
+    ]
+  },
+  {
+    "measurement": "Total memory available",
+    "description": "Indicates the total amount of physical memory available for use in this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "Represents installed RAM minus reserved hardware regions. Low total memory relative to workload can increase paging and reduce performance.",
+    "troubleshootingSteps": [
+      "Verify that the system recognizes all installed RAM in BIOS and OS; resolve mismatched modules or firmware issues if not.[web:580]",
+      "Consider upgrading RAM if typical workloads constantly consume most of the available physical memory.[web:577][web:580]"
+    ]
+  },
+  {
+    "measurement": "Memory usage",
+    "description": "Indicates the amount of physical memory used by this desktop.",
+    "measurementUnit": "GB",
+    "interpretation": "Helps identify resource‑intensive applications and potential memory leaks.",
+    "troubleshootingSteps": [
+      "Use Task Manager (sort by Memory) to find processes consuming the most physical memory and close or optimize unnecessary ones.[web:577][web:580]",
+      "Disable unnecessary startup and background applications that keep memory usage high even when idle.[web:577][web:583]",
+      "Scan for malware or unwanted software that may be consuming memory in the background.[web:577][web:580]"
+    ]
+  },
+  {
+    "measurement": "Total processes",
+    "description": "Indicates the total number of processes currently running in this desktop.",
+    "measurementUnit": "Number",
+    "interpretation": "A very high process count may indicate many background apps/services, increasing memory and CPU overhead.",
+    "troubleshootingSteps": [
+      "Review running processes and services, and uninstall or disable software you do not need (especially auto‑updaters and tray utilities).?[web:580][web:583]",
+      "Limit per-user background apps in system privacy/background-apps settings to reduce unnecessary processes.[web:583]",
+      "If the process count grows over time, look for processes that repeatedly spawn child processes or fail to terminate properly and fix or update those applications."
+    ]
+  }
+]

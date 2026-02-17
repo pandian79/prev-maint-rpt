@@ -1,0 +1,8 @@
+[
+  {
+    "Measurement": "Unused indexes",
+    "Description": "Indicates the total number of unused indexes currently found in this database.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Use the detailed diagnosis of this measure to know which indexes in a database are unused. The detailed diagnosis also reveals how often each such index has been updated, so that you can assess the unnecessary overheads that the database may have incurred in the process."
+  }
+]

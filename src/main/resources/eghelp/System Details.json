@@ -1,0 +1,50 @@
+[
+  {
+    "Measurement": "CPU utilization",
+    "Description": "Indicates the percentage of utilization of the CPU time of the host system.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "A high value could signify a CPU bottleneck. The CPU utilization may be high because a few processes are consuming a lot of CPU, or because there are too many processes contending for a limited resource. Check the currently running processes to see the exact cause of the problem. The detailed diagnosis capability, if enabled, lists the top 10 processes that are consuming more CPU, and the users who are running the CPU-intensive processes."
+  },
+  {
+    "Measurement": "System CPU utilization",
+    "Description": "Indicates the percentage of CPU time spent for system-level processing.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "An unusually high value indicates a problem and may be due to too many system-level tasks executing simultaneously."
+  },
+  {
+    "Measurement": "Run queue length",
+    "Description": "This measure indicates the instantaneous length of the queue in which threads are waiting for the processor cycle. This length does not include the threads that are currently being executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A value greater than 2 indicates processor congestion."
+  },
+  {
+    "Measurement": "Blocked processes",
+    "Description": "Indicates the number of processes blocked for I/O, paging, etc.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value could indicate an I/O problem on the host (e.g., a slow disk)."
+  },
+  {
+    "Measurement": "Swap memory",
+    "Description": "On Windows systems, this measurement denotes the committed amount of virtual memory. This corresponds to the space reserved for virtual memory on disk paging file(s). On Solaris systems, this metric corresponds to the swap space currently available. On HPUX and AIX systems, this metric corresponds to the amount of active virtual memory (it is assumed that one virtual page corresponds to 4 KB of memory in this computation).",
+    "MeasurementUnit": "MB",
+    "Interpretation": "An unusually high value for the swap usage can indicate a memory bottleneck. Check the memory utilization of individual processes to figure out the process(es) that has (have) maximum memory consumption and look to tune their memory usages and allocations accordingly."
+  },
+  {
+    "Measurement": "Free memory",
+    "Description": "Indicates the free memory available.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "This measure typically indicates the amount of memory available for use by applications running on the target host. On Unix operating systems (AIX and Linux), the operating system tends to use parts of the available memory for caching files, objects, etc. When applications require additional memory, this is released from the operating system cache. Hence, to understand the true free memory that is available to applications, the eG agent reports the sum of the free physical memory and the operating system cache memory size as the value of the Free memory measure while monitoring AIX and Linux operating systems. The detailed diagnosis of this measure, if enabled, lists the top 10 processes responsible for maximum memory consumption on the host."
+  },
+  {
+    "Measurement": "Scan rate",
+    "Description": "This measure indicates the memory scan rate.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": "A high value is indicative of memory thrashing. Excessive thrashing can be detrimental to application performance."
+  },
+  {
+    "Measurement": "Steal time",
+    "Description": "Indicates the percentage of time a virtual processor waits for a real CPU while the hypervisor is servicing another virtual processor.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": "This measure is applicable only for the Windows VMs that are provisioned via a VMware vSphere ESX. A low value is desired for this measure. A high value for this measure indicates that a particular virtual processor is waiting longer for real CPU resources. If this condition is left unattended, it can stall the tasks performed by the virtual processor and cause the overall performance of the virtual processor to deteriorate significantly and badly impact user-experience with the target server. The impact of stolen CPU always manifests in slowness but can have more profound effects on your infrastructure, such as slower page load times, slower database query times, slower processing of reports, increased queue size of asynchronous tasks because of an inability to process them quickly, and increased IaaS bill due to launching more servers to handle the same amount of load. To avoid such eventualities, administrators should either immediately terminate the virtual machine and launch a replacement or upgrade the VM to have more CPU."
+  }
+]

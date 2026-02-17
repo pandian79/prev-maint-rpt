@@ -1,0 +1,14 @@
+[
+  {
+    "Measurement": "Successful logons",
+    "Description": "Indicates the number of logon attempts that are successful.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure reveals the name of user who tried to login to the eG manager, the name of host from which the user attempted to login, the interface used by the user and the time stamp at which the user logged in to the eG manager."
+  },
+  {
+    "Measurement": "Failed logons",
+    "Description": "Indicates the number of logon attempts that failed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure reveals the name of user who tried to login to the eG manager, the name of host from which the user attempted to login, the interface used by the user, the time stamp at which the user logged in to the eG manager and the reason why the login attempts failed."
+  }
+]

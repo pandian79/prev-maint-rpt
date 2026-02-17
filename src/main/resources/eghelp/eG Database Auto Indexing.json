@@ -1,0 +1,206 @@
+[
+  {
+    "measurement": "Is auto indexing enabled?",
+    "description": "Indicates whether auto indexing is enabled for the eG database.",
+    "unit": "Boolean (Yes=1, No=0)",
+    "interpretation": "A value of Yes (1) means the automatic index maintenance feature is turned on; No (0) means it is disabled. When disabled, index fragmentation and stale indexes must be managed manually or by other jobs to avoid performance degradation.",
+    "troubleshootingSteps": [
+      "If this value is No but you rely on automated index maintenance, enable auto indexing in the eG configuration or schedule equivalent maintenance jobs.",
+      "If this value is Yes but index health is still poor, verify that auto indexing is actually executing as scheduled (see status and run-today metrics).",
+      "Document and review the policy for when auto indexing should be on or off, especially during heavy maintenance or migration activities.",
+      "Monitor database performance and fragmentation levels to confirm that the chosen setting (enabled or disabled) is appropriate for your workload."
+    ]
+  },
+  {
+    "measurement": "Auto indexing rebuild frequency",
+    "description": "Indicates how often the auto index should be rebuilt.",
+    "unit": "Days",
+    "interpretation": "This defines the interval between automatic index rebuild operations. A very short interval may cause unnecessary maintenance load, while a very long interval may allow fragmentation to accumulate and hurt query performance.",
+    "troubleshootingSteps": [
+      "Align the rebuild frequency with observed index fragmentation patterns and maintenance windows.",
+      "If indexes frequently become heavily fragmented between rebuilds, consider shortening the frequency or adding intermediate reorganizations.",
+      "If maintenance windows are tight and rebuilds often overrun, consider lengthening the interval or targeting only critical indexes.",
+      "Reassess the frequency after significant changes in workload, data volume, or hardware."
+    ]
+  },
+  {
+    "measurement": "Maximum rebuild time",
+    "description": "Indicates the maximum time duration set for performing auto indexing.",
+    "unit": "Hours",
+    "interpretation": "This cap limits how long auto indexing is allowed to run in a single maintenance window. If the limit is too low, some indexes may not be rebuilt in time; if too high, maintenance may spill into business hours and affect performance.",
+    "troubleshootingSteps": [
+      "Compare actual total duration of auto indexing against this limit to see whether maintenance frequently reaches or exceeds the cap.",
+      "If many indexes remain unprocessed when the limit is reached, consider increasing the maximum rebuild time or splitting maintenance across windows.",
+      "If maintenance impacts user workloads, consider reducing this time or rescheduling auto indexing to off-peak hours.",
+      "Tune index selection (for example, prioritize largest or most fragmented) so the most impactful work is completed within the allowed time."
+    ]
+  },
+  {
+    "measurement": "Rebuild secondary indexes only",
+    "description": "Indicates the number of secondary indexes that should be rebuilt.",
+    "unit": "Number",
+    "interpretation": "This reflects how many non-primary (secondary) indexes are targeted for rebuild operations. Depending on configuration, rebuilding only selected secondary indexes can reduce maintenance overhead while still addressing key performance bottlenecks.",
+    "troubleshootingSteps": [
+      "Review which secondary indexes are included in this count and confirm that they align with performance-critical workloads.",
+      "If too few secondary indexes are being rebuilt, consider expanding the set to include other heavily used or fragmented indexes.",
+      "If too many are being rebuilt and maintenance windows are strained, refine the criteria to focus on the most beneficial secondary indexes.",
+      "Periodically re-evaluate which secondary indexes justify rebuilds based on usage and fragmentation statistics."
+    ]
+  },
+  {
+    "measurement": "Number of indexes available",
+    "description": "Indicates the total number of indexes available.",
+    "unit": "Number",
+    "interpretation": "This represents the overall index footprint in the eG database, including primary and secondary indexes. Very high index counts can increase maintenance cost and slow write operations, while too few or poorly chosen indexes can harm read performance.",
+    "troubleshootingSteps": [
+      "Monitor this value over time to ensure that index count grows in a controlled manner as the schema evolves.",
+      "Review index usage statistics to identify unused or rarely used indexes that might be candidates for removal.",
+      "Ensure that each table has a balanced indexing strategy, avoiding excessive overlapping indexes.",
+      "Coordinate schema and application changes to keep index design aligned with current query patterns."
+    ]
+  },
+  {
+    "measurement": "Number of primary key indexes available",
+    "description": "Indicates the number of primary key indexes available in the eG database.",
+    "unit": "Number",
+    "interpretation": "This shows how many tables define primary key constraints (each typically backed by a primary key index). A mismatch between table count and primary key index count could indicate missing primary keys in some tables.",
+    "troubleshootingSteps": [
+      "Compare this value with the number of tables to identify tables that may lack primary keys.",
+      "For tables without primary keys, evaluate whether a primary key should be defined to ensure data integrity and efficient access.",
+      "Verify that primary key indexes are included in the appropriate auto indexing strategy where necessary.",
+      "Monitor changes to ensure that new tables are created with appropriate primary key definitions."
+    ]
+  },
+  {
+    "measurement": "Number of idx indexes available",
+    "description": "Indicates the number of idx indexes available in the eG database.",
+    "unit": "Number",
+    "interpretation": "This counts indexes with the naming convention or category “idx” (typically non-primary key indexes). It provides visibility into the volume of secondary or auxiliary indexing applied to support queries.",
+    "troubleshootingSteps": [
+      "Review idx indexes to confirm they are still needed and aligned with current query workloads.",
+      "Eliminate duplicate or overlapping idx indexes that add maintenance cost without providing benefit.",
+      "Ensure idx indexes most critical to performance are targeted by auto indexing policies.",
+      "Track growth in idx index count and reassess as query patterns change."
+    ]
+  },
+  {
+    "measurement": "Number of tables available",
+    "description": "Indicates the total number of tables available in the eG database.",
+    "unit": "Number",
+    "interpretation": "This reflects the size and complexity of the schema. It is useful as a denominator for understanding how indexing and maintenance scale across the database.",
+    "troubleshootingSteps": [
+      "Compare the number of tables with counts of primary key and idx indexes to ensure that indexing coverage is appropriate.",
+      "Identify unused or legacy tables that could be archived or removed to reduce maintenance overhead.",
+      "Use this measure in capacity and maintenance planning, as more tables typically imply more indexes and longer maintenance windows.",
+      "Monitor for rapid increases in table count that might suggest uncontrolled schema growth."
+    ]
+  },
+  {
+    "measurement": "Auto indexing status",
+    "description": "Indicates the current status of auto indexing.",
+    "unit": "Boolean (Yes=1, No=0)",
+    "interpretation": "Yes (1) indicates that auto indexing is currently active or has run as expected; No (0) indicates it is not active. This status helps confirm whether index maintenance is occurring according to plan.",
+    "troubleshootingSteps": [
+      "If status is No when auto indexing is expected to run, verify scheduling, configuration, and recent logs for errors or disabled tasks.",
+      "When status is Yes but index health remains poor, inspect detailed logs to ensure that indexing actually completed successfully.",
+      "Monitor changes in status across days to confirm that periodic indexing is happening consistently.",
+      "Coordinate with DBAs to temporarily disable auto indexing only when necessary (for example, during major maintenance) and re-enable it afterward."
+    ]
+  },
+  {
+    "measurement": "Rebuild completed for indexes",
+    "description": "Indicates the total number of indexes that are rebuilt.",
+    "unit": "Number",
+    "interpretation": "This indicates how many indexes were successfully rebuilt during the auto indexing process. Comparing this against the total number of eligible indexes shows how much of the planned work was completed.",
+    "troubleshootingSteps": [
+      "Compare this count to the total number of indexes and auto indexing scope to understand coverage per run.",
+      "If the number is consistently low relative to expectations, investigate whether time limits, resource constraints, or errors are limiting rebuilds.",
+      "Prioritize which indexes should be rebuilt first if time is constrained, focusing on the most fragmented and heavily used ones.",
+      "Track this measure over time to ensure that all critical indexes periodically receive rebuilds."
+    ]
+  },
+  {
+    "measurement": "Rebuild completed for primary key indexes",
+    "description": "Indicates the number of primary key indexes that are rebuilt.",
+    "unit": "Number",
+    "interpretation": "This shows how many primary key indexes received maintenance in the most recent auto indexing cycle. Maintaining primary key indexes is important for both performance and integrity.",
+    "troubleshootingSteps": [
+      "Verify that critical primary key indexes for heavily used tables are included in rebuild operations.",
+      "If few or no primary key indexes are being rebuilt, review auto indexing criteria and schedules.",
+      "Check fragmentation and performance metrics on primary key indexes to confirm that rebuilds are having the desired effect.",
+      "Ensure that maintenance does not excessively lock or block key tables during rebuilds; adjust scheduling if needed."
+    ]
+  },
+  {
+    "measurement": "Rebuild completed for idx indexes",
+    "description": "Indicates the number of idx indexes that are rebuilt.",
+    "unit": "Number",
+    "interpretation": "This shows how many idx (secondary) indexes received rebuilds. It reflects the focus of maintenance on non-primary key indexes, which often support query performance.",
+    "troubleshootingSteps": [
+      "Review which idx indexes are being rebuilt to confirm they are the ones most in need (heavily used, highly fragmented).",
+      "If many idx indexes are rebuilt each run, consider whether all are necessary or if some can be consolidated or removed.",
+      "Monitor query performance before and after rebuilds to validate the benefit of maintaining idx indexes.",
+      "If schedules are tight, prioritize idx indexes by impact to ensure the most important ones are rebuilt first."
+    ]
+  },
+  {
+    "measurement": "Rebuild completed for other indexes",
+    "description": "Indicates the number of other indexes that are rebuilt.",
+    "unit": "Number",
+    "interpretation": "This counts rebuilt indexes that are neither primary key nor categorized as idx. It helps account for specialized or less common index types that may also need maintenance.",
+    "troubleshootingSteps": [
+      "Identify which indexes fall into the “other” category and verify their purpose and importance.",
+      "Ensure that these indexes are still required and not artifacts of legacy configurations.",
+      "Check fragmentation and usage patterns for these indexes to decide whether they should remain in the rebuild set.",
+      "Adjust auto indexing rules if too much effort is spent on low-value indexes in this category."
+    ]
+  },
+  {
+    "measurement": "Number of auto indexes failed",
+    "description": "Indicates how many times the auto indexing failed.",
+    "unit": "Number",
+    "interpretation": "This reflects the count of failed auto indexing attempts. A non-zero or increasing value indicates instability or configuration issues in the maintenance process.",
+    "troubleshootingSteps": [
+      "Investigate error logs for each failure to determine root causes (for example, timeouts, resource exhaustion, locking conflicts, or configuration errors).",
+      "Address underlying issues such as insufficient maintenance windows, low disk space, or blocking transactions.",
+      "After remediation, monitor subsequent runs to confirm that failures do not recur.",
+      "If failures persist, consider temporarily reducing workload scope or frequency while the issues are investigated."
+    ]
+  },
+  {
+    "measurement": "Total duration of auto indexing",
+    "description": "Indicates the time taken for auto indexing.",
+    "unit": "Minutes",
+    "interpretation": "This shows how long the auto indexing job ran during its most recent execution. Very high values suggest that index maintenance is taking longer than expected and may be straining maintenance windows or interfering with normal operations.",
+    "troubleshootingSteps": [
+      "Compare total duration with the configured maximum rebuild time to see whether jobs are approaching or hitting the limit.",
+      "If duration is consistently high, reduce the number of indexes processed per run or increase maintenance window length.",
+      "Optimize indexes and consider reorganizations instead of full rebuilds for moderately fragmented structures where acceptable.",
+      "Monitor system resource usage during auto indexing to ensure that it does not unduly impact user workloads."
+    ]
+  },
+  {
+    "measurement": "Has auto indexing run today?",
+    "description": "Indicates whether auto indexing has run today or not.",
+    "unit": "Boolean (Yes=1, No=0)",
+    "interpretation": "Yes (1) means at least one auto indexing run has occurred today; No (0) means none has run yet. This helps verify that daily (or scheduled) maintenance is actually being executed.",
+    "troubleshootingSteps": [
+      "If this value is No when a daily run is expected, check scheduling configuration, job status, and error logs.",
+      "Confirm that any dependencies (for example, database availability, permissions) are satisfied at the scheduled time.",
+      "Use this measure in alerts so that missed auto indexing runs are detected promptly.",
+      "After resolving scheduling or configuration issues, verify that future days correctly show Yes following a successful run."
+    ]
+  },
+  {
+    "measurement": "Time since recent auto indexing",
+    "description": "Indicates the elapsed time duration since the last auto indexing process.",
+    "unit": "Time (formatted duration)",
+    "interpretation": "This measures how long it has been since auto indexing last completed. Large values relative to the expected frequency suggest that scheduled maintenance may have been missed.",
+    "troubleshootingSteps": [
+      "Compare this elapsed time with the configured rebuild frequency to determine whether auto indexing is running as often as intended.",
+      "If the time since last run greatly exceeds the frequency, investigate scheduling, failures, or manual disablement of auto indexing.",
+      "Use this metric to confirm that recent configuration changes or maintenance windows did not accidentally prevent auto indexing from running.",
+      "Implement alerts when this duration exceeds a threshold so you can quickly respond to missed or delayed maintenance."
+    ]
+  }
+]

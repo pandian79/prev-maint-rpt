@@ -1,0 +1,211 @@
+[
+  {
+    "Measurement": "SSL certificate validity",
+    "Description": "Indicates the number of days from the current day for which this SSL certificate will be valid.",
+    "MeasurementUnit": "Days",
+    "Interpretation": "Ensuring that SSL certificates are valid is crucial for maintaining secure communication over the internet. When a certificate expires, it can lead to security warnings in web browsers and other client applications, potentially causing trust issues with users and disrupting access to the website or service. To maintain security, administrators need to regularly monitor the expiration dates of SSL certificates and renew them before they expire. Many certificate authorities and certificate management tools offer reminders and automation to help with this process. Use the detailed diagnosis of this measure to find out the details of the SSL certificate such as Order, Type, Version Serial No, Active Date, Expiry Date, Common Name, Organization, Organization Unit, Locality, State, Country, etc."
+  },
+  {
+    "Measurement": "Certificate status",
+    "Description": "Indicates the current status of this SSL certificate.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "Certificate status is crucial for ensuring the security of communication over the internet. Browsers and other client applications typically check the status of SSL certificates when establishing secure connections to websites. If a certificate's status is invalid, revoked, or expired, it can result in security warnings or errors, indicating potential risks to users.",
+      "Mappings": [
+        { "MeasureValue": "Public CA Signed", "NumericValue": 20 },
+        { "MeasureValue": "Local CA Signed", "NumericValue": 25 },
+        { "MeasureValue": "Not Verified", "NumericValue": 40 },
+        { "MeasureValue": "Self Signed", "NumericValue": 60 },
+        { "MeasureValue": "Revoked", "NumericValue": 80 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above. In the graph of this measure however, the state of the SSL certificate is represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is Thumbprint valid?",
+    "Description": "Indicates whether/not the thumbprint of this SSL certificate is valid.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "Thumbprint validity is crucial to the authenticity of the certificate, it means that the thumbprint matches the expected value, indicating that the certificate has not been tampered with and that its contents are intact. This validation is crucial for ensuring the authenticity and integrity of the SSL certificate.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate valid?",
+    "Description": "Indicates whether or not this certificate is valid.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "An SSL certificate is issued by a Certificate Authority (CA) for a specific duration, typically ranging from one to three years. During this period, the certificate is considered valid for securing communication between a client and a server. Ensuring that SSL certificates are valid is essential for maintaining secure communication over the Internet. Expired certificates can lead to security warnings in web browsers and other client applications, potentially causing trust issues with users and disrupting access to the website or service. Therefore, administrators must monitor SSL certificate expiration dates and renew them before they expire to ensure uninterrupted security.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate trusted?",
+    "Description": "Indicates whether or not this certificate is from a trusted source.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "If the client's trust store includes the root certificate of the CA that issued the SSL certificate (or an intermediate certificate leading up to the root CA), and if the SSL certificate presented by the server is properly signed and not expired, then the certificate is considered trusted and the client proceeds without warnings. If the SSL certificate is self-signed or issued by an unrecognized CA, the certificate is considered untrusted and clients typically display a warning, requiring users to manually verify or accept the risk.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate is from a trusted source. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate expired?",
+    "Description": "Indicates whether or not this certificate is expired.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "SSL certificates have a defined validity period, typically ranging from one to three years, during which they are considered valid. Beyond this period, the certificate is no longer trusted by clients, and attempts to establish secure connections using the expired certificate will fail or trigger warnings. Administrators need to monitor expiration dates and renew certificates before they expire to avoid service disruption.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate is expired. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate revoked?",
+    "Description": "Indicates whether or not this certificate is revoked.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "Revocation prevents the use of compromised or unauthorized certificates. When an SSL certificate is revoked, it has been invalidated by the issuing CA due to security concerns (such as key compromise), and clients should not trust or use it for secure communication.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate is revoked. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate self signed?",
+    "Description": "Indicates whether or not this certificate is self signed.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "A self-signed certificate is one where the entity that created the certificate also signed it. While it can provide encryption, it lacks third-party validation, so browsers typically display warnings and do not inherently trust it. For production or public-facing sites, CA-signed certificates are recommended.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate is self signed. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is private certificate configured?",
+    "Description": "Indicates whether or not this certificate configured is a private certificate (i.e., the corresponding private key is properly set up and available).",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "The presence of the private key is essential for decrypting data encrypted with the public key. Without the private key, the SSL certificate cannot be used for secure communication, even if it is otherwise valid.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate is a private certificate. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate used before active date?",
+    "Description": "Indicates whether or not this certificate is used before its active date.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "Certificates have an activation (start) date and an expiration date. Using a certificate before its active date can cause client rejections, warnings, and possible violations of policy, since the certificate is not yet considered valid for use.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate is used before its active date. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate having untrusted root?",
+    "Description": "Indicates whether or not this certificate has an untrusted root.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "A certificate with an untrusted root is one whose chain of trust does not lead back to a trusted root CA. This can be due to missing intermediates, self-signed certificates, or incorrect/expired intermediates, and typically results in client warnings until the full, correct chain is presented.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate has an untrusted root. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is Common Name(CN) available for the certificate?",
+    "Description": "Indicates whether or not a Common Name is available for this certificate.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "The Common Name (CN) is the primary domain name the certificate is issued for. Clients compare the CN with the domain they connect to; absence or mismatch can lead to security warnings and failed validations.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the Common Name is available. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is Subject available for the certificate?",
+    "Description": "Indicates whether or not a subject is available for this certificate.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "The Subject field typically includes organization and domain details. During the SSL handshake, clients validate this information against the requested domain; missing or mismatched subject information can trigger security warnings.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the subject is available. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is certificate having mismatched domain?",
+    "Description": "Indicates whether or not this certificate has a mismatched domain.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "A domain mismatch occurs when the domain in the certificate (e.g., domain.com) does not match the domain the client is connecting to (e.g., subdomain.domain.com or anotherdomain.com). This typically triggers browser warnings and must be corrected by issuing a certificate for the correct domain.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate has a mismatched domain. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Is having valid certificate chain?",
+    "Description": "Indicates whether or not a valid certificate chain is available for this certificate.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "A valid certificate chain runs from the leaf certificate through any intermediate CAs to a trusted root CA. If the chain is incomplete or invalid, clients may warn or reject the connection. Ensuring the server presents the full chain during the SSL handshake is essential.",
+      "Mappings": [
+        { "MeasureValue": "Yes", "NumericValue": 1 },
+        { "MeasureValue": "No", "NumericValue": 0 }
+      ],
+      "Note": "By default, this measure reports the Measure Values listed in the table above to indicate whether the certificate has a valid certificate chain. In the graph of this measure however, the values are represented using the corresponding numeric equivalents only."
+    }
+  },
+  {
+    "Measurement": "Public key size",
+    "Description": "Indicates the size of public key on this certificate.",
+    "MeasurementUnit": "Bits",
+    "Interpretation": "The public key size refers to the length of the cryptographic key. 2048-bit RSA keys are currently widely accepted; 3072-bit can be used for stronger, longer-term security. 4096-bit keys provide higher security but at a performance cost. The maximum size of public key in an SSL certificate is typically 4096 bits; common defaults are 2048 or 4096 bits."
+  },
+  {
+    "Measurement": "Available Subject Alternative Names(SAN)",
+    "Description": "Indicates the number of SANs available for this certificate.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Subject Alternative Names (SANs) list additional domains/hostnames covered by the certificate. SANs enable one certificate to secure multiple domains or subdomains, which is useful for multi-domain hosting, UC certificates, and similar scenarios."
+  },
+  {
+    "Measurement": "SSL connection availability",
+    "Description": "Indicates the availability of SSL connection to this SSL certificate.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "If the measure value is 0, it represents non-availability of SSL connection for this SSL certificate. If the measure value is 100, it represents full availability of SSL connection for this SSL certificate."
+  }
+]

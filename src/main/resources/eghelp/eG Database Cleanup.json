@@ -1,0 +1,110 @@
+[
+  {
+    "Measurement": "Cleanup status",
+    "Description": "Indicates the current status of the database cleanup activity.",
+    "MeasurementUnit": "",
+    "Interpretation": "This measure reports a status value mapped to a numeric code for graphing. Measure values and numeric values are: Running=0, Sleeping=1, Error=2, Not started=3, Interrupted=4. By default, the measure shows the text values; graphs use the numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the status is Error or Interrupted, review the eG manager logs and eG-Database-Cleanup metrics to identify the stage at which cleanup failed.",
+      "Check database connectivity, disk space, and lock/contention issues that might stop or interrupt cleanup.",
+      "If the status remains Not started beyond the expected schedule, verify the cleanup scheduler configuration and whether the cleanup process is enabled.",
+      "If the status is Sleeping for a long time while backlog is high, review cleanup frequency and window so cleanup has enough time to complete."
+    ]
+  },
+  {
+    "Measurement": "Time taken for cleanup",
+    "Description": "Indicates the total time taken for the entire cleanup process.",
+    "MeasurementUnit": "Minutes",
+    "Interpretation": "Ideally, this value should be low. A steady rise indicates that the eG manager is taking unusually long to clean up the database, often due to a large volume of data to be cleaned. Consider tuning the cleanup frequency so that the database always has less data to clean up. Any cleanup operations taking up more than 360 minutes should be investigated by eG support team and customer's DBA team.",
+    "troubleshootingSteps": [
+      "Trend this measure over days or weeks to detect a steady increase in cleanup duration.",
+      "Check database growth, table sizes, and index fragmentation; perform DB maintenance (index rebuild/reorganize, statistics update) if needed.",
+      "Increase cleanup frequency or widen the cleanup window so that each run processes fewer records.",
+      "Verify that the cleanup process is running on adequate hardware resources (CPU, memory, I/O) and not throttled by other heavy jobs at the same time."
+    ]
+  },
+  {
+    "Measurement": "Total successfully cleaned tables",
+    "Description": "Indicates the number of tables that were successfully cleaned up.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A higher value indicates that more tables were successfully cleaned during the run. Use the detailed diagnosis of this measure to know which tables were successfully cleaned.",
+    "troubleshootingSteps": [
+      "If the number of successfully cleaned tables drops compared to previous runs, use detailed diagnosis to identify which tables are no longer being cleaned.",
+      "Check for errors in cleanup logs or DB logs for tables that are consistently skipped.",
+      "Verify permissions on affected tables and ensure the cleanup user has the required privileges.",
+      "Correlate with Total backlogged tables and Total tables that failed cleanup to understand overall cleanup effectiveness."
+    ]
+  },
+  {
+    "Measurement": "Time since recent cleanup",
+    "Description": "Indicates the elapsed time since the last cleanup.",
+    "MeasurementUnit": "Minutes",
+    "Interpretation": "This measure helps you quickly detect whether a scheduled cleanup occurred on the eG database. A large value suggests that cleanup has not run recently.",
+    "troubleshootingSteps": [
+      "If this value is significantly higher than the expected cleanup interval, confirm that the cleanup schedule is configured correctly.",
+      "Check whether the cleanup task or service is disabled, stopped, or misconfigured.",
+      "Review system and application logs around the last expected run time for any errors preventing cleanup from starting.",
+      "Once issues are fixed, monitor this measure to ensure it returns to the normal range after the next successful cleanup."
+    ]
+  },
+  {
+    "Measurement": "Has cleanup run today?",
+    "Description": "Indicates whether cleanup has run this day or not.",
+    "MeasurementUnit": "",
+    "Interpretation": "Typically, cleanup is scheduled at the end of every day. If the value is Yes, cleanup has run today; if No, cleanup is yet to run or has not run at all. Measure values map to numeric values as: Yes=1, No=0. The measure reports text values, while graphs use the numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the value is No after the scheduled time, verify the cleanup schedule and timezone settings.",
+      "Check whether the cleanup process or service is running and not disabled.",
+      "Inspect logs for any errors occurring at the expected cleanup time (e.g., DB connectivity, authentication, resource exhaustion).",
+      "If cleanup is repeatedly not running, temporarily trigger a manual cleanup (if supported) and validate that it completes successfully."
+    ]
+  },
+  {
+    "Measurement": "Is cleanup running as a separate process?",
+    "Description": "Indicates whether or not cleanup is running as a separate process.",
+    "MeasurementUnit": "",
+    "Interpretation": "If cleanup has been configured to run as a separate Java process, the value will be Yes; otherwise it will be No. Measure values map to numeric values as: Yes=1, No=0. Running cleanup as a separate process allows better utilization of available server hardware resources and improves scalability by offloading work from the core eG manager process.",
+    "troubleshootingSteps": [
+      "If the value is No and the manager process is under memory pressure, consider configuring cleanup to run as a separate Java process.",
+      "Verify JVM heap settings for both the core manager and the cleanup process so each has sufficient memory.",
+      "Ensure the OS and service configuration actually launches a separate cleanup JVM as per product documentation.",
+      "Monitor CPU and memory usage of both processes after enabling separate cleanup to confirm improved resource utilization."
+    ]
+  },
+  {
+    "Measurement": "Has cleanup timed out?",
+    "Description": "Indicates whether or not the last database cleanup process timed out.",
+    "MeasurementUnit": "",
+    "Interpretation": "If the last cleanup process timed out, the value will be Yes; otherwise it will be No. Measure values map to numeric values as: Yes=1, No=0. A Yes indicates that cleanup did not complete within the configured timeout window.",
+    "troubleshootingSteps": [
+      "If this measure is Yes, review cleanup logs to determine at which table or phase the timeout occurred.",
+      "Consider increasing the cleanup timeout or rescheduling cleanup to a longer maintenance window.",
+      "Investigate database performance (I/O latency, locks, blocking sessions) during the cleanup window and resolve bottlenecks.",
+      "Reduce the amount of data to be cleaned per run by increasing cleanup frequency or adjusting retention settings."
+    ]
+  },
+  {
+    "Measurement": "Total backlogged tables",
+    "Description": "Indicates the number of tables on which cleanup was incomplete.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure indicates the number of tables where cleanup occurred but could not delete all records marked for deletion, often because the table contains too many records. In such cases, the eG manager cleans up a portion of records each day over multiple days. Use detailed diagnosis to identify the tables that still have records pending cleanup.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list the specific backlogged tables and assess their size and growth rate.",
+      "Check whether these tables have appropriate indexes to support efficient delete operations.",
+      "Consider adjusting retention policies or cleanup batch size for very large tables.",
+      "Monitor the trend of this measure; a steadily increasing backlog suggests that cleanup capacity is insufficient and needs tuning or additional resources."
+    ]
+  },
+  {
+    "Measurement": "Total tables that failed cleanup",
+    "Description": "Indicates the number of tables on which cleanup failed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Ideally, this value should be 0. A non-zero value indicates cleanup failures. Use detailed diagnosis of this measure to identify the tables on which cleanup failed and investigate the root cause.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify which tables failed cleanup in the last run.",
+      "Inspect database error logs for permission issues, constraints, locking, or other errors on those tables.",
+      "Verify that the cleanup account has the necessary privileges to delete from the affected tables.",
+      "After fixing issues, rerun cleanup and confirm that this measure returns to 0 in subsequent runs."
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "measurement": "Thread count",
+    "description": "Indicates the number of threads that are currently assigned to a connector.",
+    "unit": "Number",
+    "interpretation": "This is the current size of the connector’s worker thread pool (busy plus idle). Tracking it against the configured limit helps you see how close the connector is to its capacity.[web:334]"
+  },
+  {
+    "measurement": "Threads busy",
+    "description": "Indicates the number of threads which are currently busy in processing requests.",
+    "unit": "Number",
+    "interpretation": "This shows how many connector threads are actively handling requests right now; a high value indicates heavy activity at the connector and that available capacity for new requests may be shrinking.[web:334]"
+  },
+  {
+    "measurement": "Max threads",
+    "description": "Indicates the high watermark of threads in the pool in the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This is effectively the maximum number of simultaneous request-processing threads allowed for the connector (its maxThreads); by default this is often 200, and if observed thread counts approach this value, you may need to tune the limit or capacity.[web:324][web:334]"
+  },
+  {
+    "measurement": "Max spare threads",
+    "description": "Indicates the maximum number of spare threads that can exist in a thread pool.",
+    "unit": "Number",
+    "interpretation": "This is the upper bound on unused (idle) request-processing threads that the connector will keep before starting to stop them; typically the default is 50, limiting how many idle threads are retained.[web:334]"
+  },
+  {
+    "measurement": "Min spare threads",
+    "description": "Indicates the minimum number of spare threads that are currently available for processing requests.",
+    "unit": "Number",
+    "interpretation": "This is the minimum number of idle processing threads the connector maintains and also the number of request-processing threads created when the connector first starts; by default it is often 4, ensuring a baseline of ready threads for new requests.[web:324][web:334]"
+  }
+]

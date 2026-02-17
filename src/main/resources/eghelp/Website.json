@@ -1,0 +1,362 @@
+[
+  {
+    "measurement": "Total Page views",
+    "description": "Indicates the total number of times pages in this web site/web application were viewed by users.",
+    "unit": "Number",
+    "interpretation": "This is a good measure of the traffic to your web site/web application and indicates how popular it is. An unusually high number of page views could signal a malicious attack or hacking attempt, so sudden spikes should be treated with caution. However, abnormally high values can also occur when the Real User Monitor agent was stopped or disconnected and later uploads locally stored metrics in bulk, making the current period appear to have a sudden surge in Total Page views.",
+    "troubleshootingSteps": [
+      "Investigate sudden spikes in Total Page views with web server, CDN, and WAF logs to distinguish legitimate users from bots or attack traffic.",
+      "Correlate spikes with Real User Monitor agent restarts or agent‑collector reconnection events to identify artificial inflation from delayed metric uploads.",
+      "Compare Total Page views trends with other site metrics (sessions, conversions) to see if growth is consistent or suspiciously isolated to page views.",
+      "If malicious traffic is confirmed, apply targeted rate limiting, IP blocking, or CAPTCHA to protect the site while preserving normal traffic."
+    ]
+  },
+  {
+    "measurement": "Apdex score",
+    "description": "Indicates the apdex score of this web site/web application.",
+    "unit": "Number",
+    "interpretation": "Apdex is an open standard that converts many performance measurements into a single number between 0 and 1 (0 = no users satisfied, 1 = all users satisfied). The Apdex formula is ApdexT = (Satisfied Count + Tolerating Count / 2) / Total Samples. A score of 1.0 is ideal; any value less than 1.0 indicates that user experience with the web site/web application is less than satisfactory.",
+    "troubleshootingSteps": [
+      "Break down the Apdex score into satisfied, tolerating, and frustrated samples to understand which group is pulling the score down.",
+      "Correlate low Apdex with Average page load time, error rates, and key transaction performance to identify root‑cause areas.",
+      "Identify pages with the worst Apdex contributions via detailed diagnostics and prioritize performance fixes on those pages.",
+      "Review whether the Apdex threshold T is set appropriately for your SLAs and user expectations and adjust if necessary."
+    ]
+  },
+  {
+    "measurement": "Average page load time",
+    "description": "Indicates the average time taken by the pages in this web site to load completely.",
+    "unit": "ms",
+    "interpretation": "This is the average interval between when a user initiates a request and when page load completes in the browser; for Ajax requests, it ends when the response has been fully processed. Consistently high values mean the site is slow to respond, which can harm user experience and Apdex. Comparing Average browser initial request time, Average server time, Average network time, Average content download time, and Average browser render time helps determine if the bottleneck is at the front end, network, or backend, and page‑level diagnostics can pinpoint which pages are slow and why.",
+    "troubleshootingSteps": [
+      "Monitor this metric over time; if it remains high, cross‑check with Apdex to see if user satisfaction is already affected.",
+      "Decompose page load into browser initial request, network, server, content download, and render components to identify the dominant source of delay.",
+      "Use the detailed diagnosis for this measure to list the slowest pages and examine their per‑page timing breakdown.",
+      "Address the specific layer causing slowness (optimize backend, network delivery, or front‑end assets and rendering) for the worst pages."
+    ]
+  },
+  {
+    "measurement": "Unique user session",
+    "description": "Indicates the number of distinct users who are currently accessing this web site/web application.",
+    "unit": "Number",
+    "interpretation": "HttpOnly is a flag that can be set on cookies to prevent JavaScript from reading their contents, often used to protect session identifiers. If session cookies are marked HttpOnly, the Real User Monitor JavaScript cannot read the session ID, and the agent cannot report the count of unique sessions.",
+    "troubleshootingSteps": [
+      "Confirm whether session cookies are marked HttpOnly and understand that this prevents RUM from measuring unique sessions directly.",
+      "If unique session visibility is needed, consider exposing a non‑sensitive session key that RUM can safely read while keeping critical identifiers HttpOnly.",
+      "Cross‑validate unique sessions using backend session stores or analytics platforms.",
+      "Document the impact of HttpOnly cookies on monitoring so stakeholders interpret Unique user session metrics correctly."
+    ]
+  },
+  {
+    "measurement": "Page views per minute",
+    "description": "Indicates the number of times the pages in this web site/web application were viewed per minute.",
+    "unit": "Number",
+    "interpretation": "This is a good indicator of the level of activity on the web site. An unusually high value may require investigation, as it could indicate abnormal usage or attack traffic.",
+    "troubleshootingSteps": [
+      "Track Page views per minute and alert on abnormal spikes relative to historical baselines and expected traffic patterns.",
+      "Inspect top IPs, user agents, and referrers during spikes to distinguish legitimate surges from bots or scraping.",
+      "Correlate spikes with infrastructure load (CPU, memory, bandwidth) to ensure capacity is sufficient for intense activity periods.",
+      "Apply rate limiting or WAF rules for abusive traffic sources if high activity appears non‑human or malicious."
+    ]
+  },
+  {
+    "measurement": "Normal page view percentage",
+    "description": "Indicates the percentage of page views with a normal user experience.",
+    "unit": "Percent",
+    "interpretation": "This is the percentage of page views in which users experienced neither slowness nor JavaScript errors. Ideally it should be 100%; values below 100% indicate at least some slow or error‑prone pages, while values below 50% indicate serious issues where most page views are problematic. Comparing this with Slow page view percentage and JavaScript error page view percentage reveals whether slowness or JavaScript errors are the main cause of poor user experience.",
+    "troubleshootingSteps": [
+      "Monitor Normal page view percentage alongside Slow page view percentage and JavaScript error page view percentage to understand the main drivers of poor UX.",
+      "If slow pages dominate, use Slow page views (Tolerating & Frustrated) diagnostics to see which pages are slow and which layer (browser, network, backend) is responsible.",
+      "If JavaScript errors dominate, rely on JavaScript error page view percentage diagnostics to identify error types and affected pages.",
+      "After implementing fixes, re‑evaluate this percentage to ensure user experience has improved."
+    ]
+  },
+  {
+    "measurement": "Slow page view percentage",
+    "description": "Indicates the percentage of page views that are slow in loading.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% means more than half of all page views are slow, which is a serious concern. Detailed diagnosis of Slow page views (Tolerating & Frustrated) helps identify the slow pages and whether slowness is caused by the browser, the network, or the backend.",
+    "troubleshootingSteps": [
+      "Use Slow page views (Tolerating & Frustrated) diagnostics to list the URLs with the most slow views and their timing breakdowns.",
+      "Determine whether slowness is mainly due to browser/rendering, network latency, or backend processing for these pages.",
+      "Prioritize improvement on high‑traffic and business‑critical pages with high slow percentages.",
+      "Monitor this percentage after optimizations to confirm that the share of slow views declines."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page view percentage",
+    "description": "Indicates the percentage of page views that have encountered JavaScript errors.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that more than half of page views experience JavaScript errors. Detailed diagnostics let you identify the error pages and the specific JavaScript errors, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Analyze JavaScript error page view diagnostics to find the most frequent errors and the pages where they occur.",
+      "Check whether certain browsers, devices, or feature flags correlate with higher JS error rates.",
+      "Fix or mitigate the top errors and then track this percentage over time to validate improvements.",
+      "Add defensive coding and graceful fallbacks for critical flows so that JavaScript errors have less impact on users."
+    ]
+  },
+  {
+    "measurement": "Slow page views (Tolerating & Frustrated)",
+    "description": "Indicates the number of times pages in this web site/web application took very long to be viewed.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the configured SLOW TRANSACTION CUTOFF. Ideally this value should be 0; high values indicate that users frequently experience slowness when accessing the site. Detailed diagnostics show which page views are slow and why.",
+    "troubleshootingSteps": [
+      "Identify which URLs have the highest counts of slow views and group them by feature or page category.",
+      "Use detailed metrics per page to see whether network, backend, or rendering is responsible for slow views.",
+      "Optimize the specific components causing delay (e.g., heavy queries, large payloads, blocking scripts) for the worst‑affected pages.",
+      "Re‑measure slow view counts after changes to ensure users experience fewer slow pages."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page views",
+    "description": "Indicates the number of times JavaScript errors occurred when viewing the pages in this web site/web application.",
+    "unit": "Number",
+    "interpretation": "Ideally, this value should be 0. A high value indicates that many JavaScript errors are occurring when users view pages. Detailed diagnostics can identify which pages and what JavaScript errors are involved, making it easier to troubleshoot.",
+    "troubleshootingSteps": [
+      "Aggregate JavaScript errors by type and page to identify the most impactful issues.",
+      "Investigate if particular user environments (browser, OS, locale) disproportionately trigger these errors.",
+      "Apply fixes or guards to problematic code paths and track this measure to confirm reduction in error volume.",
+      "Set monitoring alerts for sudden spikes in JavaScript error page views to catch regressions early."
+    ]
+  },
+  {
+    "measurement": "Satisfied page views",
+    "description": "Indicates the number of times pages were viewed in the web site without any slowness.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow if its average load time exceeds the SLOW TRANSACTION CUTOFF; otherwise it is classified as satisfactory. Ideally, Satisfied page views should equal Total Page views. If this value is much lower than Tolerating and Frustrated page views, overall site performance is below‑par.",
+    "troubleshootingSteps": [
+      "Compare Satisfied page views with Total Page views to determine what portion of traffic experiences good performance.",
+      "If Satisfied views are low relative to Tolerating and Frustrated views, use those measures’ diagnostics to find slow pages and root causes.",
+      "Tune SLOW TRANSACTION CUTOFF to reflect realistic user expectations and SLAs.",
+      "Monitor trends in Satisfied page views after performance improvements to confirm better user experience."
+    ]
+  },
+  {
+    "measurement": "Tolerating page views",
+    "description": "Indicates the number of tolerating page views to the web site/web application.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page exceeds the SLOW TRANSACTION CUTOFF but is less than four times that cutoff, the view is classified as a Tolerating page view. Ideally this value should be 0; values higher than Satisfied page views indicate that overall user experience is less than satisfactory.",
+    "troubleshootingSteps": [
+      "Monitor the ratio of Tolerating to Satisfied page views as an early warning of emerging performance issues.",
+      "Analyze timing breakdowns for tolerating views to see whether they are slightly slow due to frontend, network, or backend factors.",
+      "Optimize moderately slow areas (e.g., resource sizes, caching, query efficiency) to move tolerating views into the satisfied band.",
+      "Use detailed diagnostics to prioritize tolerating views on important pages or user journeys."
+    ]
+  },
+  {
+    "measurement": "Frustrated page views",
+    "description": "Indicates the number of frustrated page views to this web site/web application.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page is greater than four times the SLOW TRANSACTION CUTOFF, the view is considered a Frustrated page view. Ideally this value should be 0; if it exceeds Satisfied page views, user experience is clearly poor.",
+    "troubleshootingSteps": [
+      "Identify which pages contribute the most frustrated views and treat them as top‑priority for performance remediation.",
+      "Correlate frustrated views with backend problems such as errors, timeouts, or resource saturation.",
+      "Check for network constraints (e.g., slow connections, mobile users) that may amplify frustration and optimize accordingly.",
+      "Use detailed diagnostics to determine whether to focus fixes on frontend optimizations, network delivery, or backend tuning for these pages."
+    ]
+  },
+  {
+    "measurement": "Desktop page views",
+    "description": "Indicates the number of times this web site/web application was accessed from client desktops.",
+    "unit": "Number",
+    "interpretation": "Detailed diagnosis of this measure shows which pages were accessed by desktop users and the associated experience. This helps identify slow pages specifically for desktop traffic and understand why they are slow.",
+    "troubleshootingSteps": [
+      "Use detailed diagnostics to list pages most frequently accessed from desktops and review their performance metrics.",
+      "Compare desktop performance with mobile and tablet for the same pages to see whether issues are desktop‑specific.",
+      "Optimize desktop‑heavy pages (e.g., large screens, complex layouts) where desktop users see significant slowness.",
+      "Monitor changes to desktop page views and their performance after deploying desktop‑focused optimizations."
+    ]
+  },
+  {
+    "measurement": "Mobile page views",
+    "description": "Indicates the number of times this web site/web application was accessed from mobile phones.",
+    "unit": "Number",
+    "interpretation": "Detailed diagnosis of this measure reveals which pages were accessed by mobile users and their experience. This helps you identify slow pages for mobile traffic and understand the reasons for slowness.",
+    "troubleshootingSteps": [
+      "Inspect detailed diagnostics to see which pages mobile users hit most and how those pages perform on mobile.",
+      "Optimize mobile‑critical pages for constrained devices and networks (lighter resources, fewer blocking scripts). ",
+      "Compare mobile metrics against desktop and tablet to detect mobile‑specific performance problems.",
+      "Track mobile page views and performance after responsive or mobile‑specific optimizations to ensure gains."
+    ]
+  },
+  {
+    "measurement": "Tablet page views",
+    "description": "Indicates the number of times this web site/web application was accessed from tablets.",
+    "unit": "Number",
+    "interpretation": "Detailed diagnosis for this measure lists pages accessed by tablet users and the quality of their experience. This allows identification of slow pages and root causes specifically for tablet traffic.",
+    "troubleshootingSteps": [
+      "Use detailed diagnostics to identify tablet‑heavy pages and analyze their performance characteristics.",
+      "Optimize layout and assets for typical tablet resolutions and capabilities where tablet users experience slowness.",
+      "Compare tablet performance to desktop and mobile to distinguish device‑specific issues.",
+      "Monitor tablet page views and associated performance after implementing tablet‑oriented improvements."
+    ]
+  },
+  {
+    "measurement": "Average browser render time",
+    "description": "Indicates the time taken to complete the download of remaining resources, including images, and to finish rendering the page.",
+    "unit": "ms",
+    "interpretation": "High values indicate that page rendering takes too long, often due to in‑optimal HTML structure, complex CSS (deeply nested rules, slow selectors, elaborate effects), or large images. When Average page load time is high, comparing this metric with Average browser initial request time, Average network time, Average server time, and Average content download time helps identify whether rendering is the main bottleneck.",
+    "troubleshootingSteps": [
+      "Profile rendering performance with browser dev tools to find expensive layout, style, and paint operations.",
+      "Simplify HTML and CSS structures and compress or lazy‑load large images to reduce render time.",
+      "Defer non‑critical scripts and effects until after the main content is rendered.",
+      "Track this measure after UI refactors to ensure rendering becomes faster, not slower."
+    ]
+  },
+  {
+    "measurement": "Average content download time",
+    "description": "Indicates the time taken to make the complete HTML document (DOM) available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and documentContentLoadedEventStart and equals the sum of Average DOM download time and Average DOM processing time. An abnormal increase in either DOM download or DOM processing will raise this metric. If content download time is unusually long, comparing the component measures clarifies whether server/cache/local responsiveness or DOM processing is at fault.",
+    "troubleshootingSteps": [
+      "Break down Average content download time into Average DOM download time and Average DOM processing time to locate the main contributor.",
+      "If DOM download dominates, reduce HTML size and improve network delivery (compression, CDN). ",
+      "If DOM processing dominates, simplify DOM and defer heavy JavaScript that executes during parsing.",
+      "Monitor this metric for key pages before and after content and code changes."
+    ]
+  },
+  {
+    "measurement": "Average DOM download time",
+    "description": "Indicates the time taken to download the complete HTML document on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and responseEnd. Higher DOM download times delay when the document becomes available for rendering, which harms user experience; a low value is always desired.",
+    "troubleshootingSteps": [
+      "Assess network latency and throughput between users and the server/CDN delivering HTML.",
+      "Reduce HTML payload by removing unused markup and inline content for frequently visited pages.",
+      "Ensure CDN edges are close to major user regions to minimize latency.",
+      "Observe this metric by geography and ISP to discover localized network issues."
+    ]
+  },
+  {
+    "measurement": "Average DOM processing time",
+    "description": "Indicates the time taken to build the Document Object Model (DOM) and make it available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "An unusually high value clearly shows that DOM construction is slower than normal, which delays page rendering and negatively affects user experience. Ideally, this value should be low.",
+    "troubleshootingSteps": [
+      "Reduce DOM complexity by limiting nested elements and unnecessary nodes on complex pages.",
+      "Avoid heavy synchronous JavaScript that blocks DOM construction during initial parsing.",
+      "Split large pages into smaller sections or use lazy loading so that initial DOM is lighter.",
+      "Review third‑party widgets and tags that significantly expand or manipulate the DOM."
+    ]
+  },
+  {
+    "measurement": "Average server time",
+    "description": "Indicates the interval between the start of processing of a request on the browser to when the browser receives the response.",
+    "unit": "ms",
+    "interpretation": "Average server time is the period between requestStart and responseStart. Ideally it should be low, as high values hurt the Apdex score. It reflects the processing ability and configuration of the web or application server; backend slowdowns from insufficient resources or misconfiguration increase this metric. For IE 11, a Navigation Timing bug may misreport requestStart, so Business Transactions traces are recommended to obtain accurate server time for those requests.",
+    "troubleshootingSteps": [
+      "Monitor backend CPU, memory, database, and external service performance when Average server time is high.",
+      "Use APM/BTM tools to trace slow transactions and identify bottleneck operations within the server stack.",
+      "Scale or tune web and application servers (thread pools, connection pools, caching) to handle peak load more efficiently.",
+      "Investigate configuration and code issues on high‑latency endpoints and apply targeted optimizations."
+    ]
+  },
+  {
+    "measurement": "Average network time",
+    "description": "Indicates the elapsed time since a user initiates a request and the start of fetching the response document from the server or application.",
+    "unit": "ms",
+    "interpretation": "Average network time is the interval between navigationStart and requestStart and includes DNS lookup and TCP connection. It equals the sum of Average DNS lookup time and Average TCP connection time. Ideally it should be low; high values delay page loading and degrade service quality. For IE 11, Navigation Timing inaccuracies may affect this metric.",
+    "troubleshootingSteps": [
+      "Break down Average network time into Average DNS lookup time and Average TCP connection time to see which contributes more to delay.",
+      "Optimize network paths via CDNs and routing so that users reach nearby servers or edges quickly.",
+      "Ensure that connectivity to your hosting environment is robust, with adequate bandwidth and low packet loss.",
+      "Monitor this metric by geography and provider to discover where network‑level tuning or additional PoPs are needed."
+    ]
+  },
+  {
+    "measurement": "Average DNS lookup time",
+    "description": "Indicates the time taken by the browser to perform the domain lookup for connecting to this web site/web application.",
+    "unit": "ms",
+    "interpretation": "High DNS lookup time not only slows DNS resolution itself but also increases Average network time and Average page load time, which can severely impact user experience.",
+    "troubleshootingSteps": [
+      "Check DNS provider performance and ensure authoritative and recursive servers are responsive.",
+      "Minimize CNAME chains and unnecessary DNS indirections for key domains.",
+      "Tune DNS TTLs to improve caching behavior while still allowing timely updates.",
+      "Monitor DNS error and timeout rates to identify intermittent resolution problems."
+    ]
+  },
+  {
+    "measurement": "Average TCP connection time",
+    "description": "Indicates the time taken by the browser to establish a TCP connection with the server.",
+    "unit": "ms",
+    "interpretation": "Poor network connectivity between client and server can delay TCP connections, thereby increasing Average network time and harming overall page load time and user experience.",
+    "troubleshootingSteps": [
+      "Review load balancer and server connection metrics (connection queues, SYN backlog) to detect saturation or throttling.",
+      "Ensure users connect to the closest data center or CDN edge to minimize round‑trip times.",
+      "Use persistent connections and TLS session resumption so repeat requests don’t require full TCP/TLS handshakes.",
+      "Check for problematic firewalls or proxies in the path that might slow down or block TCP connections."
+    ]
+  },
+  {
+    "measurement": "Average SSL handshake time",
+    "description": "Indicates the time taken to complete the SSL handshake.",
+    "unit": "ms",
+    "interpretation": "An SSL handshake occurs when a browser initiates an encrypted HTTPS connection and negotiates keys and certificates with the server. This adds to Average network time and page load time; together with DNS lookup and TCP handshake, it contributes three extra round trips. Using HTTP/2 and effective caching can reduce SSL setup to a single round trip.",
+    "troubleshootingSteps": [
+      "Optimize TLS configuration (protocol versions, cipher suites) to reduce handshake overhead.",
+      "Enable and verify TLS session resumption so returning clients reuse existing sessions where possible.",
+      "Terminate TLS at geographically close CDN edges to reduce handshake latency.",
+      "Monitor SSL handshake time across regions and devices to identify where further tuning is required."
+    ]
+  },
+  {
+    "measurement": "Average AppCache time",
+    "description": "Indicates the time taken to check whether/not the requested URL is available in the AppCache.",
+    "unit": "ms",
+    "interpretation": "HTML5 AppCache lets web apps cache resources for offline use. High AppCache time means requests spend too long in AppCache, introducing page load latency. Common causes include incorrect manifest media type, serving the manifest from the wrong origin, incorrect relative URLs, and frequent manifest changes that force full synchronous downloads, all of which can hurt perceived performance.",
+    "troubleshootingSteps": [
+      "Serve the manifest file with the correct text/cache‑manifest media type and from the same origin as the host page.",
+      "Ensure that relative URLs in the manifest are relative to the manifest file itself, not the referencing document.",
+      "Avoid unnecessary manifest changes that cause all cached files to be re‑downloaded synchronously.",
+      "Load Application Cache from a simple HTML file in an iframe to keep manifest processing from blocking page load."
+    ]
+  },
+  {
+    "measurement": "Average redirection time",
+    "description": "Indicates the time spent in redirection before fetching the page.",
+    "unit": "ms",
+    "interpretation": "This is the elapsed time between redirectStart and redirectEnd. While redirects are useful (mobile version, secure pages, latest content, geo‑specific pages, canonical URLs), each redirect adds DNS and HTTP overhead, increasing page load time. Multiple, invalid, or looping redirects can significantly degrade performance and cause errors.",
+    "troubleshootingSteps": [
+      "Identify redirect chains and collapse them into as few hops as possible, ideally a single redirect.",
+      "Clean up invalid and obsolete redirects that lead to 404s or unnecessary detours.",
+      "Review geo‑ or device‑based redirect rules to ensure they are efficient and not causing redirect loops.",
+      "Re‑measure Average redirection time and page load time after changes to confirm improvements."
+    ]
+  },
+  {
+    "measurement": "Average browser wait time",
+    "description": "Indicates the time spent by a request on the browser, waiting for another request to complete.",
+    "unit": "ms",
+    "interpretation": "This is the sum of the time between consecutive events from navigationStart to requestStart. Because browsers limit concurrent connections per domain (often around six), additional requests wait in a queue. High browser wait time lengthens the initial request time and harms overall responsiveness. Comparing this with Average AppCache time and Average redirection time helps determine whether long waits on the browser are causing slow initial requests.",
+    "troubleshootingSteps": [
+      "Reduce the number of simultaneous resource requests by bundling/minifying assets and deferring non‑critical resources.",
+      "Consider recommending browsers that support more parallel connections (e.g., Firefox) for heavy users.",
+      "Use domain sharding carefully (on HTTP/1.1) so that resources are spread across multiple domains to increase effective concurrency.",
+      "Monitor this metric after optimization to ensure browser‑side queuing time decreases."
+    ]
+  },
+  {
+    "measurement": "Average browser initial request time",
+    "description": "Indicates the interval between when a request was received by this web site, when it followed a redirect, to when it was processed in the AppCache.",
+    "unit": "ms",
+    "interpretation": "This is the time from navigationStart to domainLookupStart and includes waits in the browser, redirection, and AppCache processing. It equals the sum of Average AppCache time, Average redirection time, and Average browser wait time. High values indicate delays before DNS lookup starts, which can degrade user experience and Apdex.",
+    "troubleshootingSteps": [
+      "Decompose this measure into its components (AppCache time, redirection time, browser wait time) to see which dominates.",
+      "Reduce unnecessary redirects and optimize redirect chains to shorten initial request time.",
+      "Optimize AppCache configuration or migrate to more modern caching mechanisms if AppCache contributes significant delay.",
+      "Lower browser waits by reducing resource contention and leveraging HTTP/2 to increase effective concurrency."
+    ]
+  },
+  {
+    "measurement": "Unique IP Count",
+    "description": "",
+    "unit": "ms",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Use Unique IP Count as a rough indicator of how many different network endpoints are accessing the site, complementing session‑based user metrics.",
+      "Compare Unique IP Count with unique sessions or users to detect anomalies such as many IPs with few sessions (possible scanning) or few IPs with many sessions (possible proxies or bots). ",
+      "Investigate sudden changes in Unique IP Count alongside security logs to catch emerging attack patterns or large botnets.",
+      "Adjust IP‑based rate limiting and WAF rules using insights from Unique IP Count to better balance security and accessibility."
+    ]
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "measurement": "Scheduled jobs",
+    "description": "Indicates the number of jobs that are scheduled to run in the next measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Outstanding jobs",
+    "description": "Indicates the number of jobs that were started but not completed during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "This includes jobs that were started and those still executing during the last measurement period. A very high value could indicate an issue requiring investigation.",
+    "troubleshootingSteps": "Check system load and job queue length; verify that sufficient resources (CPU, memory) are available; inspect logs for jobs stuck in execution; ensure no deadlocks or blocked processes exist."
+  },
+  {
+    "measurement": "Completed jobs",
+    "description": "Indicates the number of jobs that were completed during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "This includes jobs that started much earlier but finished execution in the last measurement period.",
+    "troubleshootingSteps": "If the number seems abnormally low, verify that job scheduler services are active, job configurations are correct, and there are no resource or dependency failures delaying task completion."
+  },
+  {
+    "measurement": "Failed jobs",
+    "description": "Indicates the number of jobs that were completed during the last measurement period, but with errors.",
+    "measurementUnit": "Number",
+    "interpretation": "The error status could be due to permission issues, path issues, or problems during job execution.",
+    "troubleshootingSteps": "Review job execution logs for specific error messages; check for file permission denials, missing dependencies, or invalid job paths; ensure users or services running the jobs have appropriate privileges."
+  },
+  {
+    "measurement": "Max pending job time",
+    "description": "Indicates the maximum time for which the jobs have remained pending.",
+    "measurementUnit": "Mins",
+    "interpretation": "A very high value of this measure could indicate a problem condition.",
+    "troubleshootingSteps": "Inspect scheduler queue and look for bottlenecks; confirm that job triggers and dependencies are correctly configured; ensure worker nodes or job runners are operational and not overloaded."
+  },
+  {
+    "measurement": "Max completion time",
+    "description": "Indicates the maximum time taken by the jobs for completion.",
+    "measurementUnit": "Mins",
+    "interpretation": "A very high value of this measure could indicate a problem condition.",
+    "troubleshootingSteps": "Identify the job(s) with the highest completion time; analyze logs to spot long-running tasks; check for performance bottlenecks in I/O, network, or external API calls."
+  },
+  {
+    "measurement": "Avg pending job time",
+    "description": "Indicates the average time for which jobs have remained pending.",
+    "measurementUnit": "Mins",
+    "interpretation": "A very high value of this measure could indicate a problem condition.",
+    "troubleshootingSteps": "Check if the scheduler queue length is growing; ensure job concurrency limits are not set too low; verify that pending jobs are not waiting for unavailable resources or dependencies."
+  },
+  {
+    "measurement": "Avg completion time",
+    "description": "Indicates the average time taken by the jobs for completion.",
+    "measurementUnit": "Mins",
+    "interpretation": "A very high value of this measure could indicate a problem condition.",
+    "troubleshootingSteps": "Analyze averages by job type; monitor trends to detect performance degradations; validate if application changes or external system delays increased completion times."
+  },
+  {
+    "measurement": "Pending jobs",
+    "description": "Indicates the number of cron jobs that are scheduled, but are yet to start running.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": "Verify that the cron service or job scheduler is active; ensure sufficient worker threads or execution slots are available; inspect job trigger conditions and dependencies."
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "measurement": "Status",
+    "description": "Indicates the current status of the target manager.",
+    "unit": "Not Running/Running (internally 0/1)",
+    "interpretation": "Shows whether the target manager process is currently down or operational. A value of Running (1) means the manager is up and able to make API calls; Not Running (0) means it is down and no integrations with the TT system will occur. Graphs use the numeric codes while the UI shows the text values."
+  },
+  {
+    "measurement": "TotalCallsCount",
+    "description": "Indicates the total number of API calls made from eG manager to the TT system during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Represents the overall volume of API traffic to the ticketing system for the period, useful for understanding load and sizing limits."
+  },
+  {
+    "measurement": "SuccessPct",
+    "description": "Indicates the percentage of API calls succeeded during the last measurement period.",
+    "unit": "Percent",
+    "interpretation": "A high value indicates a healthy, reliable integration. A low percentage suggests frequent failures that can lead to missing or inconsistent tickets in the TT system."
+  },
+  {
+    "measurement": "ResponseTime",
+    "description": "Indicates the average time taken to receive response from TT system.",
+    "unit": "Seconds",
+    "interpretation": "If this average grows higher than usual, it points to latency issues between the eG manager and the TT system. Such slowness can delay creating, updating, or closing tickets and may cause alarms to be missed."
+  },
+  {
+    "measurement": "AvgTimeToCreate",
+    "description": "Indicates the average time taken by the TT system to create the ticket.",
+    "unit": "Seconds",
+    "interpretation": "Reflects how quickly new tickets are created end‑to‑end. Higher values indicate creation latency in the integration flow and may delay incident handling."
+  },
+  {
+    "measurement": "AvgTimeToUpdate",
+    "description": "Indicates the average time taken by the TT system to update the ticket.",
+    "unit": "Seconds",
+    "interpretation": "Shows how long ticket updates take to be applied. Large values indicate latency that can slow synchronization of ticket status between systems."
+  },
+  {
+    "measurement": "AvgTimeToClose",
+    "description": "Indicates the average time taken by the TT system to close the ticket.",
+    "unit": "Seconds",
+    "interpretation": "Measures the delay in reflecting ticket closure. High values mean slow close operations, so dashboards or reports may show outdated open incidents."
+  },
+  {
+    "measurement": "NoCallsSucceeded",
+    "description": "Indicates the number of API calls succeeded during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Together with NoCallsFailed and TotalCallsCount, this helps quantify overall API reliability towards the TT system."
+  },
+  {
+    "measurement": "NoCallsFailed",
+    "description": "Indicates the number of API calls failed during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "A non‑trivial value indicates integration problems such as connectivity issues, authentication errors, or TT‑side failures, which can cause missing or incomplete tickets."
+  },
+  {
+    "measurement": "TicketsCreated",
+    "description": "Indicates the number of tickets created in the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Shows the volume of new incidents or requests raised via the integration in the latest interval and is useful for workload and trend analysis."
+  },
+  {
+    "measurement": "TicketsUpdated",
+    "description": "Indicates the number of tickets updated in the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Reflects how many existing tickets had their details or status changed, indicating the level of ongoing ticket activity."
+  },
+  {
+    "measurement": "TicketsClosed",
+    "description": "Indicates the number of tickets closed in the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Represents the volume of incidents resolved or completed; comparing this to TicketsCreated helps assess whether backlog is growing or shrinking."
+  },
+  {
+    "measurement": "HighPriTktsCreated",
+    "description": "Indicates the number of high priority tickets created during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Shows the inflow of critical issues. Sudden spikes may indicate major incidents or systemic problems requiring urgent attention."
+  },
+  {
+    "measurement": "MedPriTktsCreated",
+    "description": "Indicates the number of medium priority tickets created during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Represents the volume of medium‑severity issues raised and helps you understand the overall mix of ticket priorities."
+  },
+  {
+    "measurement": "LowPriTktsCeated",
+    "description": "Indicates the number of low priority tickets created during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Shows how many lower‑impact issues were logged. A high number may suggest opportunities for automation or policy changes to reduce noise."
+  },
+  {
+    "measurement": "HighPriTktsUpdated",
+    "description": "Indicates the number of high priority tickets updated during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Indicates ongoing work and status changes on critical incidents. Frequent updates are expected for actively managed high‑priority issues."
+  },
+  {
+    "measurement": "MedPriTktsUpdated",
+    "description": "Indicates the number of medium priority tickets updated during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Shows how actively medium‑priority tickets are being progressed during the interval."
+  },
+  {
+    "measurement": "LowPriTktsUpdated",
+    "description": "Indicates the number of low priority tickets updated during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Reflects ongoing activity on low‑priority items, helping ensure such tickets are not ignored despite their lower urgency."
+  },
+  {
+    "measurement": "RetryCalls",
+    "description": "Indicates the number of retried API calls during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Shows how often initial API attempts failed and had to be retried. Frequent retries indicate transient instability in the integration or TT system."
+  },
+  {
+    "measurement": "RetryCallsSucceeded",
+    "description": "Indicates the number of retried API calls that succeeded during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "A high value here (relative to RetryCalls) shows that retries are often overcoming temporary issues, though persistent reliance on retries still suggests underlying reliability problems."
+  },
+  {
+    "measurement": "RetryCallsFailed",
+    "description": "Indicates the number retried API calls that failed during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "These calls continued to fail even after retry, indicating more serious or sustained issues that prevent ticket operations from completing successfully."
+  },
+  {
+    "measurement": "DeadTickets",
+    "description": "Indicates the number of dead tickets during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Dead tickets are retried API calls that still failed after the maximum retry attempts. They represent tickets whose creation or update could not be completed and require manual investigation; detailed diagnosis provides more information about them."
+  },
+  {
+    "measurement": "AlertsAdded",
+    "description": "Indicates the total number of alerts added to eG manager from Alarm history during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Represents the number of alert records brought into the manager for potential ticketing, forming the input workload to the integration."
+  },
+  {
+    "measurement": "AlertsProcessed",
+    "description": "Indicates the total number of alerts processed during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Shows how many alerts were actually handled (for example, evaluated or mapped to tickets) by the integration logic during the period."
+  },
+  {
+    "measurement": "AlertsTobeSent",
+    "description": "Indicates the total number of alerts sent to TT system during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "Represents how many alerts resulted in outbound communication to the TT system, indicating the effective volume of ticket‑related activity driven by monitoring alerts."
+  }
+]

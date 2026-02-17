@@ -1,0 +1,74 @@
+[
+  {
+    "measurement": "Active threads",
+    "description": "Indicates the number of threads in this pool that are actively used.",
+    "unit": "Number",
+    "interpretation": "This is the count of worker threads currently busy handling tasks. If it reaches the Max no of allocated threads value, the pool has no spare threads left and Tomcat will be unable to serve additional requests, leading to thread contention and degraded application performance.[web:324]"
+  },
+  {
+    "measurement": "Recently completed tasks",
+    "description": "Indicates the number of tasks that were recently completed by the threads in this pool.",
+    "unit": "Number",
+    "interpretation": "This shows how many request-processing tasks the pool has finished in the last interval, giving a sense of recent throughput for this executor/thread pool.[web:324]"
+  },
+  {
+    "measurement": "Thread pool core size",
+    "description": "Reports the core size of this thread pool.",
+    "unit": "Number",
+    "interpretation": "This reflects the baseline number of threads the pool aims to keep available for work. It represents the configured core size around which the pool grows and shrinks based on load.[web:326]"
+  },
+  {
+    "measurement": "Peak threads",
+    "description": "Indicates the high watermark of threads in this pool.",
+    "unit": "Number",
+    "interpretation": "This is the maximum number of threads that have existed in the pool at any time since the JVM started. It is useful for capacity planning and validating whether maxThreads is sized appropriately for peak demand.[web:324]"
+  },
+  {
+    "measurement": "Max idle time",
+    "description": "Indicates the number of milliseconds before a thread can remain idle in this pool before it is shut down, shrinking the thread pool.",
+    "unit": "Milliseconds",
+    "interpretation": "This reflects the maxIdleTime setting of the Executor thread pool. A lower value lets idle threads be reclaimed quickly during light load, while too low a value under heavy load can cause frequent thread creation and teardown (flapping), so it must be tuned carefully.[web:324][web:330]"
+  },
+  {
+    "measurement": "Max queue size",
+    "description": "Reports the number of request processing tasks that can be placed in the executor queue to wait for an available worker thread.",
+    "unit": "Number",
+    "interpretation": "This corresponds to the maxQueueSize setting. When the number of queued tasks reaches this limit, Tomcat begins rejecting new tasks and can throw RejectedExecutionException, so it should be sized to accommodate expected bursts.[web:324][web:330]"
+  },
+  {
+    "measurement": "Max no of allocated threads",
+    "description": "Indicates the maximum number of threads that can be allocated/created in this pool.",
+    "unit": "Number",
+    "interpretation": "This is the maxThreads limit for the Executor thread pool. The pool can grow up to this number based on demand; under high load, increasing this value allows more concurrent request processing, subject to CPU and memory capacity.[web:324][web:330]"
+  },
+  {
+    "measurement": "Min no of allocated threads",
+    "description": "Indicates the minimum number of active and idle threads that should always be available in this pool.",
+    "unit": "Number",
+    "interpretation": "This reflects the minSpareThreads setting, ensuring the pool does not shrink below this number so that a minimum set of threads is always ready. Increasing it can improve responsiveness at the cost of keeping more idle threads.[web:324][web:330]"
+  },
+  {
+    "measurement": "No of threads in the pool",
+    "description": "Indicates the number of threads in this pool currently.",
+    "unit": "Number",
+    "interpretation": "This is the current pool size including both active and idle threads. If it equals Max no of allocated threads, the pool cannot grow further and new requests may have to wait or be rejected, suggesting a need to review maxThreads sizing.[web:324][web:326]"
+  },
+  {
+    "measurement": "Queue size",
+    "description": "Indicates the number of request processing tasks currently enqueued in the queue of this thread pool.",
+    "unit": "Number",
+    "interpretation": "This is how many tasks are currently waiting in the executor queue. If it reaches Max queue size, additional tasks are rejected and Tomcat may throw RejectedExecutionException, so consistently high values indicate the need to increase maxQueueSize or thread capacity.[web:324][web:330]"
+  },
+  {
+    "measurement": "Percent of tasks in the queue",
+    "description": "Of the maximum number of tasks that can be in queue, what percentage of tasks is currently in queue.",
+    "unit": "Percent",
+    "interpretation": "This expresses the queue occupancy as a percentage of Max queue size. Values close to 100% mean the queue is nearly full and it is a good time to consider raising maxQueueSize or improving throughput to avoid request rejection.[web:324]"
+  },
+  {
+    "measurement": "Pool utilization",
+    "description": "Indicates the percentage of pool size that is currently utilized.",
+    "unit": "Percent",
+    "interpretation": "This indicates how many of the available threads are actively processing tasks. Values near 100% show that almost all threads are busy, suggesting you should review maxThreads and minSpareThreads to confirm the pool has enough capacity for future requests.[web:324]"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "Measurement": "Process Count",
+    "Description": "Indicates the number of instances of this process that is currently running.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A value of 1 is desired. Any value above 1 indicates that multiple instances of the process are unnecessarily running and draining resources. Use detailed diagnosis to identify the process IDs of the extra instances so they can be terminated.",
+    "troubleshootingSteps": [
+      "Monitor this measure over time to detect periods when more than one instance of the process is running.",
+      "Use detailed diagnosis to list the process IDs, command lines, and owners of all running instances.",
+      "Investigate why additional instances started (e.g., misconfigured service, repeated manual starts, crash-and-restart loops).",
+      "Kill redundant instances after confirming they are not performing legitimate work, and fix the underlying cause (service configuration, startup scripts, or watchdog behavior) to prevent recurrence."
+    ]
+  },
+  {
+    "Measurement": "Time since last check",
+    "Description": "Indicates the time (in minutes) that has elapsed since this process last checked the connection to the eG manager or agent (as the case may be).",
+    "MeasurementUnit": "Minutes",
+    "Interpretation": "Typically, this should be the same as or close to the configured check frequency in the eG manager or agent configuration files. Significant deviation may indicate that the process is not functioning according to schedule and could be problematic.",
+    "troubleshootingSteps": [
+      "Compare this measure to the configured polling/check interval to determine if the process is checking in on time.",
+      "If the value is much larger than expected, check whether the process is hung, blocked, or unable to reach the eG manager/agent due to network or DNS issues.",
+      "Review logs on both the process host and the eG manager/agent to identify errors around the expected check times.",
+      "If necessary, restart the process or service and monitor subsequent values to ensure it resumes checking at the correct frequency."
+    ]
+  },
+  {
+    "Measurement": "Has process restarted?",
+    "Description": "Indicates whether or not this process has restarted.",
+    "MeasurementUnit": "",
+    "Interpretation": "This measure reports Yes (1) if the process has restarted and No (0) otherwise. The text values are shown in the measure, while graphs use the numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the value is Yes unexpectedly, review system and application logs around the restart time for crashes, resource exhaustion, or configuration changes.",
+      "Correlate process restarts with other events such as spikes in CPU, memory, or I/O to uncover possible causes.",
+      "Verify that startup scripts and service managers are configured correctly and are not repeatedly restarting the process due to failing health checks.",
+      "If frequent restarts occur, enable additional logging or diagnostics for the process and engage the application or vendor team to identify and fix the root cause."
+    ]
+  }
+]

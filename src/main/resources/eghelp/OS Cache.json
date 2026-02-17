@@ -1,0 +1,124 @@
+[
+  {
+    "measurement": "Copy read hits",
+    "description": "The percentage of cache copy read requests that hit the cache - i.e., they did not require a disk read in order to provide access to the page in the cache",
+    "measurementUnit": "Percent",
+    "interpretation": "A copy read is a file read operation satisfied by a memory copy from a page in the cache to the application's buffer. The LAN Redirector and LAN Server use this for small transfers, and disk file systems use it as well. Ideally this value should be high; a very low value can indicate increased disk access and higher processing overhead.",
+    "troubleshootingSteps": [
+      "Monitor overall cache hit ratios and memory pressure; low copy read hits often correlate with insufficient cache or excessive competing memory usage forcing pages out of the cache.[web:144][web:148][web:149][web:150][web:151][web:158]",
+      "Reduce unnecessary I/O and improve locality by tuning applications to use sequential access patterns where possible, which allows the cache and read-ahead logic to be more effective.[web:144][web:148][web:149][web:152][web:153][web:158]",
+      "If low hit rates coincide with heavy physical disk I/O and poor performance, consider adding RAM or adjusting cache-related OS settings so more frequently accessed data can stay cached.[web:144][web:148][web:149][web:150][web:151][web:158]"
+    ]
+  },
+  {
+    "measurement": "Copy reads",
+    "description": "The frequency of reads from pages of the file system cache that involve a memory copy of the data from the cache to the application's buffer",
+    "measurementUnit": "Reads/sec",
+    "interpretation": "The LAN Redirector and LAN Server use this method for small transfers; disk file systems also use it.",
+    "troubleshootingSteps": [
+      "Track copy reads alongside total reads and disk I/O; very low copy reads with high disk reads may indicate poor cache utilization or highly random access patterns.[web:144][web:148][web:149][web:154][web:158]",
+      "If copy reads are extremely high and causing CPU or memory bandwidth pressure, profile workloads to see whether some operations can use larger, more efficient transfers (e.g., MDL reads or read-ahead) instead of many small reads.[web:144][web:148][web:149][web:151][web:154]"
+    ]
+  },
+  {
+    "measurement": "Data flushes",
+    "description": "The rate at which the file system cache has flushed its contents to disk as the result of a request to flush or to satisfy a write-through file write request. More than one page can be transferred on each flush operation.",
+    "measurementUnit": "Flushes/sec",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Correlate data flush rates with write workload and disk latency; very high flushes/sec with slow disks can indicate write bottlenecks.[web:144][web:148][web:149][web:151]",
+      "Check for applications using write-through or frequent explicit flushes (e.g., FILE_FLAG_WRITE_THROUGH or FlushFileBuffers) and tune them if excessive flushing is degrading throughput.[web:148][web:151][web:155]",
+      "If flush activity is extremely low despite heavy writes, verify that lazy write behavior and cache policies are not disabled or misconfigured for critical files.[web:144][web:148][web:151][web:153]"
+    ]
+  },
+  {
+    "measurement": "Data map hits",
+    "description": "The percentage of data maps in the file system cache that could be resolved without having to retrieve a page from the disk, because the page was already in physical memory",
+    "measurementUnit": "Percent",
+    "interpretation": "A high value is desirable.",
+    "troubleshootingSteps": [
+      "Investigate low data map hit percentages together with disk read statistics; low hits mean frequent disk access, so consider increasing available memory or adjusting cache sizes.[web:144][web:148][web:149][web:150][web:154][web:158]",
+      "Optimize application access patterns (e.g., batching and sequential reading) so that once mapped pages are more likely to be reused while still in cache.[web:144][web:148][web:149][web:152][web:158]"
+    ]
+  },
+  {
+    "measurement": "Data maps",
+    "description": "The frequency with which a file system such as NTFS, maps a page of a file into the file system cache to read the page",
+    "measurementUnit": "Maps/sec",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "If data maps/sec is high with low hit ratios, review whether workloads are scanning large datasets once (streaming) versus reusing data; for streaming workloads, focus on disk throughput rather than cache tuning.[web:144][web:148][web:149][web:154][web:158]",
+      "In cases of extremely high mapping activity with thrashing, evaluate whether cache sizes or working-set limits can be adjusted to keep hot pages in memory longer.[web:144][web:148][web:149][web:150][web:158]"
+    ]
+  },
+  {
+    "measurement": "Fast reads",
+    "description": "The frequency of reads from the file system cache that bypass the installed file system and retrieve the data directly from the cache",
+    "measurementUnit": "Reads/sec",
+    "interpretation": "This path allows direct retrieval from cache and can avoid one or more file system invocations, reducing processing overhead even when data must still be fetched from disk.",
+    "troubleshootingSteps": [
+      "Monitor fast reads together with overall cache hit metrics; low fast reads in a cache-heavy workload might suggest suboptimal caching or many uncached I/O paths (e.g., direct I/O).?[web:144][web:148][web:149][web:154]",
+      "If fast reads are very high but CPU is saturated, profile whether the reduced file-system overhead is still sufficient or if additional tuning (larger sequential reads, better read-ahead) is required.[web:144][web:148][web:149][web:152]"
+    ]
+  },
+  {
+    "measurement": "Lazy write flushes",
+    "description": "The rate at which the Lazy Writer thread has written to disk",
+    "measurementUnit": "Flushes/sec",
+    "interpretation": "Lazy writing updates disk after pages have been changed in memory, allowing applications to proceed without waiting for physical disk writes.",
+    "troubleshootingSteps": [
+      "Correlate lazy write flushes/sec with disk queue length and latency; sustained high lazy writer activity with long disk queues suggests storage throughput issues.[web:144][web:148][web:149][web:151]",
+      "If lazy writer flushes are extremely frequent due to aggressive write-behind, verify that workloads and cache policies are appropriate and consider faster storage or batching writes where feasible.[web:144][web:148][web:149][web:151][web:157]"
+    ]
+  },
+  {
+    "measurement": "Lazy write pages",
+    "description": "The rate at which the Lazy Writer thread has written to disk",
+    "measurementUnit": "Pages/sec",
+    "interpretation": "Lazy writing defers disk I/O by writing modified pages from cache to disk in the background.",
+    "troubleshootingSteps": [
+      "Track lazy write pages/sec along with modified pages and dirty-page ratios; very high values point to heavy write workloads that may require storage upgrades or workload redistribution.[web:144][web:148][web:149][web:151][web:155]",
+      "If lazy writer pages/sec is very low despite many dirty pages, check for conditions that might be throttling or disabling lazy writing (e.g., configured attributes or resource constraints).?[web:144][web:148][web:151][web:153]"
+    ]
+  },
+  {
+    "measurement": "MDL read hits",
+    "description": "The percentage of Memory Descriptor List (MDL) Read requests to the file system cache that hit the cache, i.e., did not require disk accesses in order to provide memory access to the page(s) in the cache",
+    "measurementUnit": "Percent",
+    "interpretation": "Ideally, this percentage should be high.",
+    "troubleshootingSteps": [
+      "Investigate low MDL read hit percentages as they indicate that large-transfer operations are frequently going to disk instead of being served from cache.[web:146][web:147][web:149][web:154]",
+      "For workloads that rely on large sequential transfers (e.g., file servers), tune memory and cache sizing so that commonly accessed ranges remain resident and MDL hits increase.[web:144][web:146][web:149][web:154][web:158]"
+    ]
+  },
+  {
+    "measurement": "MDL reads",
+    "description": "The frequency of reads from the file system cache that use a Memory Descriptor List (MDL) to access the data",
+    "measurementUnit": "Reads/sec",
+    "interpretation": "The MDL contains the physical address of each page involved in the transfer and can use DMA; LAN Server uses this method for large transfers out of the server.",
+    "troubleshootingSteps": [
+      "Monitor MDL reads/sec alongside throughput; high MDL read rates with good hit percentages typically indicate efficient large-block transfers.[web:146][web:147][web:149][web:154]",
+      "If MDL reads are low but large sequential workloads exist, assess whether applications are using access patterns or APIs that allow the OS to optimize with MDLs.[web:144][web:146][web:149][web:154]"
+    ]
+  },
+  {
+    "measurement": "Pin read hits",
+    "description": "The percentage of pin read requests that hit the file system cache, i.e., did not require a disk read in order to provide access to the page in the file system cache",
+    "measurementUnit": "Percent",
+    "interpretation": "Pinned pages keep their physical address in the cache; LAN Redirector, LAN Server (for small transfers), and disk file systems typically use this method.",
+    "troubleshootingSteps": [
+      "Low pin read hit percentages suggest pinned pages are frequently not resident, possibly due to memory pressure or cache thrashing; evaluate adding memory or adjusting workload.[web:146][web:147][web:149][web:154][web:158]",
+      "Review applications or drivers that rely heavily on pinned I/O and ensure they are not pinning excessive ranges or holding pins longer than necessary.[web:144][web:148][web:149][web:153]"
+    ]
+  },
+  {
+    "measurement": "Read aheads",
+    "description": "The frequency of reads from the file system cache in which the Cache detects sequential access to a file",
+    "measurementUnit": "Reads/sec",
+    "interpretation": "Read ahead transfers data in larger blocks than requested, reducing overhead per access.",
+    "troubleshootingSteps": [
+      "For sequential workloads with poor performance, verify that read-ahead is enabled and effective; very low read-aheads with sequential I/O may indicate disabled or misconfigured read-ahead.[web:144][web:148][web:149][web:152][web:153]",
+      "If read-ahead activity is extremely high with limited benefit, consider tuning read-ahead size or workload patterns to avoid over-prefetching that wastes memory and bandwidth.[web:149][web:152][web:158]"
+    ]
+  }
+]

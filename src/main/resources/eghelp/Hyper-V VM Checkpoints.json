@@ -1,0 +1,20 @@
+[
+  {
+    "Measurement": "Number of checkpoints",
+    "Description": "Indicates the number of checkpoints for this VM.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Aged checkpoints count",
+    "Description": "Indicates the number of checkpoints of this VM, the age of which is more than the AGE LIMIT configured for this test.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Use the detailed diagnosis of this measure to identify the aged checkpoints."
+  },
+  {
+    "Measurement": "Large checkpoints count",
+    "Description": "Indicates the number of checkpoints of this VM that are of a size greater than the SIZE LIMIT configured for this test.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Use the detailed diagnosis of this measure to identify the large-sized checkpoints."
+  }
+]

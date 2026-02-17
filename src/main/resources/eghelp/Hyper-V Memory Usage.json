@@ -1,0 +1,50 @@
+[
+  {
+    "Measurement": "Total memory available",
+    "Description": "Indicates the total physical memory capacity of the host.",
+    "MeasurementUnit": "MB",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Memory allocated to VMs",
+    "Description": "Indicates amount of physical memory allocated to VMs.",
+    "MeasurementUnit": "MB",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Memory used by VMs",
+    "Description": "Indicates the percentage of physical memory that is allocated to the VMs on the host.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Ideally, this value should be low. A value close to 100% is indicative of over-allocation of physical memory to the VMs. You can use the detailed diagnosis of this measure to identify which VM has been allocated maximum resources."
+  },
+  {
+    "Measurement": "Available memory for VMs",
+    "Description": "Indicates the amount of physical memory unusued on the host.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "Ideally, the value of this measure should be high. A low value or a consistent decrease in this value is a cause for concern, as it indicates excessive memory usage by the VMs on the host."
+  },
+  {
+    "Measurement": "Available memory",
+    "Description": "Indicates the amount of physical memory, immediately available for allocation to a process or for system use.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "Not all of the Available memory is Available memory for VMs. Typically, Available memory is made up of the Standby List, Free List, and Zeroed List. When Windows wants to trim a process' working set, the trimmed pages are moved (usually) to the Standby List. If a page stays in the Standby List for a long time, it gets freed and moved to the Free List. In the background, a low priority thread takes pages from the Free List and zeros them out, forming the Zeroed List. All new allocations always come from the Zeroed List. Because all three lists can be used with little effort, they are all counted as available. A high value is typically desired for this measure."
+  },
+  {
+    "Measurement": "Modified memory",
+    "Description": "Indicates the amount of memory that is allocated to the modified page list.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "This memory contains cached data and code that is not actively in use by processes, the system and the system cache. This memory needs to be written out before it will be available for allocation to a process or for system use. Cache pages on the modified list have been altered in memory and can be written to disk at any time and reused, but since this involves I/O, it is not considered to be Available memory."
+  },
+  {
+    "Measurement": "Standby memory",
+    "Description": "Indicates the amount of memory assigned to the standby list.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "This memory contains cached data and code that is not actively in use by processes, the system and the system cache, and is immediately available for allocation. If the system runs out of available free and zero memory, memory on lower priority standby cache page lists will be repurposed before higher priority lists. Typically, Standby memory is the aggregate of Standby Cache Core Bytes, Standby Cache Normal Priority Bytes, and Standby Cache Reserve Bytes."
+  },
+  {
+    "Measurement": "Cached memory",
+    "Description": "This measure is an aggregate of Standby memory and Modified memory.",
+    "MeasurementUnit": "MB",
+    "Interpretation": ""
+  }
+]

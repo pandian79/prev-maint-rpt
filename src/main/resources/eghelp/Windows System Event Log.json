@@ -1,0 +1,32 @@
+[
+  {
+    "Measurement": "System errors",
+    "Description": "This refers to the number of system error events generated during the last execution of the test.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A very low value (0) indicates that the system is in healthy state or COMPLIANT and all Windows services and low level drivers are running without any potential problems. An increasing trend or a high value indicates the existence of problems such as loss of functionality or data in one or more Windows services and low level drivers. Please check the System Logs in the Event Log Viewer for more details."
+  },
+  {
+    "Measurement": "System information messages",
+    "Description": "This refers to the number of service-related and driver-related information events that were generated during the test's last execution.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A change in value of this measure may indicate infrequent but successful operations performed by one or more applications. Please check the System Logs in the Event Log Viewer for more details."
+  },
+  {
+    "Measurement": "System warnings",
+    "Description": "This refers to the number of service-related and driver-related warnings generated in the during the test's last execution.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value of this measure indicates problems that may not have an immediate impact, but may cause future problems in one or more Windows servers and low level drivers. Please check the System Logs in the Event Log Viewer for more details. A very low value (0) indicates that the system is in a healthy state or COMPLIANT"
+  },
+  {
+    "Measurement": "System critical errors",
+    "Description": "Indicates the number of critical events that were generated when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A critical event is one that a system cannot automatically recover from. A very low value (0) indicates that the system is in a healthy state or COMPLIANT and is running smoothly without any potential problems. An increasing trend or high value indicates the existence of fatal/irrepairable problems in the system. The detailed diagnosis of this measure describes all the critical system events that were generated during the last measurement period. Please check the System Logs in the Event Log Viewer for more details."
+  },
+  {
+    "Measurement": "System verbose",
+    "Description": "Indicates the number of verbose events that were generated when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Verbose logging provides more details in the log entry, which will enable you to troubleshoot issues better. The detailed diagnosis of this measure describes all the verbose events that were generated during the last measurement period. Please check the System Logs in the Event Log Viewer for more details."
+  }
+]

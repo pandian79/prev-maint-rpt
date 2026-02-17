@@ -1,0 +1,20 @@
+[
+  {
+    "measurement": "JMX availability",
+    "description": "Indicates whether the target application is available or not and whether JMX is enabled or not on the application.",
+    "unit": "Percent",
+    "interpretation": "A value of 100% means the Java application is reachable and JMX is enabled, so monitoring via JMX can proceed normally. A value of 0% means either the Java application is down or JMX is not enabled (or both), so JMX-based metrics cannot be collected until the application is brought up and JMX is correctly configured."
+  },
+  {
+    "measurement": "JMX response time",
+    "description": "Indicates the time taken to connect to the JMX agent of the Java application.",
+    "unit": "Secs",
+    "interpretation": "This is the latency for establishing a JMX connection; low values indicate a responsive connection path, while high values point to a connection bottleneck such as network latency, overloaded JVM, or contention on the JMX port."
+  },
+  {
+    "measurement": "Has the PID changed?",
+    "description": "Indicates whether/not the process ID that corresponds to the Java application has changed.",
+    "unit": "Yes/No",
+    "interpretation": "The value Yes indicates that the PID of the target application has changed since the previous check, which effectively means the Java process has restarted. The value No indicates that the same PID is still in use and the application has not restarted in the interim."
+  }
+]

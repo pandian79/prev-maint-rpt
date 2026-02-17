@@ -1,0 +1,56 @@
+[
+  {
+    "Measurement": "Syn_sent connections",
+    "Description": "Indicates the number of connections that are in the process of being established by the host to other server(s).",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Syn_received connections",
+    "Description": "Indicates the number of connections that are in the process of being established by remote hosts to this host.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Established connections",
+    "Description": "Indicates the total number of TCP connections on this host for the port number(s) specified in the test arguments.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The number of TCP connections established is a key indicator of the server workload. A significant increase in this metric may indicate a slow down in request handling by the application."
+  },
+  {
+    "Measurement": "Close_wait connections",
+    "Description": "Indicates the current number of TCP connections to a port that are in the TCP CLOSE_WAIT state. Connections remain in the CLOSE_WAIT state when they are waiting for a process to close the TCP socket.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Fin_wait_1 connections",
+    "Description": "Indicates the number of TCP connections to a TCP port that are in the FIN_WAIT_1 state. A TCP connection moves to the FIN_WAIT_1 state when a local program closes a socket but the remote server does not respond.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A large number of FIN_WAIT_1 connections can occur if clients are not properly closing down TCP connections. A connection may linger in this state for tens of minutes."
+  },
+  {
+    "Measurement": "Fin_wait_2 connections",
+    "Description": "Indicates the number of TCP connections to a TCP port that are in the FIN_WAIT_2 state. A connection moves to the FIN_WAIT_2 state when a remote server shuts down its side of a TCP connection and the local server does not respond to it.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Time_wait connections",
+    "Description": "Indicates the number of connections in the TCP TIME_WAIT state. The TIME_WAIT state is a safety mechanism, to catch stray packets for that connection after the connection is officially closed. Since the maximum time that such stray packets can exist is 2 times the maximum round-trip time, the TIME_WAIT state lasts roughly 30–120 seconds.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "TCP Send queue",
+    "Description": "Send-Q is used to show the socket buffer status. This indicates the number of bytes that have been sent to the destination, and are awaiting acknowledgement. (Available only for Solaris, Linux, HP-UX and AIX)",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value of this measure indicates a poor network response."
+  },
+  {
+    "Measurement": "TCP Receive queue",
+    "Description": "Receive-Q is used to show the socket buffer status. The number indicates the number of bytes received from the source and copied. (Available only for Solaris, Linux, HP-UX and AIX)",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value of this measure indicates a poor network response."
+  }
+]

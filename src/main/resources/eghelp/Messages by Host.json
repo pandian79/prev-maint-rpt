@@ -1,0 +1,8 @@
+[
+  {
+    "Measurement": "Number of messages",
+    "Description": "Shows the number of error or warnings found in a syslog file for each host who logged the entries in the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  }
+]

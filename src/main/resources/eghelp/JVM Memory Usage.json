@@ -1,0 +1,74 @@
+[
+  {
+    "measurement": "Initial memory",
+    "description": "Indicates the amount of memory initially allocated at startup.",
+    "unit": "MB",
+    "interpretation": "This is the JVM’s starting allocation for this memory pool at process startup. It is useful as a baseline when comparing later committed and used memory to see how far usage has grown from the original reservation."
+  },
+  {
+    "measurement": "Used memory",
+    "description": "Indicates the amount of memory currently used.",
+    "unit": "MB",
+    "interpretation": "This is the memory currently occupied by all objects, including both reachable and unreachable objects. Ideally it should remain relatively low or stable; a high or steadily increasing value suggests progressive consumption of heap and may indicate a memory leak. Detailed diagnosis, when enabled, helps identify which classes are consuming memory excessively."
+  },
+  {
+    "measurement": "Committed memory",
+    "description": "Indicates the amount of memory guaranteed to be available for use by the JVM.",
+    "unit": "MB",
+    "interpretation": "Committed memory is the portion of memory the JVM has reserved from the OS for this pool and can change over time. It can be less than the initial allocation if the JVM releases memory back to the system, but it will always be greater than or equal to the used memory."
+  },
+  {
+    "measurement": "Free memory",
+    "description": "Indicates the amount of memory currently available for use by the JVM.",
+    "unit": "MB",
+    "interpretation": "For Azul Zing with a Fixed memory pool size type, free memory equals Max allocated memory minus Used memory; for an Elastic pool it equals Committed memory minus Used memory. For other JVMs it is Max allocated memory minus Used memory. Ideally this value should be high. If maximum memory is configured as -1 (uncapped), Max allocated memory also reports -1 and Free memory is not reported."
+  },
+  {
+    "measurement": "Max allocated memory",
+    "description": "Indicates the maximum amount of memory allocated for the JVM.",
+    "unit": "MB",
+    "interpretation": "This is the upper bound of memory that the JVM can use for this pool. For Azul Zing JVMs, it is reported only for memory pools whose size type is FIXED, and not for Elastic pools that can grow by borrowing from other pools."
+  },
+  {
+    "measurement": "Used percentage",
+    "description": "Indicates the percentage of used memory.",
+    "unit": "Percent",
+    "interpretation": "For Azul Zing FIXED pools, this is computed as (Currently_used_memory / Committed memory) × 100; for other JVMs it is (Currently_used_memory / Max_free_memory) × 100. Ideally it should be low; very high values indicate heavy memory consumption and warrant analysis of which classes are using memory via detailed diagnosis."
+  },
+  {
+    "measurement": "JVM Heap memory exceeds initially reserved?",
+    "description": "Indicates whether or not the heap memory usage has exceeded the amount of memory initially reserved for this memory type.",
+    "unit": "Yes/No (internally 1/0)",
+    "interpretation": "A value of Yes (1) means current heap usage has grown beyond the initially reserved amount, which is typical for Elastic memory pools; No (0) usually indicates usage remains within the initial reservation as in most FIXED pools. In charts this status is represented by the numeric equivalents rather than the textual values."
+  },
+  {
+    "measurement": "Percentage heap used after GC",
+    "description": "Indicates the percentage of heap memory used by the Zing JVM after garbage collection.",
+    "unit": "Percent",
+    "interpretation": "Reported only for Azul Zing JVM when MemoryMXBean is enabled and only for the Heap memory usage descriptor. Low values mean GC has reclaimed a large amount of memory; very high values mean GC reclaimed little or that the application allocated intensively during GC, which can indicate memory pressure."
+  },
+  {
+    "measurement": "Heap occupied by application objects",
+    "description": "Indicates the amount of heap memory that is used by application objects.",
+    "unit": "MB",
+    "interpretation": "This Zing-only metric (with MemoryMXBean enabled, for the Heap memory usage descriptor) shows how much of the heap is actually occupied by application objects, helping distinguish application usage from other overhead in the heap."
+  },
+  {
+    "measurement": "Heap reserved for holding application objects",
+    "description": "Indicates the amount of heap memory that was reserved for the usage of application objects.",
+    "unit": "MB",
+    "interpretation": "Also specific to Azul Zing with MemoryMXBean and the Heap memory usage descriptor, this indicates the reserved capacity for application objects. Comparing this with the heap occupied by application objects shows how much headroom remains."
+  },
+  {
+    "measurement": "Percentage of heap used by application objects",
+    "description": "Indicates what percentage of its reserved memory the application objects used.",
+    "unit": "Percent",
+    "interpretation": "Reported only for Azul Zing with MemoryMXBean for the Heap memory usage descriptor, it is computed as (App_object_heap_used / App_object_heap_usable) × 100. Values close to 100% indicate that the space reserved for application objects is nearly exhausted and may soon affect performance if not controlled."
+  },
+  {
+    "measurement": "Memory pool size type",
+    "description": "Indicates this memory pool's type in terms of size.",
+    "unit": "Uninitialized/Fixed/Elastic (internally 0/1/2)",
+    "interpretation": "Available only for Azul Zing with MemoryMXBean enabled. Uninitialized (0) means the memory region has not been reserved; Fixed (1) means the pool has a fixed upper size bound defined when it was reserved; Elastic (2) means the pool can borrow unused memory from other pools and return memory when no longer needed. Graphs display the numeric codes, while the UI shows the textual values."
+  }
+]

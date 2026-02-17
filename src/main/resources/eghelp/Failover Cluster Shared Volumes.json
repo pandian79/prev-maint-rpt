@@ -1,0 +1,61 @@
+[
+  {
+    "measurement": "Cluster shared volume status",
+    "description": "Indicates the current status of this CSV.",
+    "measurementUnit": null,
+    "interpretation": "Values: Online (100), Online pending (90), Inherited (80), Initializing (70), Pending (60), Offline Pending (50), Offline (40), Unknown (20), Failed (0).",
+    "troubleshootingSteps": [
+      "If the CSV status is 'Failed' or 'Offline', verify connectivity between all cluster nodes and the shared storage (SAN/iSCSI); check for Event ID 5120 indicating lost communication with the volume.[web:483][web:489]",
+      "If the CSV is stuck in 'Online Pending' or 'Offline Pending', check for locked files or backup processes (like Veeam or DPM) that might have a lock on the volume; try restarting the Cluster Service on the coordinator node if it remains stuck.[web:484][web:490]",
+      "For persistent 'Failed' states, use `Get-ClusterResource` and `Get-ClusterSharedVolume` in PowerShell to inspect detailed error messages, and ensure that the disk has not been masked or reserved by a non-cluster host.[web:483][web:489]"
+    ]
+  },
+  {
+    "measurement": "Is shared volume migrated?",
+    "description": "Indicates whether this CSV is migrated or not.",
+    "measurementUnit": null,
+    "interpretation": "Yes (1), No (0). 'Migrated' typically refers to 'Redirected Access' mode where metadata or I/O is routed through the coordinator node.",
+    "troubleshootingSteps": [
+      "If the volume is in 'Redirected Access' mode (Migrated = Yes) unexpectedly, check network connectivity for the storage network; a lost direct connection to storage forces a node to redirect I/O through the coordinator.[web:487][web:496]",
+      "Investigate backup operations or maintenance tasks that might force redirected mode; if it persists after the task finishes, you may need to manually turn off redirected access using Failover Cluster Manager or PowerShell.[web:490][web:493][web:496]",
+      "Check for incompatible filter drivers or antivirus software on the nodes that might be forcing the CSV into redirected mode for compatibility.[web:487]"
+    ]
+  },
+  {
+    "measurement": "Total capacity of shared volume",
+    "description": "Indicates the total capacity of this CSV.",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Space used in shared volume",
+    "description": "Indicates the amount of space used in this CSV.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally low. High usage can lead to volume failure.",
+    "troubleshootingSteps": [
+      "Use tools like TreeSize or WinDirStat (running as Administrator) on the C:\\ClusterStorage\\VolumeX path to identify what is consuming space (e.g., orphaned snapshots, ISOs, or large log files).[web:491]",
+      "Check for 'System Volume Information' bloat caused by VSS snapshots (shadow copies) that haven't been cleaned up by backup software.[web:494]"
+    ]
+  },
+  {
+    "measurement": "Free space in shared volume",
+    "description": "Indicates the amount of space that is free in this CSV.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally high.",
+    "troubleshootingSteps": [
+      "If free space is critically low and the volume won't mount, you may need to expand the LUN on the SAN and then extend the volume in Disk Management on the coordinator node.[web:485][web:488]",
+      "In extreme cases where the volume is offline due to lack of space, you might need to temporarily evict a node or use specific CLI commands to clear reservations and expand the disk.[web:488]"
+    ]
+  },
+  {
+    "measurement": "Percentage of space used in shared volume",
+    "description": "Indicates the percentage of total space in this CSV that is currently in use.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100% is critical. Compare across CSVs to balance load.",
+    "troubleshootingSteps": [
+      "Set proactive alerts for high percentage usage (e.g., >90%) to allow time for migrating workloads (Storage Live Migration) to other CSVs before the disk fills up.[web:485][web:491]",
+      "If usage is consistently high, add more physical storage to the cluster pool and extend the CSV.[web:485][web:488]"
+    ]
+  }
+]

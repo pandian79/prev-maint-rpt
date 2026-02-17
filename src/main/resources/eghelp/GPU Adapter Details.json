@@ -1,0 +1,197 @@
+[
+  {
+    "measurement": "Available GPU memory",
+    "description": "Indicates the total amount of memory allocated for this GPU adapter on the target host.",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Verify that the reported available GPU memory matches the card’s specification using vendor tools such as nvidia-smi, GPU-Z, or the OS performance monitor; unexpected reductions can indicate misconfiguration or reserved memory regions.[web:100][web:101][web:102]",
+      "If available memory is significantly lower than expected, check for integrated/virtual GPU features (e.g., SR-IOV, vGPU, shared GPU) or BIOS/firmware settings that may cap usable memory.[web:101][web:102][web:110][web:113]"
+    ]
+  },
+  {
+    "measurement": "GPU memory used",
+    "description": "Indicates the amount of memory that is utilized by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally, the value of this measure should be high. A consistent decrease in the value of this measure is indicative of a steady erosion of memory available for GPU, which if left unattended, can significantly impact GPU functioning.",
+    "troubleshootingSteps": [
+      "Use tools like nvidia-smi, vendor panels, or OS performance monitors to list per-process GPU memory usage and identify applications holding large amounts of VRAM.[web:100][web:101][web:102][web:103][web:109][web:112]",
+      "For workloads that underutilize GPU memory while the GPU is busy, optimize batch size, data loading, and model or scene configuration to increase memory utilization and overall throughput.[web:102][web:109][web:112]",
+      "If memory usage remains high even after applications exit, check for zombie or hidden processes and driver bugs; restart offending applications, the display server, or the machine if necessary.[web:100][web:101][web:103][web:106]"
+    ]
+  },
+  {
+    "measurement": "GPU memory free",
+    "description": "Indicates the amount of memory that is available for use by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "The detailed diagnosis of this measure lists the Log ID, Process name, Process status, Duration, Start time, End time, Batch time, Job ID and Error log of all the processes of each process chain that had completed execution.",
+    "troubleshootingSteps": [
+      "When free GPU memory is low, close or throttle GPU-intensive applications, or reconfigure them to use smaller batches, lower-resolution textures, or reduced model sizes.[web:101][web:102][web:106][web:109][web:112]",
+      "If free memory does not recover after workloads complete, look for memory leaks or hung processes in monitoring tools and restart the GPU driver or system as needed.[web:100][web:101][web:103][web:106]"
+    ]
+  },
+  {
+    "measurement": "GPU memory usage",
+    "description": "Indicates the percentage of memory that is utilized by this GPU adapter.",
+    "measurementUnit": "Percent",
+    "interpretation": "A low value is desired for this measure. If the value of this measure grows very close to 100%, it indicates that the GPU will soon run out of memory resources. Such an occurrence will not only impact the functioning of the GPU card, but also the applications depend on it.",
+    "troubleshootingSteps": [
+      "Alert when GPU memory usage approaches critical levels (for example, above 90–95%) and inspect per-process VRAM usage to find the biggest consumers.[web:100][web:101][web:102][web:103][web:106]",
+      "Reduce GPU memory pressure by lowering application graphics settings, reducing batch sizes, unloading unused models, or splitting workloads across multiple GPUs.[web:101][web:102][web:106][web:109][web:112]",
+      "Investigate unexplained 100% usage at idle for possible malware (such as cryptominers) or runaway background processes and remove or disable them.[web:99][web:101][web:103]"
+    ]
+  },
+  {
+    "measurement": "Total dedicated video memory",
+    "description": "Indicates the total amount of dedicated video memory allocated this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "Dedicated video memory or VRAM is special RAM used by the GPU to store textures, frame buffers, and other graphics data for fast access.",
+    "troubleshootingSteps": [
+      "Verify that the OS and driver correctly detect the card’s dedicated VRAM; mismatches can indicate driver issues or firmware/BIOS limits.[web:100][web:101][web:102][web:110][web:113]",
+      "If dedicated VRAM is consistently insufficient for workloads (frequent out-of-memory or severe texture downscaling), consider upgrading to a GPU with more VRAM or reducing per-application VRAM requirements.[web:102][web:106][web:109][web:112][web:113]"
+    ]
+  },
+  {
+    "measurement": "Used dedicated video memory",
+    "description": "Indicates the amount of dedicated video memory that is utilized by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally, a low value is desired for this measure. A high value indicates that dedicated video memory is depleting rapidly; once filled, the GPU will fall back to system RAM, degrading overall performance.",
+    "troubleshootingSteps": [
+      "Identify applications using the most VRAM and tune their settings (resolution, texture quality, anti-aliasing, caching strategies) to reduce dedicated memory consumption.[web:101][web:102][web:106][web:109][web:112]",
+      "If VRAM usage rises steadily over time in a single application, suspect a memory leak; update or patch the application/driver, and restart the application periodically as a workaround.[web:100][web:101][web:103][web:106]",
+      "For integrated or low-VRAM GPUs that regularly run out of dedicated memory, move heavy workloads to more capable GPUs or reduce concurrency.[web:102][web:106][web:109][web:112][web:113]"
+    ]
+  },
+  {
+    "measurement": "Free dedicated video memory",
+    "description": "Indicates the amount of dedicated video memory that is available for use by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "A high value is desired for this measure. If the value is very low, the GPU does not have adequate memory for processing video frames.",
+    "troubleshootingSteps": [
+      "Monitor free VRAM and close or scale back GPU-heavy applications when free dedicated memory falls below a safe threshold for your workload.[web:101][web:102][web:106][web:109][web:112]",
+      "Reconfigure memory-intensive workflows by lowering resource usage or staggering jobs so that not all VRAM-heavy tasks run concurrently.[web:101][web:102][web:109][web:112]"
+    ]
+  },
+  {
+    "measurement": "Dedicated memory usage",
+    "description": "Indicates the percent of dedicated video memory that is utilized by this GPU adapter.",
+    "measurementUnit": "Percent",
+    "interpretation": "Detailed diagnosis shows the top-10 applications over-utilizing dedicated memory, with their usage share, PID, and executable paths.",
+    "troubleshootingSteps": [
+      "Use the detailed per-application breakdown or tools like nvidia-smi and OS performance monitors to find processes driving dedicated memory usage high.[web:100][web:101][web:102][web:103][web:109]",
+      "Limit or reconfigure top consumers (e.g., cap max VRAM, reduce texture/model sizes, or restrict simultaneous jobs) to keep dedicated memory usage below critical thresholds.[web:101][web:102][web:106][web:109][web:112]",
+      "If a particular app always drives usage to 100%, evaluate whether it is misconfigured, leaking memory, or requires a GPU with higher VRAM capacity.[web:100][web:101][web:103][web:106]"
+    ]
+  },
+  {
+    "measurement": "Total system shared memory",
+    "description": "Indicates the total amount of system memory that can be utilized by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "Shared memory represents system RAM that the GPU can use as additional video memory, reducing RAM available for general CPU workloads.",
+    "troubleshootingSteps": [
+      "Confirm shared memory limits and allocation behavior in BIOS/UEFI and GPU/OS documentation, as integrated GPUs often reserve a configurable portion of system RAM.[web:104][web:107][web:110][web:113]",
+      "If total shared memory for GPU is too high and starves the OS and applications, reduce its maximum allocation via BIOS or platform-specific settings where supported.[web:104][web:107][web:110]"
+    ]
+  },
+  {
+    "measurement": "Used system shared memory",
+    "description": "Indicates the amount of system memory that is utilized by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally, a low value is desired for this measure.",
+    "troubleshootingSteps": [
+      "When used shared memory grows, check whether dedicated VRAM is exhausted and GPUs are spilling into system RAM; reduce VRAM usage or workloads if so.[web:101][web:102][web:106][web:109][web:113]",
+      "If high shared-memory usage coincides with overall RAM pressure, lower graphics workloads or upgrade system RAM to avoid paging and performance degradation.[web:101][web:102][web:106][web:110][web:113]"
+    ]
+  },
+  {
+    "measurement": "Free system shared memory",
+    "description": "Indicates the amount of system memory that is available for use by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "The value of this measure should be high.",
+    "troubleshootingSteps": [
+      "Monitor free shared memory and system RAM; if both trend low, close applications using hardware acceleration or GPU workloads to free RAM.[web:101][web:102][web:106][web:110][web:113]",
+      "Adjust BIOS/UEFI or OS settings if the GPU is allowed to reserve an excessive fraction of system RAM for shared use, balancing GPU needs against general system performance.[web:104][web:107][web:110]"
+    ]
+  },
+  {
+    "measurement": "System shared usage",
+    "description": "Indicates the percentage of system memory that is utilized by this GPU adapter.",
+    "measurementUnit": "Percent",
+    "interpretation": "Detailed diagnosis lists top-10 applications over-utilizing system shared memory, with their usage percentage, PID, and executable paths.",
+    "troubleshootingSteps": [
+      "Use per-application diagnostics and tools like Task Manager/Activity Monitor to identify which applications are driving high shared-memory usage.[web:101][web:102][web:106][web:107]",
+      "Reduce hardware-accelerated features or graphics intensity in those applications, or move them to a system with more RAM or a discrete GPU with ample VRAM.[web:101][web:106][web:110][web:113]"
+    ]
+  },
+  {
+    "measurement": "System video memory",
+    "description": "Indicates the amount of system video memory that can be used by this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Verify system video memory allocation policies in BIOS/UEFI and GPU documentation, especially on integrated-graphics systems that dynamically allocate video memory from RAM.[web:104][web:107][web:110][web:113]",
+      "If system video memory allocation reduces available RAM too aggressively, adjust BIOS or firmware settings to rebalance between GPU and CPU needs where supported.[web:104][web:107][web:110]"
+    ]
+  },
+  {
+    "measurement": "Total committed memory",
+    "description": "Indicates the total amount of committed memory allocated for this GPU adapter.",
+    "measurementUnit": "MB",
+    "interpretation": "Detailed diagnosis lists top-10 applications over-utilizing GPU committed memory with their usage share, PID, and executable paths.",
+    "troubleshootingSteps": [
+      "Inspect the per-application committed-memory breakdown to find workloads that reserve excessive GPU memory and tune them accordingly.[web:100][web:101][web:102][web:109][web:112]",
+      "If committed memory approaches the adapter’s limits, stagger jobs, reduce per-job memory footprints, or distribute workloads across multiple GPUs.[web:101][web:102][web:106][web:109][web:112]"
+    ]
+  },
+  {
+    "measurement": "GPU utilization",
+    "description": "Indicates the percentage of this GPU adapter utilized in this VM.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100% is a cause of concern which requires further investigation. Comparing values across adapters reveals which GPU is over-utilized. Detailed diagnosis shows top-10 applications by overall GPU utilization.",
+    "troubleshootingSteps": [
+      "When GPU utilization is near 100% for extended periods, use detailed diagnostics or tools like nvidia-smi and vendor profilers to identify the heaviest GPU consumers.[web:99][web:100][web:101][web:102][web:109][web:112]",
+      "Throttle or redistribute GPU-heavy workloads (e.g., limit concurrency, use job queues, or move tasks to additional GPUs) to avoid contention and latency.[web:101][web:102][web:109][web:112]",
+      "If high utilization occurs even at idle, check for hidden or malicious processes such as cryptomining malware and remove them.[web:99][web:101][web:103]"
+    ]
+  },
+  {
+    "measurement": "3D utilization",
+    "description": "Indicates the percentage of this GPU adapter utilized for processing 3D frames.",
+    "measurementUnit": "Percent",
+    "interpretation": "Comparing values across adapters identifies GPUs over-utilized for 3D workloads. Detailed diagnosis lists top-10 applications by 3D GPU utilization.",
+    "troubleshootingSteps": [
+      "Identify applications driving high 3D utilization (games, 3D renderers, CAD, visualization tools) via detailed diagnostics or GPU monitoring utilities.[web:101][web:102][web:105][web:108][web:111][web:113]",
+      "Lower 3D workload intensity by reducing resolution, quality settings, and frame caps, or move heavy 3D workloads to more capable GPUs.[web:102][web:106][web:109][web:111][web:112][web:113]"
+    ]
+  },
+  {
+    "measurement": "Video decode utilization",
+    "description": "Indicates the percentage of this GPU adapter utilized for performing video decoding process.",
+    "measurementUnit": "Percent",
+    "interpretation": "Detailed diagnosis lists top-10 applications by video decode GPU utilization.",
+    "troubleshootingSteps": [
+      "When video decode utilization is high, identify which video players, conferencing tools, or streaming/encoding applications are active and adjust their resolution or codec settings.[web:101][web:102][web:105][web:106][web:111]",
+      "If high decode usage causes stutter or thermal issues, limit the number of simultaneous streams, disable hardware acceleration in some apps, or move decoding workloads to another GPU or CPU-based pipeline.[web:101][web:102][web:106][web:111]"
+    ]
+  },
+  {
+    "measurement": "Copy utilization",
+    "description": "Indicates the percentage of this GPU adapter utilized for copying operations.",
+    "measurementUnit": "Percent",
+    "interpretation": "Detailed diagnosis lists top-10 applications by GPU copy-engine utilization.",
+    "troubleshootingSteps": [
+      "Analyze which applications perform heavy data transfers between system memory and GPU (large datasets, video capture, ML pipelines) and optimize their data movement patterns.[web:101][web:102][web:109][web:112]",
+      "Reduce copy overhead by improving data batching, using pinned memory and efficient input pipelines, or co-locating data and computation on the same GPU where possible.[web:102][web:109][web:112]"
+    ]
+  },
+  {
+    "measurement": "Video processing utilization",
+    "description": "Indicates the percentage of this GPU adapter utilized for processing video frames.",
+    "measurementUnit": "Percent",
+    "interpretation": "Comparing values across adapters reveals which GPU is over-utilized for video processing workloads.",
+    "troubleshootingSteps": [
+      "Identify video-processing applications (editing, effects, streaming encoders) responsible for high utilization and tune their project settings, resolution, and effects complexity.[web:101][web:102][web:105][web:106][web:111]",
+      "Distribute video processing tasks across time or hardware (other GPUs or systems) and ensure GPU drivers and video software are up-to-date to avoid inefficiencies.[web:101][web:102][web:106][web:109][web:112]"
+    ]
+  }
+]

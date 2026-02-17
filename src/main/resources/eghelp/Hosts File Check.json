@@ -1,0 +1,38 @@
+[
+  {
+    "measurement": "DNS availability",
+    "description": "Indicates whether a successful response is received from the DNS server in response to the emulated user request.",
+    "measurementUnit": "Percent",
+    "interpretation": "Reported only when Show DNS Info is set to Yes. Availability problems may be caused by the DNS service being down, network issues, or DNS configuration errors.",
+    "troubleshootingSteps": [
+      "Verify that the DNS service is running and listening on the expected interfaces and ports (typically UDP/TCP 53), and that the server can resolve basic queries locally using tools such as nslookup or dig.[web:114][web:118][web:128]",
+      "Check network connectivity between the client/probe and the DNS server (ping, traceroute, MTR) and ensure firewalls or ACLs are not blocking DNS traffic.[web:114][web:117][web:119][web:125][web:128]",
+      "Inspect DNS zones and records for misconfigurations such as broken delegations, missing A/NS records, or wrong IPs that could cause SERVFAIL, REFUSED, or NXDOMAIN responses.[web:114][web:116][web:118][web:121][web:128]",
+      "If using forwarders or external resolvers, confirm they are reachable and functioning; replace failing forwarders or switch to alternative DNS providers when necessary.[web:114][web:118][web:121][web:128]"
+    ]
+  },
+  {
+    "measurement": "DNS response time",
+    "description": "Indicates the time taken by the DNS server to respond to a request.",
+    "measurementUnit": "Seconds",
+    "interpretation": "Reported only when Show DNS Info is set to Yes. Increased response time can result from server bottlenecks, DNS configuration issues, or network problems.",
+    "troubleshootingSteps": [
+      "Measure DNS response time with tools such as dig, nslookup, DNSPerf, or synthetic monitors and compare it against normal baselines; flag sustained times above acceptable thresholds (for example, >100 ms on LAN).[web:119][web:121][web:122][web:128]",
+      "Check for server-side performance issues including high CPU, memory pressure, or overloaded DNS processes, and scale resources or distribute queries if needed.[web:114][web:118][web:119][web:128]",
+      "Analyze network latency and packet loss between clients and DNS servers using ping, traceroute, or MTR; fix routing problems or move clients to closer resolvers.[web:119][web:121][web:125][web:128]",
+      "Review DNS configuration (forwarders, recursion, DNSSEC, large records) and tune or simplify where misconfiguration or slow upstreams are causing timeouts or retries.[web:114][web:118][web:119][web:121][web:122]"
+    ]
+  },
+  {
+    "measurement": "Is hosts file modified recently?",
+    "description": "Indicates whether or not the hosts file has been modified recently.",
+    "measurementUnit": null,
+    "interpretation": "No=0, Yes=1. A value of Yes indicates that the hosts file has been changed; detailed diagnosis should be used to inspect the modification.",
+    "troubleshootingSteps": [
+      "If the value is Yes, review the current hosts file contents and modification timestamp to determine what entries were added, removed, or changed.[web:120][web:123][web:126]",
+      "Validate whether the changes are legitimate (for example, local overrides or testing entries) or potentially malicious (such as redirects of security sites or common domains). Roll back or clean up suspicious entries.[web:120][web:123][web:126]",
+      "Run a full security scan with up-to-date antivirus/EDR tools, since unauthorized hosts file modifications are often associated with malware or PUA activity.[web:120][web:123][web:126]",
+      "Harden the hosts file against unauthorized changes by restricting permissions, enforcing endpoint security policies that monitor host-file edits, and investigating how the write access was obtained.[web:120][web:123][web:126]"
+    ]
+  }
+]

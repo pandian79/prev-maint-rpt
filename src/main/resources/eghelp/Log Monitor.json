@@ -1,0 +1,8 @@
+[
+  {
+    "Measurement": "Recent messages",
+    "Description": "The number of messages that were added to the log when the test was last executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The value of this measure is a clear indicator of the number of \"new\" messages that have come into the log of the monitored server."
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "measurement": "Swap used",
+    "description": "The total swap space that is either allocated or reserved",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Check overall RAM and swap usage with tools like free, top, or vmstat to see if high swap use correlates with memory pressure or just reserved swap.[web:27][web:31][web:34]",
+      "Identify memory‑intensive processes and potential memory leaks, then tune or restart those processes if they are causing sustained swapping.[web:27][web:31][web:37]",
+      "Consider adding more physical RAM or right‑sizing workloads if the system frequently relies on swap under normal load.[web:27][web:31][web:34][web:37]",
+      "On systems where swap is aggressively used despite free RAM, tune the swappiness or equivalent virtual memory parameters to reduce swap usage.[web:31][web:35][web:37]"
+    ]
+  },
+  {
+    "measurement": "Swap allocated",
+    "description": "The total swap space currently allocated for use as a backing store",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Use platform tools (for example, swap -s and swap -l on Solaris/Unix, or free and vmstat on Linux) to see how much swap is actually allocated versus just reserved.[web:30][web:33][web:36]",
+      "List processes with significant swap usage and review whether they can be optimized, restarted, or limited via resource controls.[web:33][web:36][web:39]",
+      "If allocated swap grows steadily, investigate applications for memory leaks or misconfiguration leading to unbounded memory growth.[web:27][web:31][web:37]",
+      "Increase swap capacity or physical memory if normal workload requires more backing store than is available, to avoid out‑of‑memory conditions.[web:27][web:30][web:31][web:34]"
+    ]
+  },
+  {
+    "measurement": "Swap reserved",
+    "description": "The total amount of swap space not currently allocated but claimed for future use",
+    "measurementUnit": "MB",
+    "interpretation": "This measure is available only for Solaris hosts.",
+    "troubleshootingSteps": [
+      "On Solaris, use swap -s to examine how much swap is reserved versus allocated, and correlate this with application virtual memory demands.[web:30][web:33][web:36]",
+      "Review applications that reserve large anonymous memory segments (malloc/brk, shared memory, mmap) and tune limits or configurations if reservations are excessive.[web:26][web:30][web:36]",
+      "Use OS resource limits and tuning (such as max process sizes or project limits) to prevent a few processes from reserving disproportionate swap.[web:26][web:30][web:36]",
+      "If reserved swap approaches total swap, increase swap space or adjust application sizing to avoid failed allocations (ENOMEM).?[web:26][web:30][web:33][web:36]"
+    ]
+  },
+  {
+    "measurement": "Swap available",
+    "description": "The total swap space that is currently available for future reservation and allocation",
+    "measurementUnit": "MB",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Monitor available swap over time; if it steadily declines towards zero under normal workloads, treat this as a capacity issue and plan remediation.[web:30][web:31][web:34][web:36]",
+      "Reduce swap consumption by optimizing or limiting memory‑hungry processes and fixing memory leaks so more swap remains available.[web:27][web:31][web:37]",
+      "Increase swap space (additional swap files/partitions or LUNs) or add RAM if available swap is frequently low, to avoid allocation failures.[web:30][web:31][web:33][web:34]",
+      "On Solaris, use swap -s and vmstat -S to verify that the system is not under heavy swapping pressure when available swap is low.[web:30][web:36]"
+    ]
+  },
+  {
+    "measurement": "Swap utilization",
+    "description": "The percentage of swap space that is allocated or reserved",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100% indicates that the swap space configured may not be sufficient. A value close to 0 may imply that the swap space configured may be too large.",
+    "troubleshootingSteps": [
+      "Alert when swap utilization is consistently high (for example, above 80–90%) and correlate with performance symptoms like latency or thrashing.[web:27][web:31][web:34][web:36]",
+      "Profile memory usage to determine whether high utilization is due to genuine memory pressure, oversized allocations, or large reserved but unused regions.[web:26][web:30][web:31][web:36]",
+      "Reduce memory footprint of key applications, fix leaks, or redistribute workloads so the system does not rely heavily on swap.[web:27][web:31][web:37]",
+      "Increase RAM or swap space if high utilization reflects legitimate workload requirements, and tune swappiness/VM parameters so swapping behavior matches expectations.[web:27][web:30][web:31][web:34][web:35]"
+    ]
+  },
+  {
+    "measurement": "Swap queue",
+    "description": "Number of processes swapped out currently",
+    "measurementUnit": "Number",
+    "interpretation": "Ideally, this value should be close to 0. This measure is available for Solaris systems only, and not Linux/HPUX systems.",
+    "troubleshootingSteps": [
+      "On Solaris, use vmstat (watching the w column) and related tools to verify that processes are being swapped due to memory pressure.[web:30][web:36]",
+      "If the swap queue is non‑zero, analyze which processes are swapped out and whether they are long‑sleeping or important services affected by latency.[web:30][web:36]",
+      "Increase physical memory or reduce concurrent workload if frequent swapping indicates that RAM is insufficient for active processes.[web:27][web:30][web:31][web:36]",
+      "Tune system virtual memory parameters and application sizing so that the kernel does not need to keep processes swapped out under normal conditions.[web:30][web:31][web:36]"
+    ]
+  }
+]

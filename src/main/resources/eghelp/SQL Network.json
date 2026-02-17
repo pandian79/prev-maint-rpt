@@ -1,0 +1,91 @@
+[
+  {
+    "measurement": "SQL server availability",
+    "description": "Indicates the availability of the server.",
+    "unit": "Percentage",
+    "interpretation": "A value of 100% means the SQL Server instance is responding to requests; 0% means it is not. Unavailability can be caused by the service not running, misconfiguration, invalid service accounts, network issues, or failures in establishing connections or executing the test query itself. If this measure is 0, use Database connection availability and Query processor availability to determine whether the issue is with connectivity or with query execution.",
+    "troubleshootingSteps": [
+      "If availability is 0, first verify that the SQL Server service is running and that the instance name and port are correctly configured.",
+      "Check whether you can manually connect to the instance from the monitoring host using the same credentials and connection string (server, port, protocol).",
+      "Review SQL Server and system event logs for startup failures, login issues, or configuration errors that could prevent the instance from responding.",
+      "If connectivity works but the metric still reports 0, examine Database connection availability and Query processor availability to see whether connection failures or query errors are causing the test to fail.",
+      "Confirm that firewalls, network routes, and endpoint configurations allow traffic between the monitoring system and the SQL Server instance."
+    ]
+  },
+  {
+    "measurement": "Total response time",
+    "description": "The time taken by the database to respond to a user query. This is the sum of connection time and query execution time.",
+    "unit": "Seconds",
+    "interpretation": "A sudden increase in total response time indicates a bottleneck at or near the database server. Since this measure combines connection establishment and query execution, it helps you see end-to-end responsiveness from the client’s perspective.",
+    "troubleshootingSteps": [
+      "When total response time spikes, compare Connection time to database server and Query execution time to determine whether the slowdown is due to connection latency or query processing.",
+      "If connection time is normal but total response time is high, investigate slow or blocking queries, resource contention (CPU, I/O, locks), and plan regressions.",
+      "If both connection time and query execution time are elevated, look for broader resource issues on the server (CPU, memory, I/O) or network congestion.",
+      "Correlate response time changes with recent deployments, configuration changes, or workload shifts to identify potential causes."
+    ]
+  },
+  {
+    "measurement": "Database connection availability",
+    "description": "Indicates whether the database connection is available or not.",
+    "unit": "Percentage",
+    "interpretation": "A value of 100 indicates that a connection to the database could be established; 0 indicates that it could not. Connection failures may be due to the database being down, listening on a different port than configured, or network issues. If SQL server availability is 0, this measure helps you determine whether the problem is connection-related.",
+    "troubleshootingSteps": [
+      "If this measure is 0, verify that the database instance is running and listening on the expected host and port.",
+      "Check for network connectivity issues between the monitoring server and the SQL Server host (ping, traceroute, firewall rules).",
+      "Confirm that the configured credentials are valid and that login and database-level permissions allow connections.",
+      "Review SQL Server error logs for login failures, endpoint issues, or access-denied messages around the time of failures.",
+      "If availability is intermittent, monitor network stability and connection pool behavior in client applications."
+    ]
+  },
+  {
+    "measurement": "Connection time to database server",
+    "description": "Indicates the time taken by the database connection.",
+    "unit": "Seconds",
+    "interpretation": "This measures how long it takes to establish a connection to the SQL Server. A high value points to a connection bottleneck, such as network latency, DNS resolution issues, or overloaded listeners. When SQL response time increases, comparing this measure against query execution time helps determine whether connection latency is the cause.",
+    "troubleshootingSteps": [
+      "If connection time increases, test raw network latency from the monitoring host to the SQL Server host and check for packet loss or routing problems.",
+      "Verify DNS resolution speed and correctness for the SQL Server hostname; try connecting by IP to rule out DNS issues.",
+      "Check for overloaded or misconfigured connection endpoints, such as insufficient listener threads or connection limits.",
+      "Review authentication configuration (Kerberos/NTLM, certificates) to ensure that connection negotiation is not being delayed by security issues.",
+      "Consider connection pooling in applications to reduce the number of new connections created under load."
+    ]
+  },
+  {
+    "measurement": "Query processor availability",
+    "description": "Indicates whether the database query is executed successfully or not.",
+    "unit": "Percent",
+    "interpretation": "A value of 100 indicates that the test query executed successfully; 0 indicates that it failed. If SQL server availability is 0 but database connections are available, a 0 here suggests that query failures (for example, permission issues, timeouts, or internal errors) are causing the unavailability status.",
+    "troubleshootingSteps": [
+      "When this measure is 0, inspect the error message returned by the test query to determine whether it is failing due to syntax, permissions, timeouts, or internal errors.",
+      "Verify that the login used by the monitor has sufficient permissions to run the test query (for example, access to the target database and objects).",
+      "Check whether resource exhaustion (CPU, memory, tempdb, locks) or blocking is causing the test query to fail or time out.",
+      "Review recent schema or configuration changes that might have invalidated the query (such as dropped objects or changed names).",
+      "Adjust the test query if necessary so it remains lightweight, predictable, and resilient to routine schema changes."
+    ]
+  },
+  {
+    "measurement": "Query execution time",
+    "description": "Indicates the time taken for query execution.",
+    "unit": "Seconds",
+    "interpretation": "A high value indicates that one or more queries to the database are taking a long time to execute. Poorly designed or inefficient queries often run for extended periods. If this measure is higher than the connection time to the database server, long-running queries are likely the main cause of poor server responsiveness.",
+    "troubleshootingSteps": [
+      "When query execution time increases, profile the test query and other representative workload queries to identify slow statements.",
+      "Examine execution plans for the slow queries to detect missing indexes, scans, parameter sniffing issues, or expensive operators.",
+      "Check for blocking and lock contention that may be delaying query completion and tune transactions and indexing to reduce conflicts.",
+      "Monitor CPU and I/O usage to see whether the slow queries are CPU-bound or I/O-bound and optimize accordingly (indexes, statistics, or storage).",
+      "Implement query tuning, index adjustments, or plan guides where necessary and re-measure execution time to confirm improvements."
+    ]
+  },
+  {
+    "measurement": "Records fetched",
+    "description": "Indicates the number of records that were fetched from the database.",
+    "unit": "Number",
+    "interpretation": "This shows how many rows the test query retrieved. A value of 0 indicates no records were fetched, which may be expected for certain tests or may suggest that the query criteria are not matching any rows.",
+    "troubleshootingSteps": [
+      "Verify that the test query is designed to return rows in normal conditions; if it should, investigate why 0 records are being returned.",
+      "If a non-zero row count is expected, check for data changes or filter conditions that may now be excluding all rows.",
+      "Ensure that the query’s WHERE clauses and joins are correct and not overly restrictive or logically incorrect.",
+      "If 0 records is acceptable for the test, use this metric mainly as a sanity check to confirm that query behavior matches expectations over time."
+    ]
+  }
+]

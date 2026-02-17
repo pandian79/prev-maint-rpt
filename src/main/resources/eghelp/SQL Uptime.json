@@ -1,0 +1,38 @@
+[
+  {
+    "measurement": "Has SQL server been restarted?",
+    "description": "Indicates whether the database instance has been rebooted during the last measurement period.",
+    "unit": "Boolean",
+    "interpretation": "If the value is Yes, the database instance was rebooted during the last measurement period. By tracking when this value changes from No to Yes, administrators can identify the exact times when the instance was restarted. Detailed diagnostics can show additional information such as TIME, SHUTDOWN DATE, RESTART DATE, SHUTDOWN DURATION, and whether the shutdown was for maintenance.",
+    "troubleshootingSteps": [
+      "If restarts are expected (for example, planned maintenance or patching), verify that the times reported match your change schedule.",
+      "Investigate any unexpected restarts by reviewing SQL Server logs, Windows Event Logs, and infrastructure monitoring around the reported restart time.",
+      "Check for recurring unplanned restarts that might indicate hardware issues, OS crashes, service failures, or resource exhaustion.",
+      "Correlate restart events with application error patterns or performance issues reported by users."
+    ]
+  },
+  {
+    "measurement": "Uptime since last measure",
+    "description": "Indicates how long the database instance has been up since the last time this test ran.",
+    "unit": "Secs",
+    "interpretation": "If the instance was not rebooted during the last measurement period and the monitoring agent has run continuously, this value equals the measurement period. If the instance was rebooted, this value is less than the measurement period (for example, with a 300‑second period and a restart 120 seconds ago, this measure would report 120). The smaller the measurement period, the more accurate this metric is.",
+    "troubleshootingSteps": [
+      "Use this measure alongside the restart indicator to confirm when within the last interval a reboot occurred.",
+      "If uptime since last measure is frequently less than the full interval, investigate for repeated or flapping restarts.",
+      "Adjust the measurement period if finer‑grained detection of short uptimes or quick restarts is required.",
+      "Combine this metric with overall Uptime to understand both recent stability and long‑term availability."
+    ]
+  },
+  {
+    "measurement": "Uptime",
+    "description": "Indicates the total time that the database instance has been up since its last reboot.",
+    "unit": "Composite time (years, months, days, hours, minutes, seconds)",
+    "interpretation": "This measure shows how long the instance has been running continuously since its last restart. Very long uptimes can be acceptable but may also indicate that planned maintenance, patching, or configuration changes have been deferred. Thresholds can be set on this metric to alert administrators when the instance has been up longer than a defined period.",
+    "troubleshootingSteps": [
+      "Monitor uptime to ensure that required maintenance windows and patch cycles are actually being executed.",
+      "If uptime is very short or frequently reset, look for chronic stability issues causing repeated restarts.",
+      "Define alert thresholds for unusually long uptimes if organizational policy requires periodic reboots or maintenance.",
+      "Use uptime data when planning maintenance to choose windows that minimize impact on availability SLAs."
+    ]
+  }
+]

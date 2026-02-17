@@ -1,0 +1,218 @@
+[
+  {
+    "measurement": "SSL certificate validity",
+    "description": "Indicates the number of days from the current day for which this SSL certificate will be valid.",
+    "unit": "Days",
+    "interpretation": "Keeping certificates valid is essential for secure communication. When a certificate expires, browsers and client applications display security warnings and may block access, harming user trust and availability. Administrators should regularly monitor expiration dates and renew certificates before they expire, often using CA or certificate-management tools that provide reminders and automation. Detailed diagnosis also exposes certificate metadata such as order, type, version, serial number, active and expiry dates, subject and issuer fields, and location information.",
+    "troubleshootingSteps": [
+      "Review certificates with low remaining validity and schedule renewal before users encounter expiry warnings.",
+      "Use detailed diagnosis to confirm the certificate’s active and expiry dates, common name, and issuing CA before renewal.",
+      "Automate certificate renewal and deployment where possible (e.g., via ACME or centralized certificate management) to avoid human error.",
+      "After renewing a certificate, verify that servers present the new certificate and that monitoring reflects an updated validity period."
+    ]
+  },
+  {
+    "measurement": "Is Thumbprint valid?",
+    "description": "Indicates whether or not the thumbprint of this SSL certificate is valid.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "Thumbprint validity confirms that the certificate’s hash matches the expected value, showing that it has not been tampered with and its contents are intact. A value of No (0) indicates an invalid thumbprint; Yes (1) indicates a valid thumbprint. Graphs display only the numeric values 0 and 1.",
+    "troubleshootingSteps": [
+      "If the thumbprint is invalid (No/0), compare the certificate on the server with the expected thumbprint from a trusted source or repository.",
+      "Investigate recent changes to certificate files or keystores that might have introduced an unapproved or corrupted certificate.",
+      "Reinstall the correct certificate and private key from a known‑good backup or CA delivery bundle.",
+      "Validate the thumbprint again after replacement and ensure all load‑balanced or clustered nodes serve the same certificate."
+    ]
+  },
+  {
+    "measurement": "Certificate status",
+    "description": "Indicates the current status of this SSL certificate.",
+    "unit": "Categorical with numeric equivalents",
+    "interpretation": "Certificate status directly affects how clients treat secure connections. Valid, CA‑signed certificates are trusted, while self‑signed, unverified, or revoked ones trigger warnings or errors. The measure can report: Public CA Signed (20), Local CA Signed (25), Not Verified (40), Self Signed (60), or Revoked (80). Graphs use these numeric values to display status over time.",
+    "troubleshootingSteps": [
+      "For Revoked (80) or Not Verified (40) statuses, immediately investigate why the certificate cannot be trusted and replace it with a valid one.",
+      "If the certificate is Self Signed (60) but used in production, consider replacing it with a Public or Local CA‑signed certificate to avoid client warnings.",
+      "Ensure intermediate certificates are correctly configured so that Public/Local CA Signed certificates validate properly.",
+      "Standardize on approved CAs and track certificate lifecycles so status remains in a trusted state (Public or Local CA Signed)."
+    ]
+  },
+  {
+    "measurement": "Is certificate valid?",
+    "description": "Indicates whether or not this certificate is currently valid.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "Certificates are valid only within their configured lifetime. During this period, they can be used to secure communication between clients and servers. If a certificate is invalid (typically expired or not yet active), browsers and applications raise warnings and may block connections. The measure returns No (0) for invalid and Yes (1) for valid, with graphs using 0 and 1.",
+    "troubleshootingSteps": [
+      "For certificates reported as invalid (No/0), verify whether they are expired, not yet active, or otherwise misconfigured.",
+      "Check the system time and time synchronization on servers; incorrect clocks can cause false validity failures.",
+      "Renew or replace expired certificates promptly and redeploy them across all relevant endpoints.",
+      "Confirm after changes that clients no longer show validity warnings and that monitoring reports Yes (1)."
+    ]
+  },
+  {
+    "measurement": "Is certificate trusted?",
+    "description": "Indicates whether or not this certificate is from a trusted source.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "A certificate is trusted when the client’s trust store contains the issuing CA (or a chain leading to a trusted root) and the certificate is properly signed and not expired. In that case, the measure reports Yes (1) and clients proceed without warnings. If the certificate is self‑signed or issued by an unrecognized CA, the measure reports No (0), and clients display trust warnings until users manually accept or the configuration is corrected.",
+    "troubleshootingSteps": [
+      "If the certificate is untrusted (No/0), verify that all intermediate and root CAs are correctly installed on both the server and client trust stores.",
+      "Replace self‑signed or private CA certificates with ones from a recognized public or enterprise CA where appropriate.",
+      "Ensure the full certificate chain is sent by the server during the SSL handshake so clients can build trust correctly.",
+      "Test from multiple client environments to confirm that all see the certificate as trusted after fixes."
+    ]
+  },
+  {
+    "measurement": "Is certificate expired?",
+    "description": "Indicates whether or not this certificate is expired.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "Certificates are valid only between their activation and expiration dates. Once expired, clients no longer trust them, and secure connections may fail or show prominent warnings. This measure reports Yes (1) if the certificate is expired and No (0) if it is still within its validity period; graphs use 0 and 1.",
+    "troubleshootingSteps": [
+      "Investigate any certificates reported as expired (Yes/1) and prioritize their renewal and replacement.",
+      "Check monitoring and inventory to identify all systems using the expired certificate, including load‑balanced or secondary nodes.",
+      "Implement or refine automated expiry monitoring and alerting so certificates are renewed well before expiration.",
+      "After renewal, validate that endpoints now serve the new certificate and that the measure shows No (0)."
+    ]
+  },
+  {
+    "measurement": "Is certificate revoked?",
+    "description": "Indicates whether or not this certificate is revoked.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "A revoked certificate has been actively invalidated by the issuing CA, typically due to compromise or mis‑issuance, and must not be used for secure communication. The measure reports Yes (1) when revoked and No (0) otherwise. Clients that correctly check revocation will refuse or warn about connections using revoked certificates.",
+    "troubleshootingSteps": [
+      "If the certificate is marked as revoked (Yes/1), immediately replace it with a new, securely issued certificate.",
+      "Investigate why revocation occurred (key compromise, mis‑issuance, or policy violation) and remediate underlying issues.",
+      "Verify that OCSP/CRL checking is correctly configured on clients and that they no longer see the revoked certificate in use.",
+      "Update internal documentation and inventories to reflect the retirement of the revoked certificate."
+    ]
+  },
+  {
+    "measurement": "Is certificate self signed?",
+    "description": "Indicates whether or not this certificate is self signed.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "A self‑signed certificate is signed by the same entity that created it rather than by an external CA. While it can provide encryption, it lacks third‑party validation and typically triggers trust warnings in browsers. The measure reports Yes (1) for self‑signed and No (0) otherwise.",
+    "troubleshootingSteps": [
+      "Avoid using self‑signed certificates for public‑facing or production services; replace them with CA‑signed certificates.",
+      "For internal or development environments where self‑signed certificates are used, ensure appropriate trust anchors are distributed to clients.",
+      "Document any intentional use of self‑signed certificates to distinguish it from misconfiguration.",
+      "Monitor for unexpected new self‑signed certificates, which may indicate ad‑hoc or insecure deployments."
+    ]
+  },
+  {
+    "measurement": "Is private certificate configured?",
+    "description": "Indicates whether or not this configured certificate has its corresponding private key in place.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "A Yes (1) indicates that the private key required to decrypt data encrypted with the public key is correctly set up and available, making SSL/TLS handshakes possible. A No (0) suggests that the private key is missing or not properly configured, rendering the certificate unusable for secure communication.",
+    "troubleshootingSteps": [
+      "If the measure reports No (0), confirm that the private key file is present and correctly associated with the certificate on the server.",
+      "Check permissions on key files and keystores so the web or application server can access the private key.",
+      "Reimport the certificate and key bundle (e.g., PFX/P12) if association is broken or corrupted.",
+      "After correction, test SSL connectivity and verify that the measure reports Yes (1)."
+    ]
+  },
+  {
+    "measurement": "Is certificate used before active date?",
+    "description": "Indicates whether or not this certificate is being used before its active (start) date.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "Certificates include an activation date and should not be used before that point. Using a certificate before its active date can cause clients to reject connections or raise warnings, and may violate organizational policies. The measure reports Yes (1) if the certificate is used prematurely and No (0) otherwise.",
+    "troubleshootingSteps": [
+      "If Yes (1), verify the server’s system time; incorrect clocks can make a not‑yet‑valid certificate appear in use.",
+      "Confirm the certificate’s Not Before date and adjust deployment plans so it is only activated once valid.",
+      "Roll back to the previous certificate or deploy a different valid certificate until the new one becomes active.",
+      "Ensure certificate rollout procedures include validation of validity windows before production use."
+    ]
+  },
+  {
+    "measurement": "Is certificate having untrusted root?",
+    "description": "Indicates whether or not this certificate has an untrusted root in its chain.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "If the chain of trust for a certificate does not lead to a trusted root CA, the certificate is considered to have an untrusted root. Causes include missing intermediate certificates, use of a self‑signed or private CA not present in client trust stores, or invalid/expired intermediates. The measure reports Yes (1) when the root is untrusted and No (0) when the chain terminates at a trusted root.",
+    "troubleshootingSteps": [
+      "For Yes (1) results, ensure the server is configured to present the full, correct chain (all intermediates) during the SSL handshake.",
+      "Install or update trusted root and intermediate CAs on client systems where appropriate.",
+      "Replace certificates issued by untrusted or deprecated CAs with ones from trusted authorities.",
+      "Retest from multiple client environments to confirm that the root is now recognized as trusted and the measure shows No (0)."
+    ]
+  },
+  {
+    "measurement": "Is Common Name(CN) available for the certificate?",
+    "description": "Indicates whether or not a Common Name is available for this certificate.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "The Common Name (CN) is the primary domain the certificate is intended to secure, such as example.com. A valid CN allows clients to verify they are connecting to the intended domain. The measure reports Yes (1) if a CN is present and No (0) if it is missing, which can prevent clients from validating the certificate.",
+    "troubleshootingSteps": [
+      "If No (0), review the certificate to confirm that the subject/CN field is correctly populated.",
+      "Ensure that the CN matches the primary domain used by clients, or that the certificate instead relies on SANs in a standards‑compliant way.",
+      "Obtain or reissue a certificate with the correct CN if it is missing or incorrect.",
+      "Verify that client hostname checks succeed without warnings once a proper CN is in place."
+    ]
+  },
+  {
+    "measurement": "Is Subject available for the certificate?",
+    "description": "Indicates whether or not a subject is available for this certificate.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "The subject typically includes organization details and domain names. During SSL handshakes, clients check the subject and related fields to validate that the certificate matches the intended endpoint. If subject information is missing (No/0) or incomplete, clients may warn of a potential security issue.",
+    "troubleshootingSteps": [
+      "If this measure shows No (0), inspect the certificate to verify that subject fields (CN, O, OU, etc.) are present and correct.",
+      "Reissue the certificate with appropriate subject information if necessary.",
+      "Ensure that the subject (or SANs) correctly matches the domains and services where the certificate is deployed.",
+      "Test from client systems to confirm that subject‑related validation errors are resolved."
+    ]
+  },
+  {
+    "measurement": "Is certificate having mismatched domain?",
+    "description": "Indicates whether or not this certificate has a mismatched domain.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "A domain mismatch occurs when the domain in the certificate (CN or SAN) does not match the hostname the client is connecting to, such as a certificate for domain.com being used on subdomain.domain.com or anotherdomain.com. This measure reports Yes (1) if a mismatch is detected and No (0) if domains match. Clients typically display warnings when a mismatch occurs.",
+    "troubleshootingSteps": [
+      "For Yes (1) results, compare the requested hostname with the certificate’s CN and SAN entries to identify the mismatch.",
+      "Obtain or install a certificate whose CN/SANs correctly cover the hostnames being used.",
+      "Adjust server configuration (e.g., virtual hosts, SNI) so each hostname presents an appropriate certificate.",
+      "Verify that browsers no longer display domain mismatch warnings once corrected."
+    ]
+  },
+  {
+    "measurement": "Is having valid certificate chain?",
+    "description": "Indicates whether or not a valid certificate chain is available for this certificate.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "A valid chain includes all necessary intermediates linking the certificate back to a trusted root CA. If the chain is incomplete or incorrect, clients cannot verify authenticity and typically show warnings. The measure reports Yes (1) when a valid chain is present and No (0) when it is not.",
+    "troubleshootingSteps": [
+      "If No (0), verify that all required intermediate certificates are installed on the server and configured to be sent during the handshake.",
+      "Check certificate chain order and correctness using tools like openssl or browser diagnostics.",
+      "Update or fix intermediate certificates that are expired, mismatched, or misconfigured.",
+      "Re‑test from multiple client platforms to ensure the chain is recognized as valid (measure shows Yes/1)."
+    ]
+  },
+  {
+    "measurement": "Public key size",
+    "description": "Indicates the size of the public key on this certificate.",
+    "unit": "Bits",
+    "interpretation": "Public key size determines the strength of the cryptography used. 2048‑bit RSA keys are widely accepted and currently considered secure; 3072‑bit keys provide stronger security for longer‑term needs, while 4096‑bit keys, though supported, can introduce performance overhead. The maximum key size referenced for SSL certificates here is 4096 bits, with common default sizes of 2048 or 4096 bits.",
+    "troubleshootingSteps": [
+      "Review key sizes and ensure they meet organizational and regulatory security requirements (e.g., minimum 2048 bits for RSA).",
+      "For high‑value or long‑lived certificates, consider using 3072‑bit keys or modern algorithms (such as ECDSA) for stronger security without excessive overhead.",
+      "If performance issues are observed with very large keys (e.g., 4096 bits), evaluate whether a smaller but still secure key size is more appropriate.",
+      "Standardize key size policies and reflect them in certificate request and issuance procedures."
+    ]
+  },
+  {
+    "measurement": "Available Subject Alternative Names(SAN)",
+    "description": "Indicates the number of Subject Alternative Names (SANs) available for this certificate.",
+    "unit": "Number",
+    "interpretation": "SANs list additional domain names or hostnames covered by the certificate beyond the primary CN. They are essential for multi‑domain hosting, UC certificates, and modern best practices where SANs, rather than CN, are used for hostname validation. A higher count indicates that a single certificate secures multiple domains or subdomains.",
+    "troubleshootingSteps": [
+      "Verify that all required hostnames for the service are included as SANs in the certificate.",
+      "When adding or removing domains from a service, ensure the certificate is reissued with an updated SAN list.",
+      "Avoid overloading a single certificate with unrelated domains if it complicates management or security boundaries.",
+      "Use SAN counts and details from diagnostics to plan certificate consolidation or separation strategies."
+    ]
+  },
+  {
+    "measurement": "Availability",
+    "description": "Indicates the percentage of available SSL connections.",
+    "unit": "Number",
+    "interpretation": "This reflects how often SSL connections to the monitored endpoint succeed without errors. High availability (ideally 100%) is required to ensure reliable, secure communication; lower values indicate frequent connection failures, timeouts, or certificate‑related issues impacting users.",
+    "troubleshootingSteps": [
+      "Investigate periods where SSL availability drops, correlating with server logs, load, and certificate status metrics.",
+      "Check for intermittent network problems, TLS handshake failures, or resource exhaustion on the server.",
+      "Verify that certificates are valid, trusted, and correctly configured, as misconfigurations can reduce SSL availability.",
+      "Implement redundancy (e.g., multiple servers, load balancers) and proactive monitoring to maintain near‑100% SSL availability."
+    ]
+  }
+]

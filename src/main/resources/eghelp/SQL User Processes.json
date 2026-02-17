@@ -1,0 +1,122 @@
+[
+  {
+    "measurement": "Total processes",
+    "description": "Indicates the total number of sessions currently open on the server for this user.",
+    "unit": "Number",
+    "interpretation": "This shows how many server sessions are associated with the user at the moment. A steadily high count may indicate that the user or its applications keep many connections open, which can increase memory usage and overall server overhead.",
+    "troubleshootingSteps": [
+      "Monitor this value over time to establish a normal range of concurrent sessions per user.",
+      "If total processes for a user are unusually high, check whether the application is opening multiple connections unnecessarily instead of reusing them.",
+      "Review connection management and pooling settings in the client application to ensure sessions are closed when no longer needed.",
+      "Use detailed diagnostics to see which hosts and programs are creating the sessions and whether they align with expected usage."
+    ]
+  },
+  {
+    "measurement": "Running processes",
+    "description": "Indicates the number of sessions of this user that are currently active.",
+    "unit": "Number",
+    "interpretation": "These are user sessions that are actively executing work rather than waiting or idle. A higher number means more concurrent activity for that user, which may be normal for busy applications but can contribute to CPU and I/O load when excessive. Detailed diagnostics reveal which applications and hosts are driving the active sessions.",
+    "troubleshootingSteps": [
+      "Correlate running processes with CPU, I/O, and wait statistics to determine whether this user’s activity is a major contributor to load.",
+      "Use detailed diagnostics to inspect the queries and commands being executed by active sessions and tune expensive ones.",
+      "If many sessions are active simultaneously for a single user or application, consider whether workload can be queued, batched, or throttled.",
+      "Verify that transaction scopes are reasonable and that long-running operations are not keeping sessions in the running state unnecessarily."
+    ]
+  },
+  {
+    "measurement": "Sleeping processes",
+    "description": "Indicates the number of sessions initiated by this user that are currently idle.",
+    "unit": "Number",
+    "interpretation": "Sleeping sessions are connected but not currently executing work. A high number indicates many idle connections consuming resources and potentially holding onto pooled connections, which can starve other clients of available connections.",
+    "troubleshootingSteps": [
+      "Review client application behavior to ensure that connections are closed or returned to the pool when idle, rather than left open indefinitely.[web:223][web:107]",
+      "Use detailed diagnostics to see which hosts and programs own the sleeping sessions and whether they are expected to remain idle.",
+      "Investigate whether sleeping sessions are holding locks or transactions open, which can lead to blocking or deadlocks.[web:224][web:226]",
+      "If a large number of idle sessions persists, consider implementing connection timeouts or maximum idle times at the application or database level."
+    ]
+  },
+  {
+    "measurement": "Suspended processes",
+    "description": "Indicates the number of sessions initiated by this user that are currently suspended.",
+    "unit": "Number",
+    "interpretation": "Suspended sessions are waiting on a resource (such as locks, I/O, memory, or network) and cannot proceed until that wait is satisfied.[web:220][web:221] A high count suggests resource contention or blocking affecting this user’s workload.",
+    "troubleshootingSteps": [
+      "Use wait statistics and session-level DMVs to identify the wait types associated with suspended sessions (for example, LCK_*, PAGEIOLATCH, ASYNC_NETWORK_IO).[web:220][web:221][web:222]",
+      "If waits are lock-related, analyze blocking chains and tune queries or transaction design to reduce lock contention.[web:107]",
+      "If waits are I/O-related, examine storage performance and high-I/O queries for opportunities to improve indexing or data layout.",
+      "Address network-related waits (such as ASYNC_NETWORK_IO) by checking application result consumption and network throughput."
+    ]
+  },
+  {
+    "measurement": "Background processes",
+    "description": "Indicates the number of background processes currently running for this user.",
+    "unit": "Number",
+    "interpretation": "Background processes are worker sessions performing non-interactive or system-type tasks on behalf of the user or associated application. A higher number can reflect scheduled jobs, service tasks, or asynchronous operations.",
+    "troubleshootingSteps": [
+      "Use detailed diagnostics to identify the nature of these background processes and confirm that they are expected (for example, jobs, service tasks).",
+      "Check that background tasks are scheduled appropriately and not overlapping in ways that cause excessive resource usage.",
+      "Tune or reschedule heavy background operations to off-peak times if they impact interactive performance.",
+      "Ensure that misbehaving or orphaned background processes are not running indefinitely without supervision."
+    ]
+  },
+  {
+    "measurement": "Blocked processes",
+    "description": "Indicates the number of processes that were currently blocked for this user.",
+    "unit": "Number",
+    "interpretation": "Blocked processes are waiting on locks held by other sessions. A low value is desirable; a high count indicates significant blocking affecting this user. Long-held locks by other sessions can stall these processes until locks are released.",
+    "troubleshootingSteps": [
+      "Analyze blocking chains to determine which sessions are the blockers and which are victims; focus on long-running blocking sessions first.[web:107]",
+      "Tune or redesign queries that frequently hold locks for long periods, reducing transaction duration and lock footprint.",
+      "Where appropriate, consider terminating sessions that hold locks excessively and cannot be otherwise tuned, being mindful of transactional impact.",
+      "Review isolation levels and consider optimistic or row-versioned isolation if blocking between readers and writers is a recurring issue."
+    ]
+  },
+  {
+    "measurement": "Dormant processes",
+    "description": "Indicates the number of processes of the session that were reset for this user.",
+    "unit": "Number",
+    "interpretation": "Dormant processes represent sessions that have been reset and are not actively in use. While they may not be consuming significant CPU, they can still represent residual connection state and should be understood in context.",
+    "troubleshootingSteps": [
+      "Use detailed diagnostics to determine why these processes were reset (for example, application disconnects, errors, or explicit resets).",
+      "Check application logs to see if frequent resets are associated with errors or timeouts that need fixing.",
+      "If many dormant sessions are seen regularly, revisit connection handling logic to reduce unnecessary session resets.",
+      "Ensure that dormant sessions are eventually closed or cleaned up by the application or server."
+    ]
+  },
+  {
+    "measurement": "Pending processes",
+    "description": "Indicates the number of processes of each session that were waiting for a worker thread to become available for this user.",
+    "unit": "Number",
+    "interpretation": "Pending processes are queued, waiting for an available worker thread. A high count indicates worker thread pressure or scheduler congestion, which can lead to slow response times.",
+    "troubleshootingSteps": [
+      "Monitor overall worker thread usage and max worker threads configuration to determine whether the server is thread-starved.",
+      "Identify heavy or long-running requests that hold worker threads for extended periods and tune them to complete more quickly.",
+      "Limit excessive parallelism or concurrent requests from this user’s applications if they are saturating worker pools.",
+      "Consider scaling up or out if normal workloads routinely exhaust available worker threads."
+    ]
+  },
+  {
+    "measurement": "Spinloop processes",
+    "description": "Indicates the number of processes of this user that were waiting for a spinlock to become free.",
+    "unit": "Number",
+    "interpretation": "Spinlocks are lightweight synchronization primitives used to protect highly contended internal data structures. Processes waiting on spinlocks repeatedly loop on CPU instead of yielding immediately, so a high value here suggests spinlock contention and can translate to wasted CPU and reduced scalability.[web:220]",
+    "troubleshootingSteps": [
+      "Examine spinlock-related DMVs to identify which spinlock types are experiencing contention (for example, by reviewing collisions, spins, and backoffs).[web:220]",
+      "Correlate spinlock waits with high CPU usage and transaction rates; high spins and backoffs alongside rising CPU are classic signs of spinlock contention.[web:220]",
+      "Investigate application patterns that may cause high contention on specific internal structures (for example, hot metadata, allocation maps, or caches) and adjust designs to reduce contention.",
+      "Consider SQL Server updates or configuration changes if known spinlock-related issues are documented for your version."
+    ]
+  },
+  {
+    "measurement": "Rollback processes",
+    "description": "Indicates the total number of processes that were rolled back for this user.",
+    "unit": "Number",
+    "interpretation": "These are processes whose transactions have been rolled back, either due to errors, explicit ROLLBACK statements, timeouts, or termination. Rollbacks can be lengthy for large transactions and may reflect stability or design issues if frequent.[web:107]",
+    "troubleshootingSteps": [
+      "Use detailed diagnostics to identify the queries and transactions that were rolled back and the reasons (errors, deadlocks, timeouts, or manual kills).",
+      "If large transactions frequently roll back, consider breaking them into smaller units of work to reduce rollback cost and risk.[web:107]",
+      "Address recurring application or logic errors that cause rollbacks, such as constraint violations or deadlocks.",
+      "Monitor the impact of rollbacks on performance, especially if long rollbacks are frequently tying up resources."
+    ]
+  }
+]

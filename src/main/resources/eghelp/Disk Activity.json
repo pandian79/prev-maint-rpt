@@ -1,0 +1,104 @@
+[
+  {
+    "Measurement": "Disk busy",
+    "Description": "Percentage of elapsed time during which the disk is busy processing requests (i.e.,reads or writes)",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Comparing the percentage of time that the different disks are busy, an administrator can determine whether the application load is properly balanced across the different disks. The detailed diagnosis of this measure (if enabled) lists the processes executing on the disk and the IO operations performed by them."
+  },
+  {
+    "Measurement": "Disk busy due to reads",
+    "Description": "Percentage of elapsed time that the selected disk drive is busy servicing read requests",
+    "MeasurementUnit": "Percent",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Disk busy due to writes",
+    "Description": "Percentage of elapsed time that the selected disk drive is busy servicing write requests",
+    "MeasurementUnit": "Percent",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Disk read time",
+    "Description": "Average time in seconds of a read of data from the disk",
+    "MeasurementUnit": "Secs",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Disk write time",
+    "Description": "Average time in seconds of a write of data from the disk",
+    "MeasurementUnit": "Secs",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Avg queue length",
+    "Description": "The average number of both read and write requests that were queued for the selected disk during the sample interval",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The detailed diagnosis of this measure (if enabled) lists the processes executing on the disk and the IO operations performed by them."
+  },
+  {
+    "Measurement": "Current disk queue length",
+    "Description": "The number of requests outstanding on the disk at the time the performance data is collected",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure includes requests in service at the time of the snapshot. This is an instantaneous length, not an average over the time interval. Multi-spindle disk devices can have multiple requests active at one time, but other concurrent requests are awaiting service. This counter might reflect a transitory high or low queue length, but if there is a sustained load on the disk drive, it is likely that this will be consistently high. Requests experience delays proportional to the length of this queue minus the number of spindles on the disks. This difference should average less than two for good performance."
+  },
+  {
+    "Measurement": "Disk read rate",
+    "Description": "Indicates the number of reads happening on a logical disk per second.",
+    "MeasurementUnit": "Reads/Sec",
+    "Interpretation": "A dramatic increase in this value may be indicative of an I/O bottleneck on the server."
+  },
+  {
+    "Measurement": "Data read rate from disk",
+    "Description": "The rate at which bytes are transferred from the disk during read operations",
+    "MeasurementUnit": "KBytes/Sec",
+    "Interpretation": "A very high value indicates an I/O bottleneck on the server."
+  },
+  {
+    "Measurement": "Disk write rate",
+    "Description": "Indicates the number of writes happening on a local disk per second.",
+    "MeasurementUnit": "Writes/Sec",
+    "Interpretation": "A dramatic increase in this value may be indicative of an I/O bottleneck on the server."
+  },
+  {
+    "Measurement": "Data write rate to disk",
+    "Description": "The rate at which bytes are transferred from the disk during write operations",
+    "MeasurementUnit": "KBytes/Sec",
+    "Interpretation": "A very high value indicates an I/O bottleneck on the server."
+  },
+  {
+    "Measurement": "Disk service time",
+    "Description": "Indicates the average time that this disk took to service each transfer request ( i.e., the average I/O operation time).",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "A sudden rise in the value of this measure can be attributed to a large amount of information being input or output. A consistent increase however, could indicate an I/O processing bottleneck."
+  },
+  {
+    "Measurement": "Disk queue time",
+    "Description": "Indicates the average time that transfer requests waited idly on queue for this disk.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "Ideally, the value of this measure should be low."
+  },
+  {
+    "Measurement": "Disk response time",
+    "Description": "Indicates the avarage time taken for read and write operations of this disk.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "The value of this measure is the sum of the values of the Disk service time and Disk queue time measures. A consistent increase in the value of this measure could indicate a latency in I/O processing."
+  },
+  {
+    "Measurement": "Avg IO read size",
+    "Description": "Indicates the average number of bytes transferred from disk during read operations.",
+    "MeasurementUnit": "KB",
+    "Interpretation": "Larger I/Os tend to have higher latency (for example, BACKUP/RESTORE operations issue 1 MB transfers by default). These measures are reported for Windows VMs only."
+  },
+  {
+    "Measurement": "Avg IO write size",
+    "Description": "Indicates the average number of bytes transferred into disk during write operations.",
+    "MeasurementUnit": "KB",
+    "Interpretation": "Larger I/Os tend to have higher latency (for example, BACKUP/RESTORE operations issue 1 MB transfers by default). These measures are reported for Windows VMs only."
+  },
+  {
+    "Measurement": "Split IO",
+    "Description": "Reports the rate at which the operating system divides I/O requests to the disk into multiple requests.",
+    "MeasurementUnit": "Splits/Sec",
+    "Interpretation": "A split I/O request might occur if the program requests data in a size that is too large to fit into a single request or if the disk is fragmented. Factors that influence the size of an I/O request can include application design, the file system, or drivers. A high rate of split I/O might not, in itself, represent a problem. However, on single-disk systems, a high rate for this counter tends to indicate disk fragmentation. This measure is reported for Windows VMs only."
+  }
+]

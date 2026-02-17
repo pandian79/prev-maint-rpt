@@ -1,0 +1,26 @@
+[
+  {
+    "measurement": "Signature status",
+    "description": "Indicates the current status of this security product.",
+    "measurementUnit": null,
+    "interpretation": "Unknown=20, Up to date=15, Out of date=10. The graph uses the numeric values, while the raw measure reports the string values. Detailed diagnosis shows the Windows system name, executable paths, and current product status.",
+    "troubleshootingSteps": [
+      "If the signature status is 'Out of date', trigger an on-demand signature update from the product console or via your management tool, and confirm the update completes successfully.[web:55][web:56][web:58][web:65][web:68]",
+      "Verify the endpoint has internet or update-server connectivity (proxy, firewall, and content-filter rules) to reach the vendor’s update endpoints.[web:55][web:57][web:58]",
+      "Check that no other security product is interfering with updates or Windows Security Center reporting; remove or reconfigure conflicting products if necessary.[web:58][web:59][web:64][web:66]",
+      "If the console still reports an old or 'Unknown' status while local signatures are current, force a status/definition resync or open a ticket, as backend or agent reporting bugs are common.[web:59][web:62][web:63][web:64]"
+    ]
+  },
+  {
+    "measurement": "Product status",
+    "description": "Indicates the real-time protection status of this security product.",
+    "measurementUnit": null,
+    "interpretation": "Unknown=25, Snoozed=20, On=15, Expired=10, Off=0. The graph uses the numeric values, while the raw measure reports the string values.",
+    "troubleshootingSteps": [
+      "For 'Off' or 'Snoozed', attempt to turn real-time protection back on from the product UI or management console, and confirm that services and drivers start correctly.[web:60][web:63][web:66][web:69]",
+      "If protection is 'Expired', verify license/subscription status and renew or reassign a valid license so the product can re-enable full protection.[web:56][web:60][web:69]",
+      "Investigate any repeated or unexplained transitions between 'On' and 'Off/Snoozed' by reviewing product logs and Windows event logs for crashes, tamper events, or policy changes.[web:60][web:63][web:66][web:69]",
+      "Where portal status appears stuck in 'Off' or 'Unknown' despite the endpoint showing protection as enabled, force a status refresh or reinstall/repair the agent to fix reporting issues.[web:59][web:60][web:62][web:63][web:67]"
+    ]
+  }
+]

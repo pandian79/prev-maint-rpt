@@ -1,0 +1,170 @@
+[
+  {
+    "measurement": "Cluster type of this manager",
+    "description": "Indicates whether the eG manager is operating within a redundant cluster, and if so, the type of cluster.",
+    "unit": "Text with numeric equivalents",
+    "interpretation": "This measure reports one of three values: Not supported (0) when clustering is not enabled or supported, Active-Active (1) when multiple managers actively share load, or Active-Passive (2) when a primary manager is backed by a standby. Graphs use the numeric values 0, 1, and 2.",
+    "troubleshootingSteps": [
+      "Confirm that the reported cluster type matches the intended deployment design (for example, Active-Passive for failover, Active-Active for load sharing).",
+      "If the value is Not supported (0) but clustering was expected, review cluster configuration and licensing settings.",
+      "In Active-Active or Active-Passive setups, ensure that both managers can reach shared resources (database, storage, network) required for failover or synchronization.",
+      "Document and monitor changes in cluster type as part of change management to avoid unexpected topology shifts."
+    ]
+  },
+  {
+    "measurement": "Is this primary manager?",
+    "description": "Indicates whether this eG manager is the primary manager in the cluster.",
+    "unit": "Boolean (Yes=1, No=0)",
+    "interpretation": "Reported only when clustering is supported (cluster type is not Not supported). A value of Yes (1) marks this instance as primary, while No (0) indicates a secondary or standby role.",
+    "troubleshootingSteps": [
+      "Verify that the intended node is acting as the primary, especially after maintenance or failover events.",
+      "If the wrong node is marked primary, check cluster failover policies, priorities, and recent events that may have caused a role switch.",
+      "Monitor transitions between Yes and No to track failovers and ensure they correlate with planned or fault events.",
+      "Ensure monitoring and integrations that rely on primary status are aware of and resilient to role changes."
+    ]
+  },
+  {
+    "measurement": "Is this manager running?",
+    "description": "Indicates whether this manager is currently running.",
+    "unit": "Boolean (Yes=1, No=0)",
+    "interpretation": "A value of Yes (1) means the manager service is up; No (0) means it is down. Graphs show 1 or 0 accordingly.",
+    "troubleshootingSteps": [
+      "If this measure reports No, immediately check the manager host to verify whether the service has stopped or crashed and restart it if necessary.",
+      "Review system and application logs to identify reasons for unexpected stoppages (resource exhaustion, configuration errors, crashes).",
+      "Implement monitoring alerts so that any transition from Yes to No generates immediate notification.",
+      "Verify that high availability or failover mechanisms are functioning correctly when a manager is not running."
+    ]
+  },
+  {
+    "measurement": "Is other manager in this cluster running?",
+    "description": "Indicates whether the other manager in the cluster is currently running.",
+    "unit": "Boolean (Yes=1, No=0)",
+    "interpretation": "Yes (1) means the peer manager is up; No (0) means the peer is down. This measure helps assess cluster health and redundancy.",
+    "troubleshootingSteps": [
+      "If this value is No, confirm the status of the peer manager and attempt a controlled restart if it is unexpectedly down.",
+      "Investigate network connectivity between cluster nodes to ensure that they can see each other and avoid split-brain scenarios.",
+      "Monitor simultaneous changes to both this and the local manager’s running status to detect full cluster outages.",
+      "Use this measure to verify that planned maintenance on one node still leaves at least one manager running for continuity."
+    ]
+  },
+  {
+    "measurement": "Data storage on this manager",
+    "description": "Indicates whether data is currently stored on this manager for transmission to the other manager in the cluster.",
+    "unit": "Text with numeric equivalents (No=0, Yes=1, Uploading=2)",
+    "interpretation": "No (0) means no pending stored data; Yes (1) means data has been stored and is waiting to be sent; Uploading (2) indicates that stored data is actively being transmitted. This reflects how the manager buffers data destined for its peer.",
+    "troubleshootingSteps": [
+      "If the value remains Yes (1) for long periods without transitioning to Uploading (2), investigate connectivity and transfer mechanisms between managers.",
+      "When Uploading (2) persists unusually long, check bandwidth and resource usage to ensure that large backlogs are being cleared efficiently.",
+      "Ensure that storage limits and configuration are sufficient so that buffered data is not lost in case of temporary connectivity issues.",
+      "Monitor transitions among No, Yes, and Uploading to understand normal buffering patterns and detect anomalies."
+    ]
+  },
+  {
+    "measurement": "Files stored for other manager",
+    "description": "Indicates the number of files currently waiting to be sent by this manager to the other manager.",
+    "unit": "Number",
+    "interpretation": "This shows how many temporary files are queued for transmission to the peer manager. Along with data size limits, it reflects how much buffered data is pending. Consistently high values relative to configured limits suggest that temporary storage is under-provisioned for the volume of data being generated.",
+    "troubleshootingSteps": [
+      "Compare this value against the configured filesPerManager limit in eg_managers.ini to see how close the manager is to its maximum allowed files.",
+      "If the number of files frequently approaches the limit, increase filesPerManager and/or maxStoragePerFile to safely handle peak volumes.",
+      "Investigate why data is not being transmitted quickly enough (network issues, peer manager load, or transfer thread bottlenecks).",
+      "Monitor trends over time to ensure that file queues grow and drain as expected, rather than accumulating steadily."
+    ]
+  },
+  {
+    "measurement": "Data stored for other manager",
+    "description": "Indicates the amount of data currently waiting to be sent by this manager to the other manager.",
+    "unit": "MB",
+    "interpretation": "This measure shows the total size of buffered data queued for transmission. High or rising values, especially near the theoretical maximum (maxStoragePerFile × filesPerManager), indicate that the manager is holding a large backlog for the peer, with potential data-loss risk if a failure occurs.",
+    "troubleshootingSteps": [
+      "Compare this value to the effective capacity defined by maxStoragePerFile and filesPerManager in eg_managers.ini to gauge headroom.",
+      "If data stored is often near capacity, increase these limits or reduce the data generation rate by tuning what is transmitted.",
+      "Investigate delays in transmission to the other manager and resolve any network or peer-performance bottlenecks.",
+      "Consider additional safeguards (for example, more frequent synchronization or alternative storage) to reduce the risk of data loss if the manager fails while holding large buffers."
+    ]
+  },
+  {
+    "measurement": "Agents assigned to this manager",
+    "description": "Indicates the number of agents that have been explicitly assigned to this manager.",
+    "unit": "Number",
+    "interpretation": "This is the configured assignment count, reflecting how many agents are supposed to report to this manager. It is useful for capacity planning and balancing agent load across managers.",
+    "troubleshootingSteps": [
+      "Review this count against sizing guidelines for the manager to ensure that it is not over-subscribed.",
+      "Balance assignments across managers in a cluster so no single manager is overwhelmed relative to peers.",
+      "When scaling out, gradually redistribute agent assignments and monitor performance to validate improved balance.",
+      "Ensure that assignment changes are reflected in configuration management and documentation."
+    ]
+  },
+  {
+    "measurement": "Agents reporting to this manager",
+    "description": "Indicates the number of agents that are currently reporting metrics to this manager.",
+    "unit": "Number",
+    "interpretation": "This represents actual, live reporting agents, which can differ from the number explicitly assigned (due to connectivity issues, agent failures, or reassignment). A lower-than-assigned count may indicate connectivity or agent problems.",
+    "troubleshootingSteps": [
+      "Compare this value to Agents assigned to this manager to identify agents that may be offline or misconfigured.",
+      "Investigate agents that are assigned but not reporting, checking network paths, credentials, and agent health.",
+      "Monitor changes in this metric after configuration or network changes to confirm that agents reconnect as expected.",
+      "Use this value for real-time capacity analysis, verifying that the manager can handle its current active agent load."
+    ]
+  },
+  {
+    "measurement": "Test data in queue",
+    "description": "Indicates the number of test data items currently waiting to be sent by this manager to the other manager.",
+    "unit": "Number",
+    "interpretation": "This is the queue depth for test-related data pending transmission. Growing or persistently high values suggest that processing or transmission is lagging behind data generation.",
+    "troubleshootingSteps": [
+      "Track this queue size over time to ensure that it increases only transiently and then drains; persistent growth indicates a bottleneck.",
+      "Correlate spikes with manager CPU, memory, and thread usage to identify resource constraints.",
+      "Verify that threads allocated for processing test data are sufficient and not blocked by other workloads.",
+      "If necessary, increase the maximum number of allocated threads carefully while monitoring memory usage and overall performance."
+    ]
+  },
+  {
+    "measurement": "DDD data in queue",
+    "description": "Indicates the number of DDD data items currently waiting to be sent by this manager to the other manager.",
+    "unit": "Number",
+    "interpretation": "This reflects the queue depth for DDD data. Similar to test data, a large or growing queue suggests that processing or transmission is not keeping up with data generation.",
+    "troubleshootingSteps": [
+      "Monitor DDD data in queue alongside Test data in queue to see whether both types are accumulating or one dominates.",
+      "Investigate whether specific jobs or features generate large volumes of DDD data and tune them if possible.",
+      "Ensure that sufficient threads are available to process DDD data without excessively starving test data processing.",
+      "If queues remain high despite tuning, consider scaling resources or adjusting configuration to better handle peak loads."
+    ]
+  },
+  {
+    "measurement": "Maximum number of allocated threads",
+    "description": "Indicates the maximum number of threads allocated for processing test and DDD data that are currently waiting to be sent by this manager to the other manager.",
+    "unit": "Number",
+    "interpretation": "This is the configured upper limit on worker threads used for processing outbound test and DDD data. It constrains parallelism and protects the manager from over-consuming memory and CPU, but if set too low can cause queues to grow and timeouts.",
+    "troubleshootingSteps": [
+      "Evaluate this limit in the context of CPU cores, memory, and observed queue lengths for test and DDD data.",
+      "If queues are frequently large and thread usage is high, consider incrementally increasing this value while monitoring the impact on resource utilization.",
+      "Avoid setting the thread limit so high that it causes excessive context switching or memory pressure on the manager.",
+      "Reassess this configuration after hardware upgrades or significant workload changes."
+    ]
+  },
+  {
+    "measurement": "Test data thread usage",
+    "description": "Indicates the percentage of threads used for processing the test data to be sent by this manager to the other manager.",
+    "unit": "Percent",
+    "interpretation": "Computed as a ratio of Test data in queue to Maximum number of allocated threads. A high value indicates that most available threads are busy handling test data, which can limit the ability to process other workloads (such as DDD data).",
+    "troubleshootingSteps": [
+      "When this value is high, inspect both test data queues and thread counts to confirm that thread capacity is acting as a bottleneck.",
+      "Consider increasing the maximum number of allocated threads cautiously if hardware resources allow, to reduce test data processing latency.",
+      "Tune the generation rate and size of test data, or schedule heavy test workloads during off-peak times.",
+      "Ensure that DDD processing is not starved; balance thread allocation and priorities so test data does not monopolize all worker threads."
+    ]
+  },
+  {
+    "measurement": "DDD data thread usage",
+    "description": "Indicates the percentage of threads used for processing the DDD data to be sent by this manager to the other manager.",
+    "unit": "Percent",
+    "interpretation": "Computed as a ratio of DDD data in queue to Maximum number of allocated threads. A high value indicates that many threads are occupied with DDD data, potentially impacting the timely processing of test data or other tasks.",
+    "troubleshootingSteps": [
+      "Monitor DDD data thread usage together with Test data thread usage to identify which workload is dominating thread consumption.",
+      "If DDD data thread usage is consistently high, optimize DDD data volume and frequency where possible, or increase thread capacity cautiously.",
+      "Ensure that critical test data processing is not excessively delayed by DDD workloads; adjust scheduling and prioritization if needed.",
+      "Revisit the overall thread allocation strategy whenever workload patterns or hardware resources change to maintain a balanced and responsive system."
+    ]
+  }
+]

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eG Preventive Maintenance - KPI Compliance Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            font-family: Arial, Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f5f7fa; 
+        }
+        .header-section { 
+            background: linear-gradient(135deg, #474747 0%, #ffffff 100%); 
+            color: white; 
+            padding: 40px 0; 
+            margin-bottom: 30px; 
+        }
+        .header-section h1 { 
+            font-weight: 600; 
+            margin-bottom: 10px; 
+        }
+        .header-section .subtitle { 
+            opacity: 0.9; 
+            font-size: 1.1rem; 
+        }
+        .kpi-card { 
+            margin-bottom: 30px; 
+            border: none; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+        }
+        .kpi-card .card-header { 
+            background-color: #474747; 
+            color: white; 
+            font-weight: 500; 
+            padding: 15px 20px; 
+        }
+        .kpi-card .card-body { 
+            padding: 25px; 
+        }
+        .status-compliant { 
+            border-left: 5px solid #28a745; 
+        }
+        .status-non-compliant { 
+            border-left: 5px solid #dc3545; 
+        }
+        .status-needs-review { 
+            border-left: 5px solid #ffc107; 
+        }
+        .section-title { 
+            color: #F29305; 
+            font-weight: 600; 
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+            border-bottom: 2px solid #e9ecef; 
+            padding-bottom: 5px; 
+        }
+        .interpretation-box { 
+            background-color: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin: 15px 0; 
+        }
+        .ai-analysis { 
+            background-color: #ededed; 
+            padding: 20px; 
+            border-radius: 4px; 
+            margin: 15px 0; 
+        }
+        .ai-analysis-compliant {
+            border-left: 4px solid #28a745;
+        }
+        .ai-analysis-non-compliant {
+            border-left: 4px solid #dc3545;
+        }
+        .ai-analysis-needs-review {
+            border-left: 4px solid #ffc107;
+        }
+        .footer-section { 
+            background-color: #1e3a8a; 
+            color: white; 
+            padding: 30px 0; 
+            margin-top: 50px; 
+        }
+        .caveat-box { 
+            background-color: #fff3cd; 
+            border: 1px solid #ffc107; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin: 20px 0; 
+        }
+        .detail-table { 
+            font-size: 0.9rem; 
+        }
+        .detail-table td { 
+            padding: 8px; 
+        }
+        .detail-table td:first-child { 
+            font-weight: 600; 
+            color: #495057; 
+            width: 180px; 
+        }
+        .badge-compliant {
+            background-color: #28a745 !important;
+            color: #fff !important;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+        }
+        .badge-non-compliant {
+            background-color: #dc3545 !important;
+            color: #fff !important;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+        }
+        .badge-needs-review {
+            background-color: #ffc107 !important;
+            color: #000 !important;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+        }
+        .summary-card {
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .summary-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .kpi-summary-table {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .kpi-summary-table table {
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .kpi-summary-table th {
+            background-color: #474747;
+            color: white;
+            font-weight: 500;
+            padding: 12px;
+        }
+        .kpi-summary-table td {
+            padding: 10px 12px;
+            vertical-align: middle;
+        }
+        .kpi-summary-table a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+        .kpi-summary-table a:hover {
+            text-decoration: underline;
+        }
+        .kpi-summary-table tr:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header-section">
+        <div class="container">
+            <h1>eG Preventive Maintenance Report</h1>
+            <p class="subtitle">KPI Compliance Analysis - AI-Powered Health Assessment</p>
+            <p class="subtitle" th:text="'Source: ' + ${zipFileName}">Source: </p>
+            <p class="subtitle" th:text="'Generated: ' + ${timestamp}">Generated: </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- AI Caveat -->
+        <div class="caveat-box">
+            <h5><strong>⚠️ Important Notice - AI-Generated Analysis</strong></h5>
+            <p class="mb-2">This report has been generated using <strong>on-premise AI analysis</strong> 
+            powered by Ollama. Your data has <strong>NOT been shared</strong> with any cloud-based LLM systems 
+            or external services. All analysis was performed locally on your infrastructure.</p>
+            <p class="mb-0"><strong>Action Required:</strong> Please verify the accuracy of the AI analysis 
+            before taking any corrective actions. While the AI provides valuable insights, human expertise and 
+            domain knowledge should always be applied when making critical infrastructure decisions.</p>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="row mt-4">
+            <!-- Total checks -->
+            <div class="col-md-3">
+                <div class="card summary-card" style="background-color: #e3f2fd;">
+                    <h3 th:text="${totalChecks}">0</h3>
+                    <p class="mb-0">Total KPI Checks</p>
+                </div>
+            </div>
+            
+            <!-- Compliant -->
+            <div class="col-md-3">
+                <div class="card summary-card" style="background-color: #d4edda;">
+                    <h3 style="color: #28a745;" th:text="${compliantCount}">0</h3>
+                    <p class="mb-0">Compliant</p>
+                </div>
+            </div>
+            
+            <!-- Non-compliant -->
+            <div class="col-md-3">
+                <div class="card summary-card" style="background-color: #f8d7da;">
+                    <h3 style="color: #dc3545;" th:text="${nonCompliantCount}">0</h3>
+                    <p class="mb-0">Non-Compliant</p>
+                </div>
+            </div>
+            
+            <!-- Needs review -->
+            <div class="col-md-3">
+                <div class="card summary-card" style="background-color: #fff3cd;">
+                    <h3 style="color: #856404;" th:text="${needsReviewCount}">0</h3>
+                    <p class="mb-0">Needs Review</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Summary Table -->
+        <div class="kpi-summary-table">
+            <h2 class="section-title">KPI Compliance Summary</h2>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">#</th>
+                        <th style="width: 20%">Component</th>
+                        <th style="width: 20%">Test</th>
+                        <th style="width: 25%">Measure</th>
+                        <th style="width: 15%">Timeline</th>
+                        <th style="width: 15%">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="result, iterStat : ${results}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td>
+                            <a th:href="'#kpi_' + ${result.kpiId}" th:text="${result.componentName}">Component</a>
+                        </td>
+                        <td th:text="${result.test}">Test</td>
+                        <td th:text="${result.measure}">Measure</td>
+                        <td th:text="${result.timeline}">Timeline</td>
+                        <td>
+                            <span th:class="'badge ' + ${result.badgeClass}" 
+                                  th:text="${result.complianceStatus}">STATUS</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- KPI Compliance Details -->
+        <h2 class="section-title mt-4">KPI Compliance Details</h2>
+        
+        <div th:each="result : ${results}" 
+             th:id="'kpi_' + ${result.kpiId}" 
+             th:class="'card kpi-card ' + ${result.statusClass}">
+            
+            <!-- Card Header -->
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span th:text="${result.checkName}">Check Name</span>
+                <span th:class="'badge ' + ${result.badgeClass}" 
+                      th:text="${result.complianceStatus}">STATUS</span>
+            </div>
+            
+            <!-- Card Body -->
+            <div class="card-body">
+                <!-- Details Table -->
+                <table class="table table-sm detail-table">
+                    <tr>
+                        <td>Component:</td>
+                        <td th:text="${result.componentName}">Component</td>
+                    </tr>
+                    <tr>
+                        <td>Component Type:</td>
+                        <td th:text="${result.componentType}">Type</td>
+                    </tr>
+                    <tr>
+                        <td>Test:</td>
+                        <td th:text="${result.test}">Test</td>
+                    </tr>
+                    <tr>
+                        <td>Measure:</td>
+                        <td th:text="${result.measure}">Measure</td>
+                    </tr>
+                    <tr>
+                        <td>Timeline:</td>
+                        <td th:text="${result.timeline}">Timeline</td>
+                    </tr>
+                    <tr th:if="${result.measurementUnit != null and !result.measurementUnit.isEmpty()}">
+                        <td>Unit:</td>
+                        <td th:text="${result.measurementUnit}">Unit</td>
+                    </tr>
+                </table>
+
+                <!-- Description -->
+                <div class="mt-3" th:if="${result.description != null and !result.description.isEmpty()}">
+                    <h6 class="section-title">Description</h6>
+                    <p th:text="${result.description}">Description text</p>
+                </div>
+
+                <!-- Interpretation -->
+                <div class="interpretation-box" 
+                     th:if="${result.interpretation != null and !result.interpretation.isEmpty()}">
+                    <h6><strong>Interpretation Guide</strong></h6>
+                    <p class="mb-0" th:text="${result.interpretation}">Interpretation text</p>
+                </div>
+
+                <!-- AI Analysis -->
+                <div th:if="${result.aiAnalysis != null and !result.aiAnalysis.isEmpty()}" 
+                     th:class="'ai-analysis ' + ${result.aiAnalysisClass}">
+                    <h6><strong>🤖 AI Analysis</strong></h6>
+                    <div th:utext="${result.aiAnalysisHtml}">AI Analysis HTML</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-section">
+        <div class="container text-center">
+            <p>eG Innovations - Enterprise Monitoring Platform</p>
+            <p>This report was generated using on-premise AI analysis without cloud data transmission</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

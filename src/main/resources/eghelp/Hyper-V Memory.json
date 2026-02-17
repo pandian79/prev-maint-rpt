@@ -1,0 +1,32 @@
+[
+  {
+    "Measurement": "Run queue length",
+    "Description": "Indicates the instantaneous length of the queue in which threads are waiting for the processor cycle. This length does not include the threads that are currently being executed.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A value consistently greater than 2 indicates that many processes could be simultaneously contending for the processor."
+  },
+  {
+    "Measurement": "Number of blocked processes",
+    "Description": "Indicates the number of processes currently blocked for I/O, paging, etc.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value could indicate an I/O problem on the host (e.g., a slow disk)."
+  },
+  {
+    "Measurement": "Swap memory",
+    "Description": "This measurement denotes the committed amount of virtual memory. This corresponds to the space reserved for virtual memory on disk paging file(s).",
+    "MeasurementUnit": "MB",
+    "Interpretation": "An unusually high value for the swap usage can indicate a memory bottleneck. Check the memory utilization of individual processes to figure out the process(es) that has (have) maximum memory consumption and look to tune their memory usages and allocations accordingly."
+  },
+  {
+    "Measurement": "Free memory",
+    "Description": "Indicates the free memory available currently.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "A very low value of free memory is also an indication of high memory utilization on a host. The detailed diagnosis of this measure lists the top 10 processes responsible for maximum memory consumption on the host."
+  },
+  {
+    "Measurement": "Scan rate",
+    "Description": "Indicates the memory scan rate.",
+    "MeasurementUnit": "Pages/Sec",
+    "Interpretation": "A high value is indicative of memory thrashing. Excessive thrashing can be detrimental to application performance."
+  }
+]

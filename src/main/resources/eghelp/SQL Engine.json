@@ -1,0 +1,117 @@
+[
+  {
+    "measurement": "CPU usage",
+    "description": "The percentage of time for which the server's CPU was engaged in processing requests to the server.",
+    "unit": "Percent",
+    "interpretation": "A high value indicates a heavy load on the server. When CPU usage approaches 100%, subsequent requests may experience delays. Detailed diagnostics (for example, background process metrics) can identify which processes or queries are consuming excessive CPU resources.[web:153][web:156]",
+    "troubleshootingSteps": [
+      "Confirm that the SQL Server process is responsible for high CPU by checking OS-level process utilization (for example, Task Manager or perfmon counters for sqlservr.exe).[web:153]",
+      "Identify top CPU-consuming queries using DMVs (such as sys.dm_exec_query_stats, sys.dm_exec_requests) or standard reports/performance dashboards, and prioritize them for tuning.[web:153][web:156]",
+      "Optimize high-CPU queries by improving indexes, reducing scans and sorts, and updating statistics so the optimizer can choose better plans.[web:153][web:155]",
+      "Check for excessive parallelism or poorly configured MAXDOP and cost threshold settings, and adjust them if many queries are over-parallelized.[web:153][web:156]",
+      "If CPU remains persistently high even after tuning, consider scaling up CPU resources or scaling out read workloads (for example, read replicas or additional instances)."
+    ]
+  },
+  {
+    "measurement": "CPU usage for I/O",
+    "description": "The percentage of time for which the server was engaged in performing input/output operations.",
+    "unit": "Percent",
+    "interpretation": "This indicates how much CPU time is spent handling I/O-related activity. Elevated values can point to I/O-intensive workloads or inefficiencies in how data is read from and written to storage.",
+    "troubleshootingSteps": [
+      "Correlate CPU usage for I/O with disk latency metrics (for example, Avg. Disk sec/Read and Avg. Disk sec/Write) to determine whether the I/O subsystem is a bottleneck.[web:155][web:161]",
+      "Use file-level DMVs (such as sys.dm_io_virtual_file_stats) to locate databases and files with the highest read/write latency and I/O load.[web:155][web:158]",
+      "Tune queries that generate excessive physical reads or writes by adding indexes, reducing scanned data, and improving filtering and joins.[web:158]",
+      "Review file layout and move hot data or log files to faster or dedicated storage if I/O hot spots are identified.[web:155][web:158]",
+      "Ensure that memory and cache are sized appropriately so frequently accessed data can be served from RAM, reducing I/O-related CPU work.[web:158][web:161]"
+    ]
+  },
+  {
+    "measurement": "CPU idle time",
+    "description": "The percentage of time for which the server was idle.",
+    "unit": "Percent",
+    "interpretation": "A low value indicates high CPU utilization and little idle capacity. When idle time remains low for extended periods, it suggests that CPU is a limiting resource and may be causing performance degradation. Detailed diagnostics on background and sleeping processes can reveal which processes are overusing CPU and which remain idle for long periods.",
+    "troubleshootingSteps": [
+      "When CPU idle time is consistently low, investigate overall CPU usage patterns and confirm that SQL Server is the main consumer.[web:153][web:156]",
+      "Drill into session and query-level DMVs to find the most CPU-intensive requests and tune them as needed.[web:153]",
+      "Review scheduled jobs, maintenance tasks, or batch operations that might be running during business hours and consider moving them to off-peak times.",
+      "If other non-database processes on the server are consuming significant CPU, evaluate moving SQL Server to dedicated hardware or restricting background services.",
+      "Plan capacity upgrades or horizontal scaling if sustained low idle time persists even after optimization efforts."
+    ]
+  },
+  {
+    "measurement": "Packets received",
+    "description": "The rate at which input packets were read by the SQL Server.",
+    "unit": "Pkts/Sec",
+    "interpretation": "This reflects inbound network activity to the SQL Server and is a general indicator of server load and health. Normal values depend on workload; sudden drops or spikes may signal connectivity or workload issues.[web:154]",
+    "troubleshootingSteps": [
+      "Monitor trends in packets received alongside batch request rates and connection counts to understand normal workload patterns.[web:154]",
+      "Investigate sudden drops that may indicate network interruptions, client disconnects, or application failures.",
+      "Investigate sudden spikes that may represent traffic surges, potentially requiring connection pooling, throttling, or additional capacity.",
+      "Use network monitoring tools to verify that there is no packet loss or congestion between clients and the SQL Server."
+    ]
+  },
+  {
+    "measurement": "Packets sent",
+    "description": "The rate at which output packets were written by the SQL Server.",
+    "unit": "Pkts/Sec",
+    "interpretation": "This measures outbound network activity from the SQL Server and, together with packets received, serves as an indicator of the server’s health and client interaction levels.[web:154]",
+    "troubleshootingSteps": [
+      "Observe packets sent in relation to packets received to confirm that response traffic aligns with incoming workload.[web:154]",
+      "If packets sent drop unexpectedly while packets received remain high, check for query timeouts, server errors, or blocked responses.",
+      "If both sent and received rates are unusually low, investigate potential service outages, firewall blocks, or client-side issues.",
+      "Monitor network bandwidth utilization and latency to ensure that outgoing responses are not being throttled or delayed by network constraints."
+    ]
+  },
+  {
+    "measurement": "Packet errors",
+    "description": "The rate at which packet errors occurred.",
+    "unit": "Errors/Sec",
+    "interpretation": "Ideally, this value should be zero. Packet errors indicate network communication issues between clients and the SQL Server and can result in failed or retried connections and degraded performance.[web:157][web:160]",
+    "troubleshootingSteps": [
+      "If packet errors are non-zero, query @@PACKET_ERRORS or run sp_monitor to see cumulative error counts since server startup.[web:157][web:160]",
+      "Check network hardware (NICs, switches, routers) and drivers for faults, misconfigurations, or outdated firmware that might cause packet corruption or loss.",
+      "Review firewall, VPN, and load balancer configurations to ensure they are not introducing errors or dropping packets under load.",
+      "Coordinate with network administrators to test network paths, replace faulty components, or increase quality of service where needed.",
+      "Monitor packet errors after fixes to verify that the rate returns to zero or near-zero levels."
+    ]
+  },
+  {
+    "measurement": "Disk reads",
+    "description": "The rate of disk reads performed by the Microsoft SQL Server.",
+    "unit": "Reads/Sec",
+    "interpretation": "Disk reads are expensive compared to cache reads. This measure should be kept as low as practical; ideally, most data reads should be served from the server cache. Adequate memory allocation and good indexing help minimize direct disk reads.[web:155][web:158]",
+    "troubleshootingSteps": [
+      "Correlate disk read rates with buffer cache hit ratios to determine whether high read activity is due to poor caching.[web:158][web:161]",
+      "Identify queries with high physical read counts using DMVs or tools like sp_BlitzCache/sp_whoisactive and tune them to reduce I/O.[web:158]",
+      "Ensure sufficient memory is allocated to SQL Server so frequently accessed data can remain in the buffer pool instead of being repeatedly read from disk.[web:158][web:161]",
+      "Check storage performance and, if necessary, move heavily read files to faster disks or SSDs.[web:155]",
+      "Optimize index and data layouts (including partitioning) to improve locality and reduce random I/O patterns."
+    ]
+  },
+  {
+    "measurement": "Disk writes",
+    "description": "The rate of disk writes performed by the Microsoft SQL Server.",
+    "unit": "Writes/Sec",
+    "interpretation": "Disk writes are also expensive operations. Ideally, writes are efficiently buffered and flushed so that direct, frequent, small writes to disk are minimized. Adequate memory, log configuration, and batch processing strategies help control write overhead.[web:155][web:158]",
+    "troubleshootingSteps": [
+      "Monitor write rates together with write latency to ensure the storage subsystem can sustain the workload without excessive stalls.[web:155][web:161]",
+      "Identify write-heavy queries or maintenance tasks (for example, index rebuilds, bulk loads) and schedule or batch them to reduce peak write pressure.[web:158]",
+      "Verify that transaction log files and data files are placed on appropriate, performant storage and sized with sensible autogrowth settings.[web:155][web:158]",
+      "Consider using bulk-logged or minimally logged operations where appropriate to reduce log write volume for bulk operations.",
+      "Ensure enough memory is available so that write caching and buffer management can operate effectively."
+    ]
+  },
+  {
+    "measurement": "Disk I/O errors",
+    "description": "The rate of errors encountered by the Microsoft SQL Server while reading and writing.",
+    "unit": "Errors/Sec",
+    "interpretation": "Disk read/write errors may be caused by issues such as semaphore contention or excessive disk space consumption, but often indicate underlying storage or OS problems. Persistent I/O errors can result in data access failures and corruption risk.[web:154][web:161]",
+    "troubleshootingSteps": [
+      "Investigate system and SQL Server error logs for detailed messages about I/O errors, including which files and operations are affected.[web:155][web:161]",
+      "Check disk health (SMART status, RAID controller logs) and OS-level disk error counters to detect failing drives or controllers.",
+      "Ensure that sufficient free disk space is available on all volumes hosting data, logs, and tempdb to avoid allocation-related errors.[web:158]",
+      "Look for I/O contention or semaphore waits that might be causing timeouts and errors, and redistribute workloads or files across additional disks where needed.",
+      "If hardware problems are confirmed, work with infrastructure teams to replace failing components and restore from backups if any corruption is detected."
+    ]
+  }
+]

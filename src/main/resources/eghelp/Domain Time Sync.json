@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "NTP offset",
+    "description": "Indicates the time difference between the local clock and the designated reference clock.",
+    "measurementUnit": "Secs",
+    "interpretation": "For a tiny offset, NTP will adjust the local clock; for small and larger offsets, NTP will temporarily reject the reference time while continuing with the last corrections. After some time, small offsets (well below one second) are slewed gradually, larger offsets cause the clock to be stepped, and very large offsets are rejected and can cause NTP to terminate.",
+    "troubleshootingSteps": [
+      "Check NTP/Time Service status and current offset using platform tools (for example, ntpq -p or chronyc sources on Unix/Linux, w32tm /query /status on Windows) to confirm the magnitude and direction of the offset.[web:88][web:90][web:95]",
+      "Verify that the configured NTP servers are reachable, healthy, and themselves correctly synchronized; test with ntpdate/chronyc or w32tm, and replace or add servers if any source is unreliable or has large offset/jitter.[web:87][web:88][web:90][web:93][web:96][web:97]",
+      "For very large offsets (seconds to minutes), stop NTP, perform a one-time manual step sync (for example, ntpdate, chronyc makestep, or w32tm /resync /force), then restart the NTP service so it can maintain fine-grained synchronization.[web:85][web:89][web:92][web:94]",
+      "Check for external causes of time jumps or skew, such as virtualization/host time sync conflicts, manual time changes, or unstable hardware clocks, and disable conflicting time sources (for example, hypervisor time sync when using NTP).[web:86][web:90][web:92][web:95]",
+      "Monitor offset, jitter, and reachability over time; if offset frequently grows large, tune NTP/chrony settings and network connectivity, or consider using closer or more reliable reference clocks (public or GPS-backed servers).[web:85][web:87][web:88][web:90][web:92][web:97]"
+    ]
+  }
+]

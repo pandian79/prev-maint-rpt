@@ -1,0 +1,15 @@
+[
+  {
+    "measurement": "Number of configuration errors",
+    "description": "Indicates the total number of configuration errors detected by the eG Configuration Checks test.",
+    "unit": "Number",
+    "interpretation": "This measure reflects how many configuration settings are currently invalid, inconsistent, or missing according to the checks defined for the monitored environment. A value greater than zero means that one or more configuration issues have been found; higher values indicate broader misconfiguration and an increased risk of failures, security exposures, or degraded performance.",
+    "troubleshootingSteps": [
+      "Use the test’s detailed diagnosis to list each configuration error, including the component, parameter name, current value, and the rule or expectation that it violates.[web:259][web:260][web:261]",
+      "Prioritize remediation of errors affecting availability, security, and data integrity (for example, missing mandatory parameters, invalid paths, unreachable endpoints, or incorrect credentials).",
+      "Validate and correct configuration values directly in the relevant product consoles or configuration files, then re-run the Configuration Checks test to confirm that the errors have been resolved.[web:261][web:262]",
+      "For recurring configuration errors, update templates, automation scripts, or baseline configurations so that new components are deployed with correct settings from the outset.[web:259][web:261]",
+      "Incorporate configuration checks into regular operational procedures and change management so that new changes are verified promptly and latent configuration issues are detected early.[web:256][web:258]"
+    ]
+  }
+]

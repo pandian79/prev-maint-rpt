@@ -1,0 +1,48 @@
+[
+  {
+    "Measurement": "Total capacity",
+    "Description": "Indicates the total capacity of a disk partition.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "For a managed Hyper-V or Hyper-V VDI component, the Disk Space test reports metrics for an additional Total descriptor. For this descriptor, this measure will reveal the total disk capacity of the Hyper-V or Hyper-V VDI host across all its disk partitions."
+  },
+  {
+    "Measurement": "Used space",
+    "Description": "Indicates the amount of space used in a disk partition.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "For a managed Hyper-V or Hyper-V VDI component, the Disk Space test reports metrics for an additional Total descriptor. For this descriptor, this measure will reveal the total space used on the Hyper-V or Hyper-V VDI host across all its disk partitions."
+  },
+  {
+    "Measurement": "Free space",
+    "Description": "Indicates the current free space available for each disk partition of a system.",
+    "MeasurementUnit": "MB",
+    "Interpretation": "For a managed Hyper-V or Hyper-V VDI component, the Disk Space test reports metrics for an additional Total descriptor. For this descriptor, this measure will reveal the total free space on the Hyper-V or Hyper-V VDI host across all its disk partitions."
+  },
+  {
+    "Measurement": "Space usage",
+    "Description": "Indicates the percentage of space usage on each disk partition of a system.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "A value close to 100% can indicate a potential problem situation where applications executing on the system may not be able to write data to the disk partition(s) with very high usage. For a managed Hyper-V or Hyper-V VDI component, the Disk Space test reports metrics for an additional Total descriptor. For this descriptor, this measure will reveal the percent usage of the total disk capacity of the Hyper-V or Hyper-V VDI host across all its disk partitions."
+  },
+  {
+    "Measurement": "Drive availability",
+    "Description": "Indicates whether the drive of each disk partition is available or not.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "A value of 100% indicates that the drive is available and a value 0 indicates that the drive is not available. For a managed Hyper-V or Hyper-V VDI component, the Disk Space test reports metrics for an additional Total descriptor. For this descriptor, this measure is not applicable."
+  },
+  {
+    "Measurement": "Cleanup automation status",
+    "Description": "Indicates the current status of cleanup automation. This measure will appear only if the Automation parameter is set to Yes.",
+    "MeasurementUnit": "",
+    "Interpretation": {
+      "Text": "By default, this measure reports the Measure Values listed below to indicate the current status of cleanup automation. The graph of this measure however, represents the status using the numeric equivalents only. The detailed diagnosis of this measure reveals the current status of the clean up process, the list of files that were deleted recently, the list of files that were not deleted during the recent clean up process, and the amount of disk space recovered after the clean up process.",
+      "Mappings": [
+        { "MeasureValue": "Not required", "NumericValue": 1 },
+        { "MeasureValue": "Started", "NumericValue": 2 },
+        { "MeasureValue": "Running", "NumericValue": 3 },
+        { "MeasureValue": "Completed", "NumericValue": 4 },
+        { "MeasureValue": "Not enabled", "NumericValue": 5 },
+        { "MeasureValue": "Failed", "NumericValue": 6 }
+      ]
+    }
+  }
+]

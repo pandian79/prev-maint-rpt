@@ -1,0 +1,58 @@
+[
+  {
+    "measurement": "Voltage utilized",
+    "description": "Indicates the current voltage of this GPU.",
+    "measurementUnit": "Volts",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Verify that the GPU voltage fluctuates appropriately with load (lower at idle, higher under load) using monitoring tools; if it is stuck low or zero, check power cables, PSU capacity, and driver power-management settings.[web:265][web:268][web:269][web:272][web:277]",
+      "If the voltage is unstable or causes crashes, especially after undervolting or overclocking, reset the GPU settings to default (remove undervolts) and test stability.[web:264][web:267][web:271][web:274]",
+      "Ensure that the power supply unit (PSU) provides stable voltage on the 12V rails and that all PCIe power connectors are securely seated.[web:265][web:274][web:275]"
+    ]
+  },
+  {
+    "measurement": "Clock speed",
+    "description": "Indicates the current speed of this GPU.",
+    "measurementUnit": "MHz",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "If clock speeds are stuck at idle/2D levels (e.g., 200–300 MHz) during 3D workloads, change the power management mode in the driver control panel to 'Prefer maximum performance' and reinstall drivers using DDU if necessary.[web:269][web:272][web:275][web:278]",
+      "Check for thermal throttling; if the GPU is overheating, it will aggressively downclock to protect itself. Address cooling if temperatures are high.[web:270][web:272][web:273][web:276]",
+      "Investigate background applications or multi-monitor setups that might force the GPU into a lower-power P-state incorrectly.[web:269][web:272][web:275]"
+    ]
+  },
+  {
+    "measurement": "Temperature",
+    "description": "Indicates the current temperature of this GPU.",
+    "measurementUnit": "Celsius",
+    "interpretation": "A sudden or gradual increase in temperature may affect server functioning and needs immediate attention.",
+    "troubleshootingSteps": [
+      "Clean dust from the GPU heatsink and fans, and ensure the case has adequate airflow (intake/exhaust).[web:270][web:273][web:276]",
+      "Adjust fan curves to be more aggressive (run fans at higher speeds sooner) using GPU utilities like MSI Afterburner or driver settings.[web:270][web:273][web:276]",
+      "If temperatures remain dangerously high (e.g., >85–90°C for core, >100°C for hotspot) despite cleaning and fan tuning, consider repasting the thermal compound or replacing thermal pads.[web:270][web:273][web:276]",
+      "Lower the GPU power limit or undervolt the card to reduce heat output without significant performance loss.[web:264][web:273][web:276]"
+    ]
+  },
+  {
+    "measurement": "Load utilized",
+    "description": "Indicates the percentage of load handled by this GPU.",
+    "measurementUnit": "Percent",
+    "interpretation": "Comparing values across GPUs helps identify the GPU handling the maximum load.",
+    "troubleshootingSteps": [
+      "If load is unexpectedly low during heavy tasks, check for CPU bottlenecks, frame-rate caps (V-Sync/FPS limits), or driver settings that limit performance.[web:269][web:272][web:276]",
+      "For multi-GPU setups, verify that the workload is correctly distributed or SLI/Crossfire/Compute profiles are active and configured properly.[web:269][web:272]",
+      "If load stays at 100% when idle, scan for malware (cryptominers) or check background applications (like instant replay/recording) consuming resources.[web:269][web:272]"
+    ]
+  },
+  {
+    "measurement": "Total revolutions",
+    "description": "Indicates the average speed of the fans in this GPU.",
+    "measurementUnit": "RPM",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Verify that fans are spinning and not physically obstructed; if RPM reads 0 but temperature is high, the fan motor or controller may be failed.[web:270][web:273]",
+      "Adjust fan curves in software to ensure fans ramp up correctly with temperature; if software control fails, check fan cable connections on the card.[web:270][web:273]",
+      "Listen for abnormal noises (grinding, clicking) which indicate bearing failure, and replace fans if they cannot maintain required RPMs.[web:270][web:273]"
+    ]
+  }
+]

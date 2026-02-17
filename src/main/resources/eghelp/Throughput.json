@@ -1,0 +1,50 @@
+[
+  {
+    "measurement": "Upload availability",
+    "description": "Indicates whether the upload data transfer from the monitored server to the eG management console succeeded.",
+    "unit": "Percent",
+    "interpretation": "A value of 100 means the upload completed successfully, while 0 indicates that the data upload to the eG management console failed. Upload failures usually point to issues with the eG management console itself or with network routing on the path to it, such as a router being down.",
+    "troubleshootingSteps": [
+      "Check the availability and health of the eG management console when upload availability drops to 0.",
+      "Verify network connectivity from the monitored server to the management console, including intermediate routers and firewalls.",
+      "Review recent changes to network routes, VPNs, or security policies that may block or throttle upload traffic.",
+      "Correlate upload availability problems across multiple agents to see if the issue is local to one server or systemic."
+    ]
+  },
+  {
+    "measurement": "Upload speed",
+    "description": "Represents the throughput observed during upload transfers from the monitored server to the eG management console.",
+    "unit": "Kbps",
+    "interpretation": "This metric shows how fast data is being uploaded. A significant reduction over time suggests a potential problem that must be investigated, such as network congestion or a bottleneck at the eG management server. If the slowdown is at the management server, reduced speeds are likely to be seen by many or all agents.",
+    "troubleshootingSteps": [
+      "Trend upload speed over time to identify persistent degradation versus short‑lived spikes.",
+      "Test raw network bandwidth and latency between the monitored server and the management console to rule out network issues.",
+      "Check the resource utilization (CPU, memory, disk, network) on the eG management server for signs of overload.",
+      "Compare upload speed across multiple agents to determine whether the problem is specific to one server or widespread."
+    ]
+  },
+  {
+    "measurement": "Download availability",
+    "description": "Indicates whether the download data transfer from the eG management console to the monitored server succeeded.",
+    "unit": "Percent",
+    "interpretation": "A value of 100 means the download completed successfully, whereas 0 indicates that the download from the eG management console failed. Failures typically indicate issues with the console or with network routing to it. Monitoring this is especially important on asymmetric networks such as ADSL or Hybrid Fiber Coaxial, where downstream and upstream behavior differ.",
+    "troubleshootingSteps": [
+      "Investigate console availability and service status when download availability reports 0.",
+      "Validate downstream network paths from the management console to the monitored server, including ISP links and intermediate routers.",
+      "Pay particular attention to asymmetric networks (e.g., ADSL) where downstream problems may not mirror upstream behavior.",
+      "Correlate download failures with upload metrics to see whether both directions are affected or only one."
+    ]
+  },
+  {
+    "measurement": "Download speed",
+    "description": "Represents the throughput observed during download transfers from the eG management console to the monitored server.",
+    "unit": "Kbps",
+    "interpretation": "This metric shows how fast data is downloaded from the console. A significant reduction over time indicates a potential problem that warrants investigation, such as network degradation or a bottleneck at the eG management server. If the management server is the bottleneck, reduced download speed is likely to be seen across many agents.",
+    "troubleshootingSteps": [
+      "Monitor download speed trends to detect sustained performance drops as opposed to transient slowdowns.",
+      "Run independent network tests (e.g., ping, traceroute, throughput checks) from the monitored server to the management console.",
+      "Examine the eG management server for resource saturation or misconfiguration that could throttle outgoing traffic.",
+      "Compare download speeds across multiple agents, especially on networks with asymmetric bandwidth, to understand the scope of the issue."
+    ]
+  }
+]

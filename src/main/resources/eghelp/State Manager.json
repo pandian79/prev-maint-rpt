@@ -1,0 +1,14 @@
+[
+  {
+    "measurement": "State manager queue",
+    "description": "Indicates the current queue size of the state manager process.",
+    "unit": "Number",
+    "interpretation": "The State manager process is responsible for computing the current state of layers, tests, measures, and infrastructure elements (such as components, services, segments, zones, etc.), based on the metrics reported by the eG agent. Also, if agents are not able to run tests or report metrics, it is the responsibility of the State manager process to change the state of the 'entity' to Unknown and send Unknown mail alerts, if configured. This is the number of pending requests waiting to be handled by the state manager. A high value, especially one that grows steadily over time, suggests a processing bottleneck where the state manager cannot keep up with incoming requests."
+  },
+  {
+    "measurement": "State manager busy time",
+    "description": "Indicates how busy the state manager is currently.",
+    "unit": "Percent",
+    "interpretation": "The State manager process is responsible for computing the current state of layers, tests, measures, and infrastructure elements (such as components, services, segments, zones, etc.), based on the metrics reported by the eG agent. Also, if agents are not able to run tests or report metrics, it is the responsibility of the State manager process to change the state of the 'entity' to Unknown and send Unknown mail alerts, if configured. This reflects the percentage of time the state manager is actively processing requests. Values close to 100% mean the state manager is nearly saturated and may not have capacity to handle additional state requests; if this stays high or keeps increasing, it indicates the state manager is overloaded and may cause delays or timeouts."
+  }
+]

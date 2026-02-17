@@ -1,0 +1,51 @@
+[
+  {
+    "measurement": "Inodes used",
+    "description": "The number of inodes that are currently in use for a disk partition",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Check inode usage per filesystem using `df -i` to see how many inodes are used and the usage percentage.[web:12][web:14][web:20]",
+      "If usage is high, identify directories with very large numbers of files using `find` plus `wc -l` to locate inode-heavy paths.[web:10][web:14][web:16][web:18][web:19]",
+      "Clean up unneeded small files such as old logs, cache, temp, or application artifacts to free inodes.[web:10][web:16][web:18][web:19][web:23]",
+      "Review application behavior (logging, temp-file handling, mail queues, caches) and configure rotation/cleanup to prevent inode exhaustion.[web:18][web:23]",
+      "For chronic inode pressure, consider recreating or resizing filesystems with a higher inode density appropriate for many small files.[web:18][web:21]"
+    ]
+  },
+  {
+    "measurement": "Inodes free",
+    "description": "The number of inodes that are free for a disk partition",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Monitor free inodes using `df -i` and set alerts when the free count or percentage drops below a safe threshold (for example, 20% free).?[web:12][web:14][web:17][web:20]",
+      "If free inodes are low, identify and remove unneeded files in directories consuming large inode counts (logs, caches, mail spools, temporary directories).?[web:10][web:14][web:16][web:18][web:19]",
+      "Ensure automated housekeeping (log rotation, cache cleanup, temporary file removal) is configured to keep a healthy buffer of free inodes.?[web:14][web:18][web:23]",
+      "Plan capacity: if workloads inherently create many small files, provision filesystems with more inodes or distribute data across additional partitions.?[web:18][web:21]"
+    ]
+  },
+  {
+    "measurement": "Inodes total",
+    "description": "The total number of inodes that are available for a disk partition",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Use `df -i` to confirm the total inode count and understand the inode limits of each filesystem.?[web:12][web:14][web:17][web:20]",
+      "If the total inode count is too low for the workload (frequent inode exhaustion), recreate the filesystem with a lower bytes‑per‑inode value to increase total inodes.?[web:18][web:21]",
+      "When redesigning storage, separate workloads that create many small files (e.g., logs, caches, mail) onto dedicated partitions with higher inode density.?[web:18][web:23]",
+      "Document filesystem creation parameters so future capacity planning can ensure adequate total inode counts.?[web:18][web:21]"
+    ]
+  },
+  {
+    "measurement": "Percent inode usage",
+    "description": "The percentage of the inodes that are currently in use for a disk partition",
+    "measurementUnit": "Percent",
+    "interpretation": "High percentage of inode usage may lead to a problem in creating new files/directories.",
+    "troubleshootingSteps": [
+      "Regularly check percentage inode usage with `df -i` and configure alerts when usage exceeds warning and critical thresholds (for example, 80% and 90%).[web:12][web:14][web:17][web:20]",
+      "When percentage usage is high, locate directories with huge file counts using `find` with `wc -l` or similar commands and clean up unnecessary files.[web:10][web:14][web:16][web:18][web:19]",
+      "Implement or tune log rotation, cache eviction, and temporary file cleanup to slow down growth in inode usage.[web:14][web:18][web:23]",
+      "If inode usage frequently approaches 100%, consider migrating data, splitting it across filesystems, or recreating the filesystem with more inodes to avoid \"No space left on device\" errors.[web:15][web:18][web:21][web:23]"
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "measurement": "Initial objects",
+    "description": "Indicates the number of objects initially allocated to this pool.",
+    "unit": "Number",
+    "interpretation": "This is the starting size of the pool. It determines how many objects are immediately available without requiring on-demand allocation when the system starts or when the pool is created.",
+    "troubleshootingSteps": [
+      "Set the initial objects count high enough to cover typical startup and steady-state demand, reducing latency from on-the-fly allocations.",
+      "Monitor pool usage after startup to see whether the pool quickly grows beyond the initial size, which may indicate that the initial allocation is too small.",
+      "If many initial objects remain unused, consider lowering the initial size to save memory while still meeting peak requirements."
+    ]
+  },
+  {
+    "measurement": "Maximum objects",
+    "description": "Indicates the maximum number of objects this pool can contain.",
+    "unit": "Number",
+    "interpretation": "This defines the upper limit of objects that the pool can allocate. When Used objects approaches this limit, new requests may be blocked, queued, or fail, depending on configuration.",
+    "troubleshootingSteps": [
+      "Compare Maximum objects with peak Used objects to ensure there is adequate headroom for spikes in demand.",
+      "If Used objects frequently reaches or nears this limit, consider increasing the maximum or optimizing how and when objects are returned to the pool.",
+      "Balance this limit against memory and resource constraints so the pool cannot grow to a size that destabilizes the system."
+    ]
+  },
+  {
+    "measurement": "Used objects",
+    "description": "Indicates the objects that are currently used in this pool.",
+    "unit": "Number",
+    "interpretation": "This shows how many objects are checked out and in active use. When this value grows dangerously close to Maximum objects, the pool is nearly exhausted and may soon be unable to satisfy new requests.",
+    "troubleshootingSteps": [
+      "Track Used objects over time to identify peak demand and see whether the pool regularly operates near its maximum.",
+      "If usage is frequently high, investigate whether objects are being returned promptly or are held longer than necessary.",
+      "Increase Maximum objects or reduce application demand per object (for example, by sharing or batching work) if sustained high usage leads to contention or timeouts."
+    ]
+  },
+  {
+    "measurement": "Free objects",
+    "description": "Indicates the number of unused objects in this pool.",
+    "unit": "Number",
+    "interpretation": "This represents immediate capacity available to handle new requests. A low value indicates that the pool has few free objects and may soon be unable to service additional load, potentially impacting the availability of the eG manager.",
+    "troubleshootingSteps": [
+      "Monitor Free objects to ensure there is always a buffer of idle objects for sudden bursts in demand.",
+      "If Free objects remain low for extended periods, consider increasing Maximum objects or tuning workloads to release objects sooner.",
+      "Review growth in monitored components or users; increased usage may require resizing the pool to maintain responsiveness."
+    ]
+  },
+  {
+    "measurement": "Object timeout",
+    "description": "Indicates the time taken by the object to timeout.",
+    "unit": "Secs",
+    "interpretation": "This reflects how long an object can remain in use or idle (depending on configuration) before it is considered expired. Observing this over time helps determine the ideal lifetime for objects to balance reuse against resource freshness and leak prevention.",
+    "troubleshootingSteps": [
+      "Analyze typical object usage patterns to set a timeout that is long enough for legitimate work but short enough to reclaim abandoned resources.",
+      "If objects frequently time out while still needed, increase the timeout to reduce unnecessary churn and reallocation.",
+      "If stale or leaked objects accumulate, consider reducing the timeout and improving application logic to return or close objects properly."
+    ]
+  },
+  {
+    "measurement": "Total objects",
+    "description": "Indicates the total number of objects in this pool.",
+    "unit": "Number",
+    "interpretation": "This is the sum of Used objects and Free objects and represents the current size of the pool. It can grow from the initial allocation up to the configured maximum as demand increases.",
+    "troubleshootingSteps": [
+      "Compare Total objects with Initial objects and Maximum objects to understand how the pool scales under typical and peak loads.",
+      "If Total objects is consistently near the maximum, revisit pool sizing and workload patterns to prevent exhaustion.",
+      "If Total objects remains much larger than necessary during off-peak periods, consider adjusting pool parameters or implementing shrink logic to reclaim resources."
+    ]
+  }
+]

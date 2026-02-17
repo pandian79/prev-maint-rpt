@@ -1,0 +1,109 @@
+[
+  {
+    "measurement": "Log allocated size",
+    "description": "Indicates the current size of the transaction log attached to this database.",
+    "unit": "MB",
+    "interpretation": "This is the amount of disk space currently allocated to the database’s transaction log file. Tracking this value helps you understand how large the log has grown and whether its size is appropriate for the workload.",
+    "troubleshootingSteps": [
+      "Monitor log allocated size over time to ensure it is stable and appropriate for the database workload rather than growing unexpectedly.",
+      "If the log has grown very large, investigate reasons such as infrequent log backups, long-running transactions, or large bulk operations.[web:214][web:218]",
+      "Use sys.dm_db_log_space_usage and disk-usage reports to compare allocated size with actual used space and decide whether a one-time shrink is appropriate.[web:218][web:217]",
+      "Avoid frequent shrinking of the log; instead, size it correctly to handle typical peak workloads and maintain it at that size.[web:215][web:219]"
+    ]
+  },
+  {
+    "measurement": "Usage of allocated space",
+    "description": "Indicates the percentage of transaction log space that is currently in use.",
+    "unit": "Percent",
+    "interpretation": "Ideally this value should be low to moderate. A very high value, especially near 100%, indicates that the transaction log is under severe space pressure and may soon be unable to record additional transactions. This is often caused by many changes being written to the log without corresponding log truncation (for example, no log backups, long-running transactions, or replication/CDC issues).",
+    "troubleshootingSteps": [
+      "When log usage is high, check the log_reuse_wait_desc column in sys.databases to determine why log space is not being reused (for example, ACTIVE_TRANSACTION, LOG_BACKUP, REPLICATION, or AVAILABILITY_REPLICA).[web:215][web:218]",
+      "For databases in FULL or BULK_LOGGED recovery, ensure that transaction log backups run frequently enough and are succeeding; add more frequent log backups if necessary.[web:214][web:218]",
+      "Investigate long-running transactions or open sessions that may be preventing log truncation and resolve or redesign them.[web:215][web:218]",
+      "If usage remains high, consider increasing log file size or adding additional log files on suitable disks to provide more headroom.[web:214][web:218]"
+    ]
+  },
+  {
+    "measurement": "Is auto-growth enabled?",
+    "description": "Indicates whether or not auto-growth is enabled for the transaction logs.",
+    "unit": "Boolean (Yes/No with numeric equivalents 100/0)",
+    "interpretation": "When autogrowth is enabled, transaction log files can automatically grow when more space is needed. This measure reports Yes (100) if autogrowth is enabled and No (0) if it is disabled. While autogrowth provides safety against sudden log exhaustion, relying solely on it without proper sizing and monitoring can cause pauses or disk consumption issues. Available on SQL Server 2008 R2 and above.[web:216][web:218]",
+    "troubleshootingSteps": [
+      "If autogrowth is disabled (No/0), ensure you have strong monitoring and manual growth processes in place to prevent the log from filling up unexpectedly.[web:216][web:218]",
+      "If autogrowth is enabled (Yes/100), review FILEGROWTH settings to confirm they are reasonable and do not cause frequent small growths or very large blocking growth events.[web:216][web:218]",
+      "Verify that sufficient disk space is available on volumes hosting the log so that autogrowth events can succeed without filling the disk.[web:210][web:218]",
+      "Use autogrowth as a safety net, not as the primary sizing strategy—pre-grow logs during maintenance windows to expected sizes based on workload.[web:216][web:218]"
+    ]
+  },
+  {
+    "measurement": "Auto growth percent",
+    "description": "Indicates the percentage by which the transaction log files have been configured to automatically grow when more data space is required.",
+    "unit": "Percent",
+    "interpretation": "This is the percentage-based autogrowth increment for the log. Growth increments must be large enough to stay ahead of workload demands but not so large that growth events cause long pauses, timeouts, or excessive VLF (virtual log file) fragmentation. In many environments, using a fixed MB increment rather than a percentage is recommended. Available on SQL Server 2008 R2 and above.[web:214][web:216][web:218]",
+    "troubleshootingSteps": [
+      "Avoid small percentage increments on small logs, which can cause many frequent growths, and very large percentage increments on big logs, which can cause long pauses and oversized growth events.[web:214][web:216]",
+      "Consider switching from percentage-based autogrowth to a fixed MB increment tuned to your workload (for example, around one-eighth of the file size as a starting point), and adjust based on monitored behavior.[web:216]",
+      "Monitor the number and frequency of autogrowth events; frequent events indicate that growth increments are too small or the log is undersized.[web:214][web:218]",
+      "Review VLF counts (for example, using DBCC LOGINFO or modern equivalents) and adjust growth strategy if excessive VLFs are observed.[web:214][web:218]"
+    ]
+  },
+  {
+    "measurement": "Auto growth size",
+    "description": "Indicates the size (in MB) by which the transaction log files have been configured to automatically grow when more data space is required.",
+    "unit": "MB",
+    "interpretation": "This is the fixed-size autogrowth increment for the log. It should be large enough to avoid frequent growths but not so large that each growth causes a noticeable pause or large VLFs. Available on SQL Server 2008 R2 and above.[web:214][web:216][web:218]",
+    "troubleshootingSteps": [
+      "Tune the FILEGROWTH size so that the log grows in reasonably sized chunks—large enough to reduce the number of growths, but small enough to minimize blocking and VLF side effects.[web:214][web:216]",
+      "If you observe frequent growths, increase the growth size; if single growth events cause long pauses or very large VLFs, reduce the growth size and pre-grow during maintenance windows instead.[web:214][web:218]",
+      "Coordinate autogrowth settings with capacity planning to ensure disks have enough free space to handle projected log expansions.[web:210][web:218]"
+    ]
+  },
+  {
+    "measurement": "Maximum size of log",
+    "description": "Indicates the maximum size to which the transaction log can grow.",
+    "unit": "MB",
+    "interpretation": "This reflects the MAXSIZE setting for the log file. Setting a maximum prevents a log file from consuming all available disk space, but if it is too low, the log can hit the limit and raise error 9002 (log full). Available on SQL Server 2008 R2 and above.[web:214][web:216][web:218]",
+    "troubleshootingSteps": [
+      "Ensure MAXSIZE is set high enough to support expected workloads while still preventing uncontrolled disk consumption.[web:214][web:218]",
+      "If the log frequently approaches its MAXSIZE, evaluate increasing the limit, adding additional log files on separate disks, or revising workload and backup frequency.[web:214][web:218]",
+      "Monitor disk usage and alert before the log reaches its maximum size so corrective action can be taken preemptively.[web:210][web:218]",
+      "Review MAXSIZE settings after hardware or workload changes to ensure they remain appropriate."
+    ]
+  },
+  {
+    "measurement": "Disk usage",
+    "description": "Indicates the percentage of maximum log file size that is currently being used.",
+    "unit": "Percent",
+    "interpretation": "A value trending toward 100% indicates that the log is filling up and may soon run out of space. In SIMPLE recovery, the log should clear on checkpoints; in FULL recovery, regular log backups are required. If this value reaches 100%, error 9002 is raised and write operations fail until space is freed or growth settings are adjusted. Available on SQL Server 2008 R2 and above.[web:214][web:216][web:218]",
+    "troubleshootingSteps": [
+      "For SIMPLE recovery databases, ensure checkpoints are occurring regularly and investigate long-running transactions that prevent log reuse.[web:214][web:218]",
+      "For FULL recovery databases, verify that transaction log backups are scheduled and succeeding at appropriate intervals; increase their frequency if necessary.[web:214][web:218]",
+      "When disk usage approaches 100%, review autogrowth and MAXSIZE settings, and consider increasing maximum size or adding more log space to avoid error 9002.[web:214][web:216]",
+      "If the log becomes full (disk usage 100%), free space by backing up the log (in FULL recovery), resolving reuse blockers (per log_reuse_wait_desc), and, if appropriate, temporarily enlarging the log file.[web:215][web:218]"
+    ]
+  },
+  {
+    "measurement": "Free space of max size",
+    "description": "Indicates the amount of maximum log file size that is currently available for use.",
+    "unit": "MB",
+    "interpretation": "This is the remaining headroom between current log usage and its configured maximum size. A higher value is desirable because it indicates more space is available for future log growth before hitting limits. Available on SQL Server 2008 R2 and above.[web:214][web:218]",
+    "troubleshootingSteps": [
+      "Monitor this measure alongside disk usage to ensure there is sufficient free space for upcoming transactional activity.[web:214][web:218]",
+      "If free space of max size becomes low, proactively increase MAXSIZE or add additional log files, and verify that log truncation mechanisms (checkpoints or backups) are functioning correctly.[web:214][web:218]",
+      "Plan capacity upgrades or data-archiving strategies if growth trends show that free space will be exhausted in the near future.",
+      "Use this metric to validate the effectiveness of changes to backup frequency, autogrowth settings, and workload patterns on log space consumption."
+    ]
+  },
+  {
+    "measurement": "Free space percentage of max size",
+    "description": "Indicates the percentage of maximum log file size that is currently available for use.",
+    "unit": "Percent",
+    "interpretation": "A sudden or gradual decrease in this value indicates that the log is growing and may eventually reach its maximum size. Persistent declines without recovery suggest that log space is not being effectively reused or truncated. Available on SQL Server 2008 R2 and above.[web:214][web:216][web:218]",
+    "troubleshootingSteps": [
+      "Track this percentage over time; a downward trend without periodic recovery indicates that log truncation (via checkpoints or log backups) is not keeping up with log generation.[web:214][web:218]",
+      "Investigate log_reuse_wait_desc when free space percentage is falling to determine what is preventing reuse (for example, long-running transactions, replication, or availability replicas).[web:215][web:218]",
+      "Adjust backup schedules, transaction design, or autogrowth/MAXSIZE settings to restore a healthy buffer of free space.",
+      "Set alerts for when free space percentage falls below defined thresholds so that action can be taken before error 9002 occurs."
+    ]
+  }
+]

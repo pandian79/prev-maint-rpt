@@ -1,0 +1,100 @@
+[
+  {
+    "measurement": "Service/Application status",
+    "description": "Indicates the current state of this service/application.",
+    "measurementUnit": null,
+    "interpretation": "Values: Online (100), Partially online (95), Online pending (90), Inherited (80), Initializing (70), Pending (60), Offline Pending (50), Unknown (40), Offline (20), Failed (0). A value of 50 indicates failover failed. Use detailed diagnosis to check associated resources.",
+    "troubleshootingSteps": [
+      "If status is 'Failed' or 'Offline Pending', check the 'Failed resources' count and identify the specific resource causing the failure (e.g., Disk, IP Address, or Service) using Failover Cluster Manager or `Get-ClusterResource`.[web:331][web:476][web:479]",
+      "Review Cluster Events (Event ID 1069, 1205) to see why the resource failed (e.g., 'Cluster resource failed to bring online'); look for dependency failures where one failed resource drags down the whole group.[web:331][web:479]",
+      "If the service is stuck in 'Online Pending', restart the Cluster Service on the owner node or try moving the group to another node to clear the hung state.[web:419][web:477]",
+      "Ensure that the service account used by the application has the correct permissions in Active Directory and hasn't been locked out or deleted.[web:328]"
+    ]
+  },
+  {
+    "measurement": "Server status",
+    "description": "Indicates the current state of the server created in the cluster for this service/application.",
+    "measurementUnit": null,
+    "interpretation": "Reports the status of the DNS name resource. Values match Service/Application status table.",
+    "troubleshootingSteps": [
+      "If Server status is 'Failed', verify that the Cluster Name Object (CNO) or Virtual Computer Object (VCO) exists in AD and is not disabled.[web:328]",
+      "Check DNS registration; ensure the IP address resource is online and that the cluster can update the DNS record.[web:328][web:480]",
+      "Repair the Active Directory object if the name resource is offline and permissions seem corrupt (Right-click Name resource -> More Actions -> Repair Active Directory Object).[web:328]"
+    ]
+  },
+  {
+    "measurement": "Resource status",
+    "description": "Indicates the current status of the IP address assigned to this service/application.",
+    "measurementUnit": null,
+    "interpretation": "Reports status of the IP address resource. Values match Service/Application status table.",
+    "troubleshootingSteps": [
+      "If IP status is 'Failed', check for IP address conflicts on the network or incorrect subnet mask configuration.[web:331][web:450]",
+      "Verify that the network adapter hosting the IP is up and has connectivity; a partitioned network can prevent IP resources from coming online.[web:448][web:482]"
+    ]
+  },
+  {
+    "measurement": "Has the owner changed?",
+    "description": "Indicates whether/not the owner of this service/application has changed since the last measurement period.",
+    "measurementUnit": null,
+    "interpretation": "No (0), Yes (1). If 'No' and Service state is 'Failed', failover did not occur. Detailed diagnosis shows current owner.",
+    "troubleshootingSteps": [
+      "If the owner changed unexpectedly, investigate logs for 'Clustered role moved to node' events to understand if it was a planned move or a failover due to a node crash.[web:479][web:482]",
+      "If the owner did *not* change but the service failed, check failover policies (Maximum failures in the specified period) to see if the group hit its failover limit and stopped trying.[web:478][web:479]"
+    ]
+  },
+  {
+    "measurement": "Total disk space",
+    "description": "Indicates the total capacity of all cluster disks mapped to this service/application.",
+    "measurementUnit": "MB",
+    "interpretation": "Use detailed diagnosis to see disk details.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Total free space",
+    "description": "Indicates the total amount of free space in all cluster disks mapped to this service/application.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally, the value should be high.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Percentage of space free",
+    "description": "Indicates the percentage of space that is free in the cluster disks mapped to this service/application.",
+    "measurementUnit": "Percent",
+    "interpretation": "Ideally, the value should be high. Compare across applications to balance storage.",
+    "troubleshootingSteps": [
+      "If free space is low, expand the cluster disk or clean up old logs/backups to prevent the application from crashing due to disk full errors.[web:331][web:476]"
+    ]
+  },
+  {
+    "measurement": "Other resources",
+    "description": "Indicates the number of other resources that are online in this service/application.",
+    "measurementUnit": "Number",
+    "interpretation": "Use detailed diagnosis to know details.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Online resources",
+    "description": "Indicates the number of resources associated with this service/application that are currently online.",
+    "measurementUnit": "Number",
+    "interpretation": "Use detailed diagnosis to see online resources.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Offline resources",
+    "description": "Indicates the number of resources associated with this service/application that are currently offline.",
+    "measurementUnit": "Number",
+    "interpretation": "Use detailed diagnosis to see offline resources.",
+    "troubleshootingSteps": [
+      "Investigate offline resources to see if they are dependencies for the main application; bring them online manually to see if they throw errors.[web:331][web:477]"
+    ]
+  },
+  {
+    "measurement": "Failed resources",
+    "description": "Indicates the number of resources associated with this service/application that have failed currently.",
+    "measurementUnit": "Number",
+    "interpretation": "Ideally 0. Use detailed diagnosis to identify failed resources.",
+    "troubleshootingSteps": [
+      "Prioritize fixing failed resources as they are likely the root cause of the service unavailability. Check specific event logs for the failed resource name.[web:331][web:479][web:481]"
+    ]
+  }
+]

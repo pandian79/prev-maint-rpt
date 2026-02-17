@@ -1,0 +1,86 @@
+[
+  {
+    "measurement": "Queue max capacity",
+    "description": "Indicates the maximum number of threads that the queue can hold at any given time.",
+    "unit": "Number",
+    "interpretation": "This value represents the upper limit of the queue's storage capacity. When the number of enqueued items approaches or reaches this limit, new tasks may be rejected, blocked, or delayed, which can impact overall throughput and responsiveness.",
+    "troubleshootingSteps": [
+      "Monitor this metric together with Queue current size and Queue utilization to determine whether the configured capacity is sufficient for peak workloads.",
+      "If the queue frequently reaches its maximum capacity, consider increasing the queue size or adjusting workload patterns (for example, rate limiting or batching) to avoid saturation.",
+      "Review consumer throughput and thread pool sizing to ensure tasks are being drained from the queue quickly enough.",
+      "Tune rejection or backpressure policies so that, when the queue is full, tasks fail fast or degrade gracefully instead of causing system-wide slowdowns."
+    ]
+  },
+  {
+    "measurement": "Queue current size",
+    "description": "Indicates the number of threads that are currently present in the queue.",
+    "unit": "Number",
+    "interpretation": "This shows how many pending tasks are currently waiting in the queue to be processed. A low or fluctuating value is normal; consistently high or steadily increasing values can signal that producers are outpacing consumers and that processing may be falling behind.",
+    "troubleshootingSteps": [
+      "Track Queue current size over time to see whether it periodically drains back toward zero or grows continuously under load.",
+      "If the queue size continues to grow, investigate whether the thread pool has enough capacity or if tasks are taking too long to complete.",
+      "Correlate spikes in queue size with specific time windows, input sources, or job types to identify heavy producers.",
+      "Consider scaling the consumer side (more threads, more instances) or smoothing incoming workload if sustained backlogs are observed."
+    ]
+  },
+  {
+    "measurement": "Queue utilization",
+    "description": "Indicates the percentage of the queue’s capacity that is currently in use.",
+    "unit": "Percent",
+    "interpretation": "This metric reflects how full the queue is relative to its maximum capacity. High utilization means the queue is nearing its limit, which can lead to increased latency, backpressure, or task rejection if not addressed promptly.",
+    "troubleshootingSteps": [
+      "Set alert thresholds for high queue utilization (for example, above 70–80%) so you can intervene before the queue becomes saturated.",
+      "When utilization is high, examine both incoming task rates and processing speeds to identify whether the issue is with producers or consumers.",
+      "Increase queue capacity cautiously if high utilization is common during legitimate peak periods, ensuring that memory usage remains acceptable.",
+      "Optimize or parallelize task processing to drain the queue more quickly, reducing utilization during busy intervals."
+    ]
+  },
+  {
+    "measurement": "Core pool size",
+    "description": "Indicates the number of core threads in the thread pool that are maintained and kept alive, even if they are idle.",
+    "unit": "Number",
+    "interpretation": "This defines the baseline concurrency level of the thread pool. Core threads remain available to handle tasks without incurring the overhead of frequent creation and destruction, helping to stabilize latency under normal loads.",
+    "troubleshootingSteps": [
+      "Ensure the core pool size is large enough to handle typical concurrent workload without excessive queuing.",
+      "Avoid setting the core size too high relative to available CPU and memory, which could lead to context switching and resource contention.",
+      "Adjust the core pool size as workload patterns evolve, for example increasing it for systems with more CPU cores or higher steady-state concurrency.",
+      "Monitor Active threads count and Pool utilization to validate that the chosen core size provides a good balance between responsiveness and resource usage."
+    ]
+  },
+  {
+    "measurement": "Pool max capacity",
+    "description": "Indicates the maximum number of threads that the thread pool can create to handle tasks.",
+    "unit": "Number",
+    "interpretation": "This sets the upper bound on how many threads can run concurrently in the pool. When the pool reaches this limit, additional tasks must wait in the queue (or may be rejected), which can impact latency if the limit is too low or cause resource strain if it is too high.",
+    "troubleshootingSteps": [
+      "Align the pool’s maximum capacity with the number of CPU cores and expected peak concurrency to avoid oversubscription.",
+      "If tasks are frequently queued and Pool utilization is high while CPU is underused, consider increasing the maximum pool size.",
+      "If high pool sizes cause CPU thrashing or memory pressure, reduce the maximum and focus on making tasks more efficient.",
+      "Revisit this setting after major changes in hardware, deployment topology, or workload characteristics."
+    ]
+  },
+  {
+    "measurement": "Active threads count",
+    "description": "Indicates the number of threads in the pool that are currently active and executing tasks.",
+    "unit": "Number",
+    "interpretation": "This shows the current level of parallel execution in the thread pool. High active thread counts (relative to the maximum) suggest that the system is under heavy load, while low counts may indicate idle capacity or underutilization.",
+    "troubleshootingSteps": [
+      "Compare Active threads count to Core pool size and Pool max capacity to understand whether the pool is operating near its limits.",
+      "If active threads are consistently near the maximum and queues are growing, consider scaling out, increasing pool capacity, or optimizing tasks.",
+      "If active threads are low while queue size is high, investigate whether threads are blocked, starved, or misconfigured (for example, deadlocks or resource waits).",
+      "Monitor CPU and I/O metrics alongside active thread counts to ensure that high concurrency is not saturating underlying resources."
+    ]
+  },
+  {
+    "measurement": "Pool utilization",
+    "description": "Indicates the percentage of the pool’s capacity that is currently in use.",
+    "unit": "Percent",
+    "interpretation": "This ratio (active threads versus maximum capacity) reflects how fully the thread pool is utilized. High utilization indicates that the pool is close to saturation and may have limited headroom to absorb additional load, while low utilization suggests available capacity.",
+    "troubleshootingSteps": [
+      "Set thresholds for acceptable pool utilization (for example, keeping sustained usage below 80–90%) and alert on prolonged over-utilization.",
+      "When utilization is high, examine task characteristics and queue metrics to decide whether to increase pool capacity or optimize work.",
+      "If utilization remains low despite high queue sizes, investigate thread starvation, blocking, or misconfiguration preventing the pool from scaling up.",
+      "Use this metric in capacity planning to decide when to scale hardware or adjust thread pool parameters."
+    ]
+  }
+]

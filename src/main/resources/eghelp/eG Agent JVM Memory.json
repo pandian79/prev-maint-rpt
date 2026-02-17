@@ -1,0 +1,37 @@
+[
+  {
+    "measurement": "Maximum memory",
+    "description": "Returns the maximum amount of memory that the Java virtual machine will attempt to use. If there is no inherent limit then the maximum value will be returned.",
+    "measurementUnit": "MB",
+    "interpretation": "If you had configured the eG agent's -Xmx setting with 512M, then the value of this measure will be 512 MB.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Current total memory",
+    "description": "Returns the total amount of memory in the Java virtual machine. The value returned by this method may vary over time, depending on the host environment.",
+    "measurementUnit": "MB",
+    "interpretation": "If you had configured the eG agent's -Xrs setting with 214M, then the value of this measure will be 214 MB.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Current used memory",
+    "description": "Indicates the amount of memory that the JVM is using for the eG agent.",
+    "measurementUnit": "MB",
+    "interpretation": "The value of this measure is the difference between the value of the Current total memory and Current free memory measures. Ideally, the value of this measure should be low. A consistent rise in this value is a cause for concern.",
+    "troubleshootingSteps": "Analyze heap dumps to identify potential memory leaks; Force a Garbage Collection to see if memory is reclaimed; If usage reflects legitimate load, increase the JVM heap size (-Xmx)."
+  },
+  {
+    "measurement": "Current free memory",
+    "description": "Indicates the amount of free memory in the JVM.",
+    "measurementUnit": "MB",
+    "interpretation": "Ideally, the value of this measure should be high. A consistent drop in this value is a cause for concern.",
+    "troubleshootingSteps": "Investigate high memory consumption processes within the JVM; Check for memory leaks; Increase the JVM maximum memory limit (-Xmx) if the workload requires it."
+  },
+  {
+    "measurement": "Maximum memory usage",
+    "description": "Indicates the percentage of maximum memory that is used by the eG agent.",
+    "measurementUnit": "Percent",
+    "interpretation": "The formula for calculating this measure is: (Current used memory / Maximum memory) * 100. Ideally, the value of this measure should be low. If this value keeps growing closer to 100%, it indicates excessive memory usage by the eG agent, which in turn may cause the agent to fail or slow down. You may want to change the maximum memory configuration of the eG agent to avoid such an eventuality.",
+    "troubleshootingSteps": "Increase the maximum memory setting (-Xmx) for the Java process; Analyze heap dumps for memory leaks; Check for frequent Garbage Collection (GC) cycles indicating memory pressure."
+  }
+]

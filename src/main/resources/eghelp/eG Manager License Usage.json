@@ -1,0 +1,254 @@
+[
+  {
+    "Measurement": "License type",
+    "Description": "Indicates the type of the monitoring license offered to the eG manager.",
+    "MeasurementUnit": "",
+    "Interpretation": "This measure reports the license model used by the eG manager. Possible values and numeric codes are: Server Based=0, Server & Named Users Based=1, Server & Concurrent Users Based=2, No Expiry=9999. The textual value is shown in the measure, while graphs use the numeric equivalents.",
+    "troubleshootingSteps": [
+      "Verify that the license type aligns with how you intend to use eG (server-only, named users, or concurrent users).",
+      "If planned usage changes (e.g., more digital workspace users), review whether the current license type remains appropriate.",
+      "Document license type and constraints so capacity and user growth are managed within the agreed model.",
+      "If you need to move from one license type to another, coordinate with eG Innovations to adjust contracts and keys."
+    ]
+  },
+  {
+    "Measurement": "Total monitors allowed",
+    "Description": "Indicates the total number of monitor licenses allocated to the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure equals the sum of Premium monitors allowed and Basic monitors allowed and represents the overall monitoring capacity licensed for this manager.",
+    "troubleshootingSteps": [
+      "Use this measure as the baseline capacity when planning how many components and tiers you can monitor.",
+      "Compare Total monitors allowed with current and projected monitoring needs to determine if additional licenses will be required.",
+      "When adding new components, ensure you remain within this total capacity and avoid unexpected license constraints.",
+      "If business plans require monitoring significantly more targets, initiate a license review with eG Innovations."
+    ]
+  },
+  {
+    "Measurement": "Total monitors in use",
+    "Description": "Indicates the number of monitor licenses utilized currently by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A value close to Total monitors allowed indicates that licenses are depleting and additional licenses may be required to onboard more components.",
+    "troubleshootingSteps": [
+      "Monitor this value as a percentage of Total monitors allowed to track how close you are to license saturation.",
+      "If utilization is consistently high, identify unused or decommissioned components that can be removed to free licenses.",
+      "Plan capacity upgrades in advance if growth trends show you will soon exceed current licensed monitors.",
+      "Use this measure in preventive maintenance reports to highlight license headroom risks to stakeholders."
+    ]
+  },
+  {
+    "Measurement": "Total monitors available",
+    "Description": "Indicates the number of monitor licenses that are available for use by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure represents remaining monitor capacity (Total monitors allowed minus Total monitors in use) and shows how many additional monitors can be configured. Generally customers will buy the license A free license lower than 50 licenses, is a cause of concern. eG Sales person to be informed about depleting licenses. Rapid consumption of licenses at short span of time is a cause of concern. A - value (hiphen) indicates that this license type is not applicable for this deployment and this can be treated as COMPLIANT or not-a-concern",
+    "troubleshootingSteps": [
+      "Track this value over time to understand how quickly free monitoring capacity is being consumed.",
+      "Before onboarding new applications or environments, confirm that Total monitors available is sufficient.",
+      "If available monitors drop below an internal threshold (for example 10–20% of capacity), trigger a license review.",
+      "Where possible, reclaim monitors by removing obsolete components rather than immediately expanding licenses."
+    ]
+  },
+  {
+    "Measurement": "Premium monitors allowed",
+    "Description": "Indicates the number of premium monitor licenses that were allocated to the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows the licensed capacity for premium monitors, typically used for advanced or higher-value monitored components.",
+    "troubleshootingSteps": [
+      "Review which components consume premium monitors and validate that they truly require premium-level monitoring.",
+      "Ensure premium monitor allocation matches business criticality (key services should be covered by premium monitors first).",
+      "If you consistently run out of premium capacity while basic capacity remains, consider rebalancing or increasing premium licenses.",
+      "Document which tiers use premium monitors so license audits and renewals are easier to manage."
+    ]
+  },
+  {
+    "Measurement": "Premium monitors in use",
+    "Description": "Indicates the number of premium monitor licenses utilized currently by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This shows current consumption of premium monitor capacity. High utilization relative to Premium monitors allowed indicates limited headroom for additional premium-monitored components.",
+    "troubleshootingSteps": [
+      "Track premium utilization as a percentage of Premium monitors allowed to ensure sufficient headroom for planned additions.",
+      "Identify low-value or test components using premium monitors and consider downgrading them to basic where appropriate.",
+      "If critical projects require more premium monitoring than the current allocation, plan a license upgrade.",
+      "Include this metric in license utilization reports for stakeholders responsible for budgeting and renewals."
+    ]
+  },
+  {
+    "Measurement": "Premium monitors available",
+    "Description": "Indicates the number of premium monitor licenses that are available for use by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This is the remaining premium monitoring capacity. A low value indicates that you are close to exhausting premium monitor licenses. A - value (hiphen) indicates that this license type is not applicable for this deployment and this can be treated as COMPLIANT or not-a-concern",
+    "troubleshootingSteps": [
+      "Monitor this measure to ensure you have enough unused premium monitors for upcoming high-priority deployments.",
+      "Set internal thresholds to trigger alerts when Premium monitors available falls below a defined safety margin.",
+      "Review current premium assignments and reclaim licenses from non-critical or temporary components.",
+      "Discuss premium capacity planning with infrastructure and application owners so expansion is anticipated rather than reactive."
+    ]
+  },
+  {
+    "Measurement": "Basic monitors allowed",
+    "Description": "Indicates the number of basic monitor licenses that were allocated to the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This represents the licensed capacity for basic monitors, typically used for standard or less complex components.",
+    "troubleshootingSteps": [
+      "Ensure that routine or less critical components are assigned basic rather than premium monitors where possible.",
+      "Compare Basic monitors allowed to the total number of lower-tier components to confirm adequate capacity.",
+      "If many basic monitors remain unused while premium capacity is tight, consider shifting suitable components from premium to basic.",
+      "Include this measure in license planning to balance basic vs premium allocations according to your environment mix."
+    ]
+  },
+  {
+    "Measurement": "Basic monitors in use",
+    "Description": "Indicates the number of basic monitor licenses utilized currently by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This shows current consumption of basic monitoring capacity. It helps you understand how widely basic monitoring is deployed across the environment.",
+    "troubleshootingSteps": [
+      "Monitor trends in basic monitors usage as new infrastructure or services are onboarded.",
+      "If basic usage approaches Basic monitors allowed, review whether some components can be consolidated or removed.",
+      "Use this measure along with component inventory to verify that all required assets are being monitored.",
+      "If growth plans suggest significant expansion of monitored infrastructure, adjust basic license quantities accordingly."
+    ]
+  },
+  {
+    "Measurement": "Basic monitors available",
+    "Description": "Indicates the number of basic monitor licenses that are available for use by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This is the remaining capacity for basic monitoring. A low value indicates that you are close to using all basic licenses. A - value (hiphen) indicates that this license type is not applicable for this deployment and this can be treated as COMPLIANT or not-a-concern",
+    "troubleshootingSteps": [
+      "Track this measure to ensure adequate basic monitoring capacity for upcoming deployments or migrations.",
+      "If Basic monitors available becomes low, reclaim licenses by removing obsolete or duplicate monitored targets.",
+      "Set alert thresholds to notify administrators when basic capacity is nearly exhausted.",
+      "If future projects will add many standard components, plan a basic license expansion in advance."
+    ]
+  },
+  {
+    "Measurement": "Digital workspace user/machine licenses allowed",
+    "Description": "Indicates the number of users allowed to log in to the Thin client/VDI components managed and monitored by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure applies only to Server & Named Users Based and Server & Concurrent Users Based license types and reflects the total capacity of licensed digital workspace user/machine logins.",
+    "troubleshootingSteps": [
+      "Compare allowed digital workspace licenses with the expected number of VDI/thin clients and users.",
+      "Ensure that your license allocation reflects peak concurrent usage patterns if you use concurrent licensing.",
+      "If planned VDI expansion will exceed current capacity, coordinate a license increase ahead of the rollout.",
+      "Document how these licenses are mapped to user groups or VDI pools for audit and planning purposes."
+    ]
+  },
+  {
+    "Measurement": "Digital workspace user/machine licenses in use",
+    "Description": "Indicates the number of users who are logged into the Thin client/VDI components monitored by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure, used with Digital workspace user/machine licenses allowed, shows current active consumption of digital workspace licenses under named or concurrent license models.",
+    "troubleshootingSteps": [
+      "Monitor peak values to ensure active usage never exceeds licensed capacity in concurrent scenarios.",
+      "If usage frequently approaches or reaches the allowed limit, consider acquiring additional digital workspace licenses.",
+      "Analyze login patterns to see whether some sessions remain idle or unused and can be optimized.",
+      "Correlate high usage with end-user experience metrics to ensure capacity is adequate and users are not throttled."
+    ]
+  },
+  {
+    "Measurement": "Digital workspace user/machine licenses available",
+    "Description": "Indicates the number of users who can still log into the Thin client/VDI components monitored by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This applies to Server & Named Users Based and Server & Concurrent Users Based license types and indicates remaining capacity for digital workspace logins. A - value (hiphen) indicates that this license type is not applicable for this deployment and this can be treated as COMPLIANT or not-a-concern",
+    "troubleshootingSteps": [
+      "Track remaining digital workspace licenses to ensure there is headroom for peak login periods (e.g., morning logon storms).",
+      "Set alert thresholds when available licenses fall below a defined buffer to avoid login denials.",
+      "Review inactive or orphaned accounts and sessions that might be consuming licenses unnecessarily.",
+      "Include this metric in digital workspace capacity planning discussions with EUC and VDI teams."
+    ]
+  },
+  {
+    "Measurement": "External agents",
+    "Description": "Indicates the number of external agents that were configured to report to the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows how many external agents are deployed and connected to this manager, reflecting the scale of distributed monitoring.",
+    "troubleshootingSteps": [
+      "Compare the count of external agents with your architecture design to ensure all required locations and zones are covered.",
+      "Investigate discrepancies where expected agents are not counted, which may indicate connectivity or registration issues.",
+      "Periodically review and remove agents that are no longer needed to simplify management and reduce overhead.",
+      "Correlate external agent counts with agent health metrics to ensure all agents are functioning as expected."
+    ]
+  },
+  {
+    "Measurement": "Monitored targets",
+    "Description": "Indicates the number of unique IP addresses that can be monitored by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure reflects the number of distinct target entities (by IP) under monitoring. It is useful for understanding environment coverage relative to licensing and design.",
+    "troubleshootingSteps": [
+      "Compare Monitored targets with your CMDB or asset inventory to identify gaps in monitoring coverage.",
+      "If the number of monitored targets is close to or exceeds expectations, verify that no duplicate or obsolete entries exist.",
+      "Use this measure alongside license utilization metrics to ensure sufficient capacity for all required targets.",
+      "Plan expansions in Monitored targets in line with infrastructure growth and license limits."
+    ]
+  },
+  {
+    "Measurement": "Applications",
+    "Description": "Indicates the number of applications that can be monitored by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows the count of application entities configured for monitoring and helps assess the breadth of application-level coverage.",
+    "troubleshootingSteps": [
+      "Validate that all critical business applications are included in this count and are configured for monitoring.",
+      "Review application inventory regularly to ensure new applications are added and retired ones are removed.",
+      "If the number of monitored applications is lower than expected, identify missing apps and add appropriate monitors.",
+      "If approaching any application-related license or design limits, plan for license or architecture adjustments."
+    ]
+  },
+  {
+    "Measurement": "Network devices",
+    "Description": "Indicates the number of network devices that can be monitored by the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure reflects how many network devices (such as switches, routers, firewalls) are configured for monitoring.",
+    "troubleshootingSteps": [
+      "Compare this count with your network inventory to confirm that key devices are being monitored.",
+      "Identify any network segments with insufficient monitoring coverage and onboard additional devices as needed.",
+      "Remove monitoring for decommissioned or unused devices to keep configuration clean and conserve licenses.",
+      "Use this metric to plan growth in network monitoring as the infrastructure expands."
+    ]
+  },
+  {
+    "Measurement": "Segments",
+    "Description": "Indicates the total number of topology segments that can be configured on the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows how many logical topology segments are defined or allowed, which helps organize monitored components by function, location, or service.",
+    "troubleshootingSteps": [
+      "Review the number and structure of segments to ensure they reflect current topology and service organization.",
+      "If segments are underutilized, consider using them to improve visualization, reporting, and ownership mapping.",
+      "Avoid excessive fragmentation into many tiny segments that may complicate management.",
+      "Align segments with organizational boundaries (e.g., business units, data centers) for clearer accountability."
+    ]
+  },
+  {
+    "Measurement": "Services",
+    "Description": "Indicates the total number of services that can be configured and monitored as logical groups within the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure reflects how many end-to-end or composite services are modeled for monitoring, which helps align technical metrics with business services.",
+    "troubleshootingSteps": [
+      "Ensure that key business services (e.g., ERP, email, VDI service) are defined as services in eG and counted by this metric.",
+      "If services are not modeled, consider creating them to provide clearer end-to-end visibility and reporting.",
+      "Periodically review service definitions to retire obsolete ones and adjust components included in each service.",
+      "Use service-level modeling to drive SLA/SLO reporting and preventive maintenance discussions with stakeholders."
+    ]
+  },
+  {
+    "Measurement": "Monitor users",
+    "Description": "Indicates the number of users permitted to access the eG monitoring console of the eG manager.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure represents the licensed or configured capacity for monitoring console users and reflects how many individuals can directly use the eG UI.",
+    "troubleshootingSteps": [
+      "Compare Monitor users with Non-default users and actual usage metrics to understand adoption levels.",
+      "If many monitor user slots are unused, consider onboarding additional team members who would benefit from direct access.",
+      "If you hit the limit of monitor users, review inactive accounts and remove or disable them to free capacity.",
+      "Align the number of monitor users with support model changes (e.g., onboarding new NOC teams or MSP partners)."
+    ]
+  },
+  {
+    "Measurement": "License expiry",
+    "Description": "Indicates the number of days beyond which the license to the eG manager will expire.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "This measure shows the remaining validity period of the eG manager license. A low value indicates that renewal or extension is required soon to avoid disruption.",
+    "troubleshootingSteps": [
+      "Monitor this measure regularly and define internal thresholds (e.g., 90, 60, 30 days) to trigger renewal planning.",
+      "Share upcoming expiry information with procurement, vendor management, and technical owners to align budgeting and approvals.",
+      "Ensure that any changes in environment scope (more monitors, users, or features) are considered during renewal negotiations.",
+      "Avoid last-minute renewals that risk license lapse and potential monitoring outages."
+    ]
+  }
+]

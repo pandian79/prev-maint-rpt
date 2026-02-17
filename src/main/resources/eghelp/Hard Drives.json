@@ -1,0 +1,26 @@
+[
+  {
+    "measurement": "Temperature",
+    "description": "Indicates the current temperature of this hard disk.",
+    "measurementUnit": "Celcius",
+    "interpretation": "Ideally, the value of this measure should be within prescribed limits. A sudden/gradual increase in the value of this measure may adversely affect the functioning of the server and therefore, administrators may need to attend to the issue immediately.",
+    "troubleshootingSteps": [
+      "Check physically for blocked airflow, dust buildup on fans/vents, or malfunctioning cooling fans, and clean/replace as needed to restore proper ventilation.[web:280][web:282][web:287]",
+      "Ensure the server environment ambient temperature is within specifications; if using an enclosure, verify it is not placed in a hot location or lacking ventilation.[web:279][web:287]",
+      "Reduce disk load by identifying and stopping processes causing excessive I/O (using Task Manager or Resource Monitor), which generates heat.[web:283][web:285]",
+      "Run disk diagnostic tools (like CHKDSK or SMART utilities) to check for bad sectors or mechanical failures, as failing drives often overheat due to friction or repeated seek attempts.[web:283][web:285][web:287][web:291]"
+    ]
+  },
+  {
+    "measurement": "Physical hard disk space utilized",
+    "description": "Indicates the percentage of space that is currently utilized by this hard disk.",
+    "measurementUnit": "Percent",
+    "interpretation": "A value close to 100 indicates that the hard disk is currently running out of space. Administrators may need to either free up the space or need to add more space to the hard disk to ensure smooth functioning of the server.",
+    "troubleshootingSteps": [
+      "Use tools like Disk Cleanup (Windows), Storage Sense, or `du` (Linux) to identify and remove temporary files, old logs, system caches, and empty the Recycle Bin.[web:284][web:286][web:288][web:292]",
+      "Analyze disk usage with tree-view utilities (like WinDirStat or TreeSize) to locate large, unexpected files or folders (e.g., old backups, installer files) for deletion or archiving.[web:284][web:288]",
+      "Check for 'ghost' usage such as shadow copies/restore points taking up space, or file system errors reporting incorrect free space; run `chkdsk` or adjust System Restore limits.[web:284][web:286][web:290]",
+      "If the drive remains full despite cleanup, extend the partition (if unallocated space exists) or migrate data to a larger drive/secondary storage volume.[web:284][web:292]"
+    ]
+  }
+]

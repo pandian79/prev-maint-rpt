@@ -1,0 +1,67 @@
+[
+  {
+    "measurement": "Average wait time for locks",
+    "description": "Indicates the average amount of wait time for each lock request that resulted in a wait.",
+    "unit": "Secs",
+    "interpretation": "A high value indicates contention for locks in the system. When average lock wait time is high, users must wait longer for their transactions to complete. This metric covers multiple lock types (database, extent, key, page, RID, table). When the value is high, you should identify which specific lock types or objects are causing transaction delays using detailed diagnostics or profiling.[web:173][web:174][web:175]",
+    "troubleshootingSteps": [
+      "Break down average lock wait time by lock type (key, page, table, etc.) to see which lock classes are contributing most to the delay.[web:173][web:174]",
+      "Use blocking/lock diagnostic tools or DMVs to identify which sessions hold the blocking locks and which sessions are waiting, along with the objects involved.[web:174][web:175][web:179]",
+      "Tune problematic queries by reducing the number of rows they lock (more selective predicates, better indexes) and by shortening transaction scopes so locks are held for less time.[web:174][web:175][web:180]",
+      "Review isolation levels and consider row-version-based isolation (for example, READ_COMMITTED_SNAPSHOT) where appropriate to reduce blocking between readers and writers.[web:174][web:179]",
+      "If specific hot tables or rows are constantly involved in waits, consider schema/index changes or partitioning to distribute contention more evenly.[web:174][web:180]"
+    ]
+  },
+  {
+    "measurement": "Lock requests",
+    "description": "Indicates the total number of new locks and lock conversions requested from the lock manager per second.",
+    "unit": "Reqs/Sec",
+    "interpretation": "A high value indicates high locking activity in the system. This by itself is not necessarily bad, but it warrants closer scrutiny of which lock types are being requested and whether they are causing blocking and wait issues.[web:173][web:175]",
+    "troubleshootingSteps": [
+      "Drill into lock requests by lock type to identify whether certain lock classes (for example, key or page locks) are much more frequent than others.[web:173][web:175]",
+      "Compare lock request rates with lock waits and deadlocks: high lock requests with low waits can be healthy, while high lock requests plus high waits suggest contention.[web:175][web:178]",
+      "Review application transaction design to avoid unnecessary locking, such as long-running transactions or holding locks while waiting for user input.[web:174][web:180]",
+      "Optimize queries to use appropriate indexes, minimizing the need for large range locks or escalation to table locks.",
+      "If lock requests spike after deployments or configuration changes, inspect new or modified queries for excessive locking behavior."
+    ]
+  },
+  {
+    "measurement": "Lock waits",
+    "description": "Indicates the number of lock requests per second that could not be satisfied immediately and required the caller to wait before being granted the lock.",
+    "unit": "Waits/Sec",
+    "interpretation": "High lock waits per second can significantly degrade application performance. Causes include insufficient available locks, unusually heavy locking behavior in applications, and poor database or application design. Detailed diagnostics can show the rate of lock waits by lock type.[web:173][web:174][web:175]",
+    "troubleshootingSteps": [
+      "Monitor both lock waits/sec and total lock wait time to understand not only how often waits occur but how long they last.[web:174][web:175][web:177]",
+      "Use lock and wait DMVs or blocking diagnostics to identify specific objects, lock owners, and waiting sessions; focus first on the highest-impact waits.[web:174][web:179][web:180]",
+      "Reduce lock contention by shortening transactions, using more granular operations, and avoiding patterns that cause widespread blocking (for example, large batch updates on hot tables).",
+      "Ensure indexing supports the most common queries so they lock fewer rows and pages, minimizing the chance of conflicts.[web:175][web:178]",
+      "Where feasible, adjust isolation levels or use optimistic concurrency to reduce blocking between readers and writers.[web:174][web:179]"
+    ]
+  },
+  {
+    "measurement": "Deadlocks",
+    "description": "Indicates the number of lock requests per second that resulted in a deadlock.",
+    "unit": "Deadlocks/Sec",
+    "interpretation": "A deadlock occurs when two or more sessions each hold locks that the others need, forming a circular dependency so none can proceed. Deadlocks are usually the result of poor query design, inconsistent locking order, or deficient coding practices, and are harmful to database performance. Detailed diagnostics can show deadlock rates by lock type.[web:173][web:175][web:171]",
+    "troubleshootingSteps": [
+      "Capture deadlock graphs (for example, via Extended Events or the system_health session) to see the exact resources and queries involved.[web:167][web:171]",
+      "Standardize the order in which application code accesses tables and resources so that concurrent transactions acquire locks in a consistent sequence and avoid circular waits.[web:171][web:180]",
+      "Refactor long or complex transactions into smaller units where possible so locks are held for shorter durations, reducing deadlock windows.[web:167][web:171]",
+      "Add or tune indexes to reduce the number of rows locked and to prevent wide-range scans that increase the probability of deadlocks.[web:175][web:178]",
+      "If deadlocks are confined to specific reporting or batch jobs, reschedule or serialize those jobs to minimize overlap with interactive workloads."
+    ]
+  },
+  {
+    "measurement": "Lock timeouts",
+    "description": "Indicates the number of lock requests per second that timed out, including requests for NOWAIT locks.",
+    "unit": "Timeouts/Sec",
+    "interpretation": "LOCK_TIMEOUT determines how long a statement waits for a blocked resource. If the wait exceeds this setting, SQL Server cancels the blocked statement and returns error 1222, but does not roll back the entire transaction. A high lock timeout rate indicates many statements are being canceled because they cannot acquire locks quickly enough, often due to other long‑held locks such as extent locks.[web:173][web:174][web:175]",
+    "troubleshootingSteps": [
+      "Investigate blocked and blocking sessions to see which statements are repeatedly timing out and which long-running transactions are holding locks on the target resources.[web:174][web:175][web:179]",
+      "Review and, if necessary, adjust the LOCK_TIMEOUT setting: if it is very low, some timeouts may be too aggressive; if it is reasonable, focus more on resolving blocking and contention.[web:176]",
+      "Optimize blocking queries by improving indexes, reducing scan ranges, and narrowing transaction scopes so locks are released sooner.[web:174][web:178][web:180]",
+      "Consider redesigning application logic to avoid frequent NOWAIT lock requests unless the application can gracefully handle and retry failures.",
+      "Monitor trends in lock timeouts alongside deadlocks and average wait times; a combined rise across these metrics strongly indicates locking and design issues that need immediate attention.[web:174][web:176]"
+    ]
+  }
+]

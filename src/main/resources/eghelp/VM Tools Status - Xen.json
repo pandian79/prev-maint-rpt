@@ -1,0 +1,26 @@
+[
+  {
+    "measurement": "Is Xen tools installed?",
+    "description": "Indicates whether or not XenServer Tools has been installed on this VM.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "If XenServer Tools is installed on a VM, this measure reports Yes (numeric 1); if it is not installed, it reports No (numeric 0). Graphs use the numeric values 0 and 1 to represent the installation status over time.",
+    "troubleshootingSteps": [
+      "If the value is No, install XenServer Tools on the VM so that you can obtain accurate performance and management metrics.",
+      "Verify that the tools ISO is correctly mounted and the guest OS components are successfully installed inside the VM.",
+      "After installation, confirm in XenCenter/Xen Orchestra or the monitoring tool that the VM is detected as having tools installed.",
+      "Standardize templates so that new VMs are provisioned with XenServer Tools preinstalled, reducing the chance of missing tools."
+    ]
+  },
+  {
+    "measurement": "Is Xen tools up to date?",
+    "description": "Indicates whether the latest version of XenServer Tools has been installed on this VM.",
+    "unit": "Text (Yes/No) with numeric equivalents 1/0",
+    "interpretation": "If the latest version of XenServer Tools is installed, this measure reports Yes (numeric 1); if an older or obsolete version is installed, it reports No (numeric 0). Graphs again use only the numeric values 0 and 1 to show tools version compliance over time.",
+    "troubleshootingSteps": [
+      "For VMs reporting No, schedule an update of XenServer Tools to the latest supported version recommended by Citrix.",
+      "Snapshot or back up the VM before updating the tools to allow rollback if issues occur during the upgrade.",
+      "After upgrading, validate that the monitoring tool now reports Yes and that VM metrics and drivers (PV/I/O drivers) operate correctly.",
+      "Incorporate XenServer Tools updates into your regular patch management process so VMs remain on supported tool versions."
+    ]
+  }
+]

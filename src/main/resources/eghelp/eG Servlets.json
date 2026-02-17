@@ -1,0 +1,74 @@
+[
+  {
+    "measurement": "Requests received",
+    "description": "Indicates the number of requests handled by this servlet.",
+    "unit": "Number",
+    "interpretation": "This is a key indicator of the load handled by the servlet over the measurement period. Higher values reflect heavier usage, which can be expected during peak activity but may also contribute to increased response times if resources are limited.",
+    "troubleshootingSteps": [
+      "Track this value over time to establish normal and peak load patterns for the servlet.",
+      "If requests received increase significantly, verify that the underlying infrastructure (threads, database connections, CPU, memory) can handle the additional load.",
+      "Use this measure together with Average response time to see whether higher load correlates with slower responses.",
+      "If a single servlet is handling disproportionately high traffic compared to others, consider load balancing or refactoring responsibilities."
+    ]
+  },
+  {
+    "measurement": "Average response time",
+    "description": "Indicates the time taken by this servlet to respond to requests.",
+    "unit": "Secs",
+    "interpretation": "A high value indicates poor responsiveness of the servlet. Comparing this metric across servlets helps you identify which servlet is the slowest and may be causing bottlenecks for users or agents.",
+    "troubleshootingSteps": [
+      "Compare Average response time across all servlets to pinpoint which ones are significantly slower.",
+      "Correlate spikes in response time with Requests received to see if performance issues arise only under higher load.",
+      "Profile the servlet’s code path (including database calls, external service calls, and complex processing) to identify and optimize slow operations.",
+      "Check for resource contention (thread pool saturation, DB connection pool exhaustion, high CPU or I/O) that can increase response times."
+    ]
+  },
+  {
+    "measurement": "Insert queries",
+    "description": "Indicates the number of insert queries that were executed by this servlet during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This shows how write-intensive the servlet’s workload is in terms of insert operations. High counts may indicate heavy data ingestion or logging activity driven by this servlet.",
+    "troubleshootingSteps": [
+      "Monitor Insert queries alongside Average insert time to determine whether higher insert volume degrades performance.",
+      "If insert counts are unexpectedly high, review application logic to ensure that redundant or unnecessary inserts are not being issued.",
+      "Assess database indexing and storage configuration to handle the observed insert rate efficiently.",
+      "If required, consider batching inserts or using more efficient bulk-insert mechanisms."
+    ]
+  },
+  {
+    "measurement": "Average insert time",
+    "description": "Indicates the time taken by this servlet to respond to insert queries during the last measurement period.",
+    "unit": "Secs",
+    "interpretation": "This reflects the responsiveness of insert operations handled by the servlet. Higher values indicate slower insert performance. Comparing this metric across servlets helps you identify the servlet that is slowest in handling inserts.",
+    "troubleshootingSteps": [
+      "Compare Average insert time across servlets to detect specific components with slower insert performance.",
+      "Examine database execution plans for insert statements to identify issues such as excessive index maintenance, triggers, or constraints.",
+      "Check for contention on tables receiving inserts (locks, I/O bottlenecks, or log write delays).",
+      "Optimize schema, indexes, and application logic to reduce insert latency, and validate improvements by monitoring this metric afterward."
+    ]
+  },
+  {
+    "measurement": "Update queries",
+    "description": "Indicates the number of updates that were handled by this servlet during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This measures how many update operations the servlet performs. High values suggest that the servlet is responsible for significant state changes or metric updates, potentially contributing to database load.",
+    "troubleshootingSteps": [
+      "Track Update queries along with Average update time to see whether increased update volume correlates with slower performance.",
+      "Review application logic to avoid unnecessary or overly frequent updates, especially inside tight loops or frequent polling.",
+      "Validate that appropriate indexes exist on columns used in update predicates to reduce row scan costs.",
+      "If update counts are unexpectedly high, investigate whether agents or clients are sending more frequent updates than intended."
+    ]
+  },
+  {
+    "measurement": "Average update time",
+    "description": "Indicates the time taken by this servlet to update the requests during the last measurement period.",
+    "unit": "Secs",
+    "interpretation": "A high value indicates poor responsiveness for update operations. This can imply that too many agents are reporting to the eG Manager, leading to overload, or that the underlying update logic or database design is inefficient. Comparing this measure across servlets highlights which servlet is slowest in handling updates.",
+    "troubleshootingSteps": [
+      "Compare Average update time across servlets to identify the ones with the highest update latency.",
+      "Investigate whether database locks, contention, or large row sets are causing slow updates, and adjust indexing and query patterns accordingly.",
+      "Check whether agent reporting frequency or payload size can be optimized to reduce the volume or cost of updates.",
+      "Scale resources (database, application tier) or refactor the update workflow if high update times persist under normal load."
+    ]
+  }
+]```

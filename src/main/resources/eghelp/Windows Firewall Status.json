@@ -1,0 +1,35 @@
+[
+  {
+    "measurement": "Domain network status",
+    "description": "Indicates the current status of the domain profile.",
+    "measurementUnit": null,
+    "interpretation": "On=1, Off=0. The graph represents the domain network status using these numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the domain profile is Off on a domain-joined machine, verify that the device can reach domain controllers and that DNS points to the AD DNS servers, then restart the Network Location Awareness (NLA) service or reboot if needed.[web:205][web:207][web:209][web:211][web:214][web:218]",
+      "Ensure domain controllers themselves are using the Domain profile (not Public/Private), as misclassified DCs can cause clients to fall back to Public or Private firewall profiles.[web:205][web:208][web:209][web:211][web:216]",
+      "Review Group Policy and Windows Security/Firewall settings so domain firewall rules are correctly applied when the Domain profile is active, and monitor for profile misclassification via scripts or management tools.[web:204][web:210][web:213][web:215][web:216][web:218]"
+    ]
+  },
+  {
+    "measurement": "Private network status",
+    "description": "Indicates the current status of the private profile.",
+    "measurementUnit": null,
+    "interpretation": "On=1, Off=0. The graph represents the private network status using these numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the private profile is Off on a trusted home/office network, confirm the network is set to Private in Windows network settings and that firewall rules for Private networks match your sharing and access requirements.[web:204][web:206][web:212][web:218]",
+      "Where Windows shows the NIC as Private but the firewall uses another profile, check for recent updates and NLA anomalies, and consider delaying NLA start or adjusting related registry/GPO settings as documented in known issues.[web:206][web:209][web:211][web:214][web:217]",
+      "Avoid enabling overly permissive rules on Public when the intent is to use Private; instead, fix the profile classification and keep Public as the more restrictive profile for untrusted networks.[web:204][web:210][web:212][web:216][web:218]"
+    ]
+  },
+  {
+    "measurement": "Public network status",
+    "description": "Indicates the current status of the public profile.",
+    "measurementUnit": null,
+    "interpretation": "On=1, Off=0. The graph represents the public network status using these numeric equivalents.",
+    "troubleshootingSteps": [
+      "If the Public profile is On while connected to a corporate domain or trusted LAN, investigate why Windows Firewall is selecting Public instead of Domain/Private (NLA issues, DC reachability, DNS misconfiguration) and correct the underlying cause.[web:205][web:207][web:209][web:211][web:214][web:217]",
+      "Keep the Public profile rules the most restrictive (minimal inbound access) to protect devices on untrusted networks such as public Wi‑Fi; do not disable the firewall entirely for Public.[web:204][web:212][web:216][web:218]",
+      "Monitor active firewall profile and notify administrators if servers unexpectedly switch to Public, as this can break management tools and indicate domain or NLA problems.[web:209][web:211][web:213][web:216]"
+    ]
+  }
+]

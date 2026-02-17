@@ -1,0 +1,68 @@
+[
+  {
+    "measurement": "Trend manager status",
+    "description": "Indicates the current status of the trend manager process.",
+    "unit": "Running/Sleeping/Error/Not Started/Interrupted (internally 0/1/2/3/4)",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This shows whether the trend manager is actively running, idle, in error, not yet started, or was interrupted. A healthy environment should typically report Running or sometimes Sleeping; Error, Not Started, or Interrupted indicate conditions that can block trend computations. Charts use the numeric codes 0–4 while the UI shows the textual states."
+  },
+  {
+    "measurement": "Time taken for trend computation",
+    "description": "Indicates the total time taken by the trend manager process to perform trend computations.",
+    "unit": "Minutes",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This is the duration of the latest trend computation cycle. It should remain low; a steady rise suggests the trend manager is taking too long, often because there are many components, tests, and measurements to process, which can delay availability of updated trend data."
+  },
+  {
+    "measurement": "Successful trend tests",
+    "description": "Indicates the number of tests for which trends were computed successfully.",
+    "unit": "Number",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This counts tests whose trend data was computed without error. Using detailed diagnosis, you can list those tests and confirm that important metrics have valid trend information for reporting and capacity planning."
+  },
+  {
+    "measurement": "Failed trend tests",
+    "description": "Indicates the number of tests for which trend computation failed.",
+    "unit": "Number",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.The desired value is 0. Any non‑zero value indicates that some tests do not have updated trend data, which can undermine trend graphs and reports. Detailed diagnosis identifies the affected tests so you can investigate and correct the underlying issues."
+  },
+  {
+    "measurement": "Time since last trend update",
+    "description": "Indicates the elapsed time since the last trend computation.",
+    "unit": "Minutes",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This shows how long it has been since trends were last computed. Since trending is usually scheduled once per day, an unusually large value can reveal that a scheduled trend computation cycle was missed or did not complete."
+  },
+  {
+    "measurement": "Is trend manager a separate process?",
+    "description": "Indicates whether or not the trend manager is running as a separate process.",
+    "unit": "Yes/No (internally 1/0)",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.Yes (1) means the trend manager runs in its own Java process, offloading work and memory from the core eG manager and improving scalability. No (0) means it runs within the core manager process, which is simpler but constrained by that single process’s heap. Graphs use numeric values while the UI shows Yes/No."
+  },
+  {
+    "measurement": "Has trend computation completed for today?",
+    "description": "Indicates whether or not trend computation was completed for this day.",
+    "unit": "Yes/No (internally 1/0)",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.Yes (1) indicates that today’s scheduled trend computation has finished; No (0) indicates that it is still pending or did not run. Monitoring this helps ensure daily trend cycles complete so that reports and capacity plans are based on up‑to‑date data."
+  },
+  {
+    "measurement": "Slow trend tests",
+    "description": "Indicates the number of tests for which trend data computation was slow.",
+    "unit": "Number",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This counts tests whose trend computations took longer than expected. Detailed diagnosis lists those tests so you can examine their configuration or data volume and optimize them to speed up trend processing."
+  },
+  {
+    "measurement": "Days for which trends were computed",
+    "description": "Indicates the number of days since the trend manager was started.",
+    "unit": "Days",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This represents how many days of trend computation runs have occurred in the current lifetime of the trend manager. It provides a simple indication of how long the current trend-processing instance has been active."
+  },
+  {
+    "measurement": "Time taken for computing historical state data",
+    "description": "Indicates the time taken by the trend manager to perform trend computations for historical state data.",
+    "unit": "Minutes",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This is the time spent computing trends over historical state information. Higher values can indicate that historical datasets are large or complex, which may affect how quickly historical trend views become available."
+  },
+  {
+    "measurement": "Time taken for computing and sending schedule reports",
+    "description": "Indicates the total time taken by the trend manager to perform trend computations for schedule reports and send the same.",
+    "unit": "Minutes",
+    "interpretation": "The eG Trend manager process uses the raw measurement data in the eG database to compute hourly, daily, weekly, and monthly summaries and performance averages, and stores these computations in trend tables. Users to the eG monitoring and reporting consoles can query the data in the trend tables to generate trend graphs and reports. These graphs/reports enable administrators to clearly understand the historical trends in performance, on the basis of which they can accurately predict future performance and effectively plan the future capacity of the environment. Using this test, you can understand how efficient the trend manager process is.This measures the time required both to compute the trend data used in scheduled reports and to deliver those reports. Larger or growing values may signal that report generation is becoming more resource-intensive and could delay report delivery."
+  }
+]

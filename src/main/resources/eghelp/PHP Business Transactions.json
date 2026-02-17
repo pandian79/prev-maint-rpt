@@ -1,0 +1,194 @@
+[
+  {
+    "Measurement": "All transactions",
+    "Description": "Indicates the total number of requests received for transactions of this pattern during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "By comparing the value of this measure across transaction patterns, you can identify the most popular transaction patterns. Using the detailed diagnosis of this measure, you can then figure out which specific transactions of that pattern are most requested. For the Summary descriptor, this measure will reveal the total number of transaction requests received by the target web site during the last measurement period. This is a good indicator of the transaction workload on that web site."
+  },
+  {
+    "Measurement": "Avg response time",
+    "Description": "Indicates the average time taken by the transactions of this pattern to complete execution.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "Compare the value of this measure across patterns to isolate the type of transactions that were taking too long to execute. You can then use the detailed diagnosis of the All transactions measure of that group to know how much time each transaction in that group took to execute. This will lead you to the slowest transaction. For the Summary descriptor, this measure will reveal the average responsiveness of all the transaction requests received by the target web site during the last measurement period. An abnormally low value for this measure for the Summary descriptor could indicate a serious processing bottleneck on the target web site."
+  },
+  {
+    "Measurement": "Healthy transactions",
+    "Description": "Indicates the number of healthy transactions of this pattern.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "By default, this measure will report the count of transactions with a response time less than 4000 milliseconds. You can change this default setting by modifying the thresholds of the Avg response time measure using the eG admin interface. For the Summary descriptor, this measure will report the total number of healthy transactions on the target web site."
+  },
+  {
+    "Measurement": "Healthy transactions percentage",
+    "Description": "Indicates what percentage of the total number of transactions of this pattern is healthy.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "To know which are the healthy transactions, use the detailed diagnosis of this measure. For the Summary descriptor, this measure will report the overall percentage of healthy transactions on the target web site."
+  },
+  {
+    "Measurement": "Slow transactions",
+    "Description": "Indicates the number of transactions of this pattern that were slow during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "By default, this measure will report the number of transactions with a response time higher than 4000 milliseconds and lesser than 60000 milliseconds. You can change this default setting by modifying the thresholds of the Avg response time measure using the eG admin interface. A high value for this measure is a cause for concern, as too many slow transactions means that user experience with the web application is poor. For the Summary descriptor, this measure will report the total number of slow transactions on the target web site. This is a good indicator of the processing power of the target web site."
+  },
+  {
+    "Measurement": "Slow transaction response time",
+    "Description": "Indicates the average time taken by the slow transactions of this pattern to execute.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "For the Summary descriptor, this measure will report the average response time of all the slow transactions on the target web site."
+  },
+  {
+    "Measurement": "Slow transactions percentage",
+    "Description": "Indicates what percentage of the total number of transactions of this pattern is currently slow.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Use the detailed diagnosis of this measure to know which precise transactions of a pattern are slow. You can drill down from a slow transaction to know what is causing the slowness. For the Summary descriptor, this measure will report the overall percentage of slow transactions on the monitored web site."
+  },
+  {
+    "Measurement": "Error transactions",
+    "Description": "Indicates the number of transactions of this pattern that experienced errors during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A high value is a cause for concern, as too many error transactions to a web application can significantly damage the user experience with that application. For the Summary descriptor, this measure will report the total number of error transactions on the target web site. This is a good indicator of how error-prone the target web site is."
+  },
+  {
+    "Measurement": "Error transactions response time",
+    "Description": "Indicates the average duration for which the transactions of this pattern were processed before an error condition was detected.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "The value of this measure will help you discern if error transactions were also slow. For the Summary descriptor, this measure will report the average response time of all error transactions on the target web site."
+  },
+  {
+    "Measurement": "Error transactions percentage",
+    "Description": "Indicates what percentage of the total number of transactions of this pattern is experiencing errors.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Use the detailed diagnosis of this measure to isolate the error transactions. You can even drill down from an error transaction in the detailed diagnosis to determine the cause of the error. For the Summary descriptor, this measure will report the overall percentage of transactions of this pattern on the target web site that is currently experiencing errors."
+  },
+  {
+    "Measurement": "Stalled transactions",
+    "Description": "Indicates the number of transactions of this pattern that were stalled during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "By default, this measure will report the number of transactions with a response time higher than 60000 milliseconds. You can change this default setting by modifying the thresholds of the Avg response time measure using the eG admin interface. A high value is a cause for concern, as too many stalled transactions means that user experience with the web application is poor. For the Summary descriptor, this measure will report the total number of stalled transactions on the target web site."
+  },
+  {
+    "Measurement": "Stalled transactions response time",
+    "Description": "Indicates the average time taken by the stalled transactions of this pattern to execute.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "For the Summary descriptor, this measure will report the average response time of all stalled transactions on the target web site."
+  },
+  {
+    "Measurement": "Stalled transactions percentage",
+    "Description": "Indicates what percentage of the total number of transactions of this pattern is stalling.",
+    "MeasurementUnit": "Percent",
+    "Interpretation": "Use the detailed diagnosis of this measure to know which precise transactions of a pattern are stalled. You can drill down from a stalled transaction to know what is causing that transaction to stall. For the Summary descriptor, this measure will report the overall percentage of transactions of this pattern on the target web site that is stalling."
+  },
+  {
+    "Measurement": "Slow SQL statements executed",
+    "Description": "Indicates the number of slow SQL queries that were executed by the transactions of this pattern during the last measurement period.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "For the Summary descriptor, this measure will report the total number of slow SQL queries executed by all transactions to the target web site."
+  },
+  {
+    "Measurement": "Avg slow SQL statement time",
+    "Description": "Indicates the average execution time of the slow SQL queries that were run by the transactions of this pattern.",
+    "MeasurementUnit": "Secs",
+    "Interpretation": "If there are too many slow transactions of a pattern, you may want to check the value of this measure for that pattern to figure out if query execution is slowing down the transactions. Use the detailed diagnosis of the Slow transactions measure to identify the precise slow transaction. Then, drill down from that slow transaction to confirm whether/not database queries have contributed to the slowness. Deep-diving into the queries will reveal the slowest queries and their impact on the execution time of the transaction."
+  },
+  {
+    "Measurement": "Total transactions per minute",
+    "Description": "Indicates the number of transactions of this pattern that are executed per minute.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Error transactions per minute",
+    "Description": "Indicates the number of error transactions of this pattern that are executed per minute.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A very low value is desired for this measure. Compare the value of this measure across transaction patterns to find that pattern of transactions that is experiencing errors frequently."
+  },
+  {
+    "Measurement": "Avg CPU time",
+    "Description": "Indicates the average time for which transactions of this pattern were utilizing the CPU.",
+    "MeasurementUnit": "Msecs",
+    "Interpretation": "Compare the value of this measure across transaction patterns to accurately identify the CPU-intensive transaction patterns. For the Summary descriptor, this measure will report the average time for which all the transactions on the target PHP web server used the CPU."
+  },
+  {
+    "Measurement": "Avg block time",
+    "Description": "Indicates the average duration for which transactions of this pattern were blocked and could not execute.",
+    "MeasurementUnit": "Msecs",
+    "Interpretation": "If the Avg response time for any transaction pattern is very high, you may want to check the value of this measure for that pattern. This will help you figure out whether/not prolonged blocking is causing transactions of that pattern to slow down or stall. For the Summary descriptor, this measure will report the average time for which all the transactions on the target PHP web server were blocked."
+  },
+  {
+    "Measurement": "Avg wait time",
+    "Description": "Indicates the average duration for which transactions of this pattern were waiting before they resumed execution.",
+    "MeasurementUnit": "Msecs",
+    "Interpretation": "If the Avg response time for any transaction pattern is very high, you may want to check the value of this measure for that pattern. This will help you figure out whether/not a very high waiting time is what is causing the transactions to slow down/stall. For the Summary descriptor, this measure will report the average time for which all the transactions on the target PHP web server were waiting."
+  },
+  {
+    "Measurement": "Entry point request count",
+    "Description": "Indicates the total number of requests of this pattern for which the monitored node was the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The All transactions measure reports the sum of the requests passing through the target node and the requests for which the target node is the entry point, and hence paints the true picture of transaction load on a specific node. The Entry point request count reports the count of unique transactions (of a given pattern) for which that node is the entry point. By monitoring this count across all nodes that are engaged in delivering a business service, service managers can accurately ascertain the total transaction load on the service."
+  },
+  {
+    "Measurement": "Entry point avg response time",
+    "Description": "Indicates the average time taken by the transactions (of this pattern) for which the target node is the entry point, to complete execution.",
+    "MeasurementUnit": "Milliseconds",
+    "Interpretation": "The Avg response time measure reveals how responsive a transaction pattern is from the time requests of that pattern are received by the target node, and is a good indicator of workload processing ability of the target node. The Entry point avg response time measure on the other hand enables service owners/managers to accurately measure transaction performance at the business service-level, by reporting the end-to-end responsiveness of transactions from the entry point through all nodes until the user receives the responses."
+  },
+  {
+    "Measurement": "Entry point slow request count",
+    "Description": "Indicates the number of slow transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The Slow transactions measure captures the total count of transactions that have been observed to be slow from the time the transaction requests reach the target node till responses are returned, and is node-focused. The Entry point slow request count measure instead allows you to determine the count of slow transactions to a business service by reporting, for each node that supports a business service, how many distinct transactions to that service are slow."
+  },
+  {
+    "Measurement": "Entry point slow response time",
+    "Description": "Indicates the average execution time of the slow transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Milliseconds",
+    "Interpretation": "The Slow transaction response time measure reports slowness from the perspective of the target node. The Entry point slow response time measure captures slowness by observing transaction response time from its entry point, enabling monitoring of transaction slowness at the business service-level."
+  },
+  {
+    "Measurement": "Entry point error request count",
+    "Description": "Indicates the count of error transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The Error transactions measure captures the total count of error transactions to a target node. The Entry point error request count measure allows you to determine the count of error transactions to a business service by aggregating, across nodes, how many distinct transactions to that service have encountered errors."
+  },
+  {
+    "Measurement": "Entry point error response time",
+    "Description": "Indicates the average execution time of the error transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Milliseconds",
+    "Interpretation": "The Error transaction response time measure reports responsiveness of error transactions on the target node. The Entry point error response time measure reports the average response time of unique error transactions from their entry point, which helps understand responsiveness of error transactions to a business service."
+  },
+  {
+    "Measurement": "Entry point stalled request count",
+    "Description": "Indicates the number of stalled transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The Stalled transactions measure captures the total count of stalled transactions observed at the target node. The Entry point stalled request count measure allows you to determine the count of stalled transactions to a business service by indicating how many distinct transactions to that service are stalled."
+  },
+  {
+    "Measurement": "Entry point stalled response time",
+    "Description": "Indicates the average execution time of the stalled transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Milliseconds",
+    "Interpretation": "The Stalled transaction response time measure reports stalled transaction responsiveness at the target node. The Entry point stalled response time measure reports the average responsiveness of unique stalled transactions from their entry point, enabling measurement of stalled transaction responsiveness at the business service-level."
+  },
+  {
+    "Measurement": "Entry point healthy request count",
+    "Description": "Indicates the number of healthy transactions (of this pattern) for which the target node is the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "The Healthy transactions measure captures the total count of healthy transactions to a target node. The Entry point healthy request count measure allows you to determine the count of healthy transactions to a business service by indicating how many distinct transactions to that service are healthy."
+  },
+  {
+    "Measurement": "Entry point total calls per minute",
+    "Description": "Indicates the total number of transaction calls (of this pattern) that were received per minute by the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Entry point error transactions per minute",
+    "Description": "Indicates the number of error transaction calls (of this pattern) that were received per minute by the entry point.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  },
+  {
+    "Measurement": "Satisfaction score",
+    "Description": "Indicates the Apdex score / Satisfaction score of the transactions of this pattern.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "Apdex (Application Performance Index) is an open standard that defines a standard method for reporting and comparing application performance by converting measurements into insights about user satisfaction. It produces a value from 0 to 1, where 1 means all users are satisfied and 0 means none are. The Apdex formula is: Apdex_t = (Satisfied Count + Tolerating Count / 2) / Total Samples. Ideally, this measure should be 1.0; values less than 1.0 indicate that user experience has been less than satisfactory."
+  }
+]

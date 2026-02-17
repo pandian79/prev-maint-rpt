@@ -1,0 +1,314 @@
+[
+  {
+    "measurement": "Total Page views",
+    "description": "Indicates the total number of times pages were viewed by users from this country.",
+    "unit": "Number",
+    "interpretation": "This is a good measure of the traffic from a specific country. Sudden, but significant spikes in the page view count could be a cause for concern, as it could be owing to a malicious virus attack or an unscrupulous attempt to hack your web site/web application. An abnormally high value for this measure may not always indicate a genuine increase in traffic because, after Real User Monitor agent stops or agent‑collector disconnections, locally stored metrics can be cumulated and reported in the current period, making Total Page views appear to surge.",
+    "troubleshootingSteps": [
+      "Investigate sudden spikes in Total Page views from this country using web server, CDN, and WAF logs to distinguish real users from bots or attacks.",
+      "Correlate spikes with Real User Monitor agent restarts or agent‑collector reconnection events to detect artificial inflation caused by delayed metric upload.",
+      "Compare country‑level page views with global trends to see whether the spike is localized to this country or part of a broader pattern.",
+      "If you confirm malicious traffic from specific networks or ASNs in this country, apply rate limiting, IP blocking, or CAPTCHA challenges for those sources."
+    ]
+  },
+  {
+    "measurement": "Apdex score",
+    "description": "Indicates the apdex score of the web site/web application based on the experience of users from this country.",
+    "unit": "Number",
+    "interpretation": "Apdex is an open standard that converts many measurements into a single number on a 0‑to‑1 scale (0 = no users satisfied, 1 = all users satisfied). The Apdex formula is ApdexT = (Satisfied Count + Tolerating Count / 2) / Total Samples. A score of 1.0 is ideal; a value less than 1.0 indicates that the experience of users from this country has been less than satisfactory.",
+    "troubleshootingSteps": [
+      "Decompose the Apdex score for this country into satisfied, tolerating, and frustrated counts to see which category contributes most to dissatisfaction.",
+      "Correlate low Apdex with Average page load time, error rates, and key transaction performance for users in this country.",
+      "Identify the slowest or most error‑prone URLs for this country via detailed diagnostics and prioritize remediation there.",
+      "Review whether Apdex threshold T is realistic for latency expectations of users in this country (e.g., distant regions may have inherently higher RTTs). "
+    ]
+  },
+  {
+    "measurement": "Average page load time",
+    "description": "Indicates the average time that pages accessed by users from this country took to load completely on the browser.",
+    "unit": "ms",
+    "interpretation": "This is the average interval between when a user initiates a request and the completion of page load in the browser, including Ajax requests until responses are fully processed. Comparing this across countries shows whether users in a particular country experience higher page load times. Further comparison of Average browser initial request time, Average network time, Average server time, Average content download time, and Average browser render time highlights whether slowness is due to redirection/AppCache, network, backend, HTML download, or DOM/rendering.",
+    "troubleshootingSteps": [
+      "Compare Average page load time for this country with other countries to determine whether slowness is region‑specific.",
+      "Break down slow pages for this country by browser initial request time, network time, server time, content download time, and render time to locate the dominant phase.",
+      "Investigate regional network routes and ISP performance serving this country if network time is the main contributor.",
+      "If server time dominates, focus on backend optimization and capacity in data centers that handle traffic from this country."
+    ]
+  },
+  {
+    "measurement": "Unique user session",
+    "description": "Indicates the number of distinct users who are currently accessing the web site/web application from this country.",
+    "unit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Confirm that session tracking (cookies, tokens, user IDs) behaves consistently for users from this country, especially behind proxies or carrier NATs.",
+      "Correlate fluctuations in unique sessions from this country with authentication logs and marketing campaigns to detect anomalies.",
+      "Compare unique user sessions with Total Page views for this country to derive pages per session and spot unusual patterns (very short or very long sessions). ",
+      "Check for regional login or SSO issues that might prevent users in this country from maintaining stable sessions."
+    ]
+  },
+  {
+    "measurement": "Page views per minute",
+    "description": "Indicates the number of times the pages were viewed per minute by users from this country.",
+    "unit": "Number",
+    "interpretation": "An unusually high value for this measure may require investigation.",
+    "troubleshootingSteps": [
+      "Monitor Page views per minute for this country and flag time windows with abnormal spikes relative to historical baselines.",
+      "Examine top IPs, user agents, and referrers driving high page‑view rates from this country to distinguish normal surges from automated traffic.",
+      "Correlate peaks with server/resource utilization to ensure infrastructure can handle bursts originating from this country.",
+      "Apply geo‑specific rate limiting or bot‑mitigation controls if a small set of sources from this country dominate traffic."
+    ]
+  },
+  {
+    "measurement": "Normal page view percentage",
+    "description": "Indicates the percentage of page views that delivered a satisfactory experience to users from this country.",
+    "unit": "Percent",
+    "interpretation": "This indicates the percentage of page views in which users from this country have neither experienced slowness nor encountered JavaScript errors. Ideally, it should be 100%. Values slightly below 100% imply somewhat degraded experience, while values below 50% indicate serious issues where most page views are slow or error‑prone. Comparing Slow page view percentage and JavaScript error page view percentage shows whether slow pages or JavaScript errors are the primary cause.",
+    "troubleshootingSteps": [
+      "Track Normal page view percentage alongside Slow page view percentage and JavaScript error page view percentage for this country to identify the main driver of poor UX.",
+      "If slow pages are the main issue, use detailed diagnostics of Slow page views – Tolerating & Frustrated to see where time is lost (front end, network, or backend). ",
+      "If JavaScript errors dominate, inspect JavaScript error page view percentage diagnostics to identify per‑page and per‑error details for this country.",
+      "Correlate drops in this percentage with releases, configuration changes, or regional incidents affecting this country."
+    ]
+  },
+  {
+    "measurement": "Slow page view percentage",
+    "description": "Indicates the percentage of pages that were slow in loading when accessed by users in this country.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that over half of the page views are slow. Detailed diagnosis of Slow page views – Tolerating & Frustrated helps identify slow pages and determine whether slowness is due to the front end, the network, or the backend.",
+    "troubleshootingSteps": [
+      "Use Slow page views – Tolerating & Frustrated diagnostics to identify which URLs most frequently load slowly for users in this country.",
+      "Compare timing components (network vs server vs rendering) for those pages to see where optimization efforts should focus.",
+      "Check whether slow percentages spike at particular times of day, suggesting peak‑time capacity or ISP congestion in this country.",
+      "Prioritize improvements for slow pages that are both high‑traffic and business‑critical for users in this country."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page view percentage",
+    "description": "Indicates the percentage of page views that have encountered JavaScript errors.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that more than half of the page views of this type are experiencing JavaScript errors. Detailed diagnostics can be used to identify error pages and find out which JavaScript error occurred on which page, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Inspect JavaScript error diagnostics scoped to this country to find top errors, affected URLs, and impacted browsers.",
+      "Determine whether localized content or region‑specific scripts contribute to higher error rates in this country.",
+      "Fix the most frequent and impactful JavaScript errors first, then monitor error page view percentage for this country for improvement.",
+      "Add robust client‑side error handling and fallbacks on critical flows to mitigate user impact when errors occur."
+    ]
+  },
+  {
+    "measurement": "Satisfied page views",
+    "description": "Indicates the number of times pages were viewed by users in this country without any slowness.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF; otherwise it is deemed satisfactory. Ideally, Satisfied page views should equal Total Page views. If this value is much lower than Tolerating and Frustrated page views, it clearly indicates that the experience of users in this country has been below‑par.",
+    "troubleshootingSteps": [
+      "Compare Satisfied page views with Total Page views for this country to understand the proportion of truly good experiences.",
+      "Monitor trends where Satisfied views decline while Tolerating or Frustrated views increase and correlate with deployments or incidents.",
+      "Review and tune SLOW TRANSACTION CUTOFF so that it reflects realistic SLAs and expectations for this country.",
+      "Use diagnostics for Tolerating and Frustrated views to fix specific issues preventing sessions from being classified as satisfied."
+    ]
+  },
+  {
+    "measurement": "Slow page views - Tolerating & Frustrated",
+    "description": "Indicates the number of page views that were slow when accessed from this country.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF. Ideally, pages should load quickly, so 0 is the desired value. High values show that users from this country frequently experience slowness; detailed diagnostics reveal which page views are slow and why.",
+    "troubleshootingSteps": [
+      "List URLs with the highest counts of slow views from this country and group them by functional area.",
+      "Determine whether these pages are slow globally or specifically for this country by comparing with other regions.",
+      "Optimize backend performance, caching, and front‑end payloads for the most problematic pages accessed by users in this country.",
+      "Re‑measure slow view counts after changes to confirm improvement for this country."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page views",
+    "description": "Indicates the number of times JavaScript errors occurred when accessing pages from this country.",
+    "unit": "Number",
+    "interpretation": "Ideally, this value should be 0. A high value indicates that many JavaScript errors occur when viewing pages, and detailed diagnostics show which pages and which errors are involved, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Aggregate JavaScript error page views by error type and URL for this country to find the most disruptive issues.",
+      "Analyze whether particular browsers, OS versions, or language settings popular in this country are correlated with higher JS error rates.",
+      "Fix or guard against the top errors and then track JavaScript error page views from this country to validate improvements.",
+      "Set up alerts for sudden spikes in JS error page views specifically for this country to catch regional regressions quickly."
+    ]
+  },
+  {
+    "measurement": "Tolerating page views",
+    "description": "Indicates the number of tolerating page views experienced by users in this country.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page exceeds the SLOW TRANSACTION CUTOFF but is less than 4 times that cutoff, it is considered a Tolerating page view. Ideally, this value should be 0. When it is higher than Satisfied page views, it is a concern, showing that overall experience for users in this country is less than satisfactory.",
+    "troubleshootingSteps": [
+      "Monitor the ratio of Tolerating to Satisfied page views for this country to detect early performance regressions.",
+      "Analyze tolerating views by timing breakdown to see whether mild slowness is due to front end, network, or backend for this country.",
+      "Optimize moderately slow paths (caching, compression, resource reduction) to shift tolerating views into the satisfied category.",
+      "Validate optimizations using A/B or canary deployments targeted at users in this country."
+    ]
+  },
+  {
+    "measurement": "Frustrated page views",
+    "description": "Indicates the number of frustrated page views experienced by users in this country.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page is more than 4 times the SLOW TRANSACTION CUTOFF, the view is considered a Frustrated page view. Ideally, this value should be 0. Values higher than Satisfied page views show that users in this country are having a significantly unsatisfactory experience.",
+    "troubleshootingSteps": [
+      "Identify which pages generate the most frustrated views from this country and treat them as high‑priority issues.",
+      "Correlate frustrated views with backend errors, timeouts, or resource saturation during the same periods for traffic from this country.",
+      "Investigate network quality (ISPs, routes, outages) to and from this country when frustrated counts spike.",
+      "Consider rolling back or disabling new features that correlate with increased frustrated views for this country."
+    ]
+  },
+  {
+    "measurement": "Average browser render time",
+    "description": "Indicates the time taken to complete the download of remaining resources, including images, and to finish rendering the pages in the browser for users in this country.",
+    "unit": "ms",
+    "interpretation": "High values indicate that page rendering is taking too long, often due to in‑optimal HTML document architecture, complex CSS (deeply nested rules, slow selectors, complex effects), and large images. When Average page load time is high, comparing this measure with Average browser initial request time, Average network time, Average server time, and Average content download time helps determine whether rendering is the bottleneck for users in this country.",
+    "troubleshootingSteps": [
+      "Profile rendering and paint performance for pages heavily used by users in this country using browser developer tools.",
+      "Simplify DOM and CSS, and optimize or lazy‑load large images that are especially heavy for users in this region.",
+      "Adopt responsive images and conditional loading so users in this country on slower networks see lighter content.",
+      "Track Average browser render time per country after UI changes to ensure no regression for users here."
+    ]
+  },
+  {
+    "measurement": "Average content download time",
+    "description": "Indicates the time taken by the browser to make the complete HTML document (DOM) available for JavaScript to apply rendering logic on the pages accessed by users in this country.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and documentContentLoadedEventStart. It equals the sum of Average DOM download time and Average DOM processing time. If content download time is unusually long, comparing these two measures reveals whether slow server/cache/local resource responsiveness or heavy DOM processing is causing the delay.",
+    "troubleshootingSteps": [
+      "Break down Average content download time into Average DOM download time and Average DOM processing time for users in this country.",
+      "Optimize HTML size for pages frequently visited from this country by removing unused markup and scripts.",
+      "Ensure compression (gzip/brotli) of HTML responses is effective for users in this country via their nearest edge locations.",
+      "Improve DOM processing performance if parsing and script execution times dominate this measure (see DOM processing metric). "
+    ]
+  },
+  {
+    "measurement": "Average DOM download time",
+    "description": "Indicates the time taken to download the complete HTML document for requests received from users in this country.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and responseEnd. Higher document download times lengthen the time before the document is available for rendering, affecting overall user experience; a low value is desired at all times.",
+    "troubleshootingSteps": [
+      "Check network latency and bandwidth from the main ISPs in this country to your servers or CDN edges.",
+      "Reduce HTML payload size by removing unnecessary inline content and minimizing templates for popular pages in this country.",
+      "Verify that CDN coverage and edge placement adequately serve this country to minimize physical distance.",
+      "Monitor DOM download time by ISP or region within the country to identify sub‑regions with particular issues."
+    ]
+  },
+  {
+    "measurement": "Average DOM processing time",
+    "description": "Indicates the time taken by the browser to build the Document Object Model (DOM) for the pages requested by the users in this country and make it available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "Unusually high values clearly indicate that DOM building is taking longer than normal. This delays page rendering and adversely impacts user experience when this page group is accessed. Ideally, this measure should be low.",
+    "troubleshootingSteps": [
+      "Reduce DOM complexity (node count and depth) on pages heavily consumed by users in this country.",
+      "Avoid heavy synchronous JavaScript execution during DOM construction that blocks parsing and delays DOM readiness.",
+      "Split complex pages into smaller sections or use pagination/infinite scroll to keep initial DOM lighter for users here.",
+      "Evaluate third‑party widgets or tags used primarily in this country that might generate large or inefficient DOM structures."
+    ]
+  },
+  {
+    "measurement": "Average server time",
+    "description": "Indicates the interval between the start of processing of a request from a user in this country to when response is received.",
+    "unit": "ms",
+    "interpretation": "Average server time is the interval between requestStart and responseStart. Ideally, it should be low because high values hurt the Apdex score. It is influenced by the processing ability and configuration of the web or application server. Backend slowdowns (insufficient processing power or misconfiguration) increase this metric. For IE 11, Navigation Timing may mis‑report requestStart, and Business Transactions traces are recommended as a workaround for accurate per‑transaction timing.",
+    "troubleshootingSteps": [
+      "Monitor backend CPU, memory, database, and external service performance during periods of high Average server time for traffic from this country.",
+      "Use APM/BTM to trace slow transactions originating in this country, identifying the slowest operations (queries, remote calls, etc.).",
+      "Scale or tune backend components that handle a large share of requests from this country (e.g., regional APIs or services). ",
+      "Investigate configuration issues (connection pools, thread limits, GC) that may particularly affect peak loads from this country."
+    ]
+  },
+  {
+    "measurement": "Average network time",
+    "description": "Indicates the elapsed time since a user in this country initiates a request to the web site/web application and the start of fetching the response document from it.",
+    "unit": "ms",
+    "interpretation": "Average network time is the interval between navigationStart and requestStart and includes DNS lookups and TCP connection setup. It equals the sum of Average DNS lookup time and Average TCP connection time. Ideally, it should be low; very high values delay page loading and damage service quality. Navigation Timing issues on IE 11 can cause inaccuracies for that browser.",
+    "troubleshootingSteps": [
+      "Split Average network time into Average DNS lookup time and Average TCP connection time for this country to see which dominates.",
+      "Review routing and latency from major ISPs in this country to your data centers or CDN edges, and adjust routing or POP locations if needed.",
+      "Use CDN and additional points of presence closer to this country to lower round‑trip times.",
+      "Enable connection reuse and modern protocols (HTTP/2/3) to reduce per‑request connection overhead for users here."
+    ]
+  },
+  {
+    "measurement": "Average DNS lookup time",
+    "description": "Indicates the time taken by the browser used by a user in this country to perform the domain lookup for connecting to the web site/web application.",
+    "unit": "ms",
+    "interpretation": "A high value affects DNS lookup itself and also increases Average network time and Average page load time, which can have a disastrous effect on user experience.",
+    "troubleshootingSteps": [
+      "Assess DNS resolution performance for queries originating from this country and ensure DNS providers offer nearby resolvers.",
+      "Reduce CNAME chains and unnecessary DNS indirections for domains heavily used by users in this country.",
+      "Tune DNS TTLs to balance cache hit rates for this country with the need for timely propagation of changes.",
+      "Monitor DNS timeouts and SERVFAIL rates per region to detect intermittent DNS issues affecting users here."
+    ]
+  },
+  {
+    "measurement": "Average TCP connection time",
+    "description": "Indicates the time taken by the browser used by a user in this country to establish a TCP connection with the server.",
+    "unit": "ms",
+    "interpretation": "A bad network connection between the browser client and the server can delay TCP connections, which increases Average network time and negatively impacts page load time and overall user experience.",
+    "troubleshootingSteps": [
+      "Check load balancer and server metrics (connection queues, SYN backlog) for signs of saturation when TCP connection time is high for this country.",
+      "Ensure traffic from this country is routed to the closest data center or CDN edge to minimize RTT.",
+      "Encourage persistent connections and use TLS session resumption to avoid repeated full handshakes for return visitors from this country.",
+      "Review firewall or middle‑box performance on international links commonly used by this country."
+    ]
+  },
+  {
+    "measurement": "Average SSL handshake time",
+    "description": "Indicates the time taken by requests from this country to complete the SSL handshake.",
+    "unit": "ms",
+    "interpretation": "An SSL handshake happens when a browser makes a secure HTTPS request and negotiates encrypted keys and certificates with the server. Because this negotiation adds network round trips, it increases Average network time and page load time. Together, DNS lookup, TCP handshake, and SSL handshake can add three round trips to page load. HTTP/2 and proper caching can reduce SSL setup to one round trip.",
+    "troubleshootingSteps": [
+      "Optimize TLS configuration (use modern protocols and efficient cipher suites) to reduce handshake times for users in this country.",
+      "Enable TLS session resumption and confirm that clients in this country benefit from resumed sessions.",
+      "Terminate TLS at CDN edges close to this country to minimize RTT during handshakes.",
+      "Monitor SSL handshake times per country to spot regions where certificate chain validation or network latency is unusually high."
+    ]
+  },
+  {
+    "measurement": "Average AppCache time",
+    "description": "Indicates the time taken to check whether/not the requests from this country can be serviced by the AppCache.",
+    "unit": "ms",
+    "interpretation": "HTML5 AppCache lets web‑based applications run offline by caching specified resources. A high value indicates that requests are spending too much time in the AppCache, which introduces page loading latency and worsens perceived performance. Common causes include incorrect manifest media type, serving the manifest from a different origin, path‑relative URL mistakes, and frequent manifest changes that force full synchronous downloads.",
+    "troubleshootingSteps": [
+      "Serve the manifest file with the correct media type (text/cache‑manifest) and from the same origin as the host page for users in this country.",
+      "Ensure relative URLs in the manifest are relative to the manifest file path, not the document referencing it, to avoid stalled appcaching.",
+      "Avoid unnecessary manifest changes that would force full re‑downloads of resources for users in this country.",
+      "Load the Application Cache from a simple HTML file in an iframe to avoid synchronous heavy downloads blocking page load."
+    ]
+  },
+  {
+    "measurement": "Average redirection time",
+    "description": "Indicates the time that requests from this country spent in redirection before fetching the pages.",
+    "unit": "ms",
+    "interpretation": "This is the elapsed time between redirectStart and redirectEnd. Redirects are used to send users to mobile versions, secure pages, latest content, geo‑specific pages, or canonical URLs, but every redirect adds latency through extra DNS and HTTP requests. Multiple, invalid, or looping redirects increase page load time and can cause errors.",
+    "troubleshootingSteps": [
+      "Identify redirect chains frequently used by visitors from this country and collapse them into a single redirect where possible.",
+      "Clean up obsolete or invalid redirects that lead to 404s or unnecessary hops and impact users here.",
+      "Ensure geo‑specific redirect logic is not overly complex or misconfigured, which could cause multiple redirects for this country.",
+      "Monitor Average redirection time along with Average page load time after redirect optimizations to confirm improvements."
+    ]
+  },
+  {
+    "measurement": "Average browser initial request time",
+    "description": "Indicates the interval between when a request was received from users in this country, when it followed a redirect, to when it was processed in the AppCache.",
+    "unit": "ms",
+    "interpretation": "This is the time between navigationStart and domainLookupStart, including time spent in the browser waiting for events, following redirects, and processing AppCache. It equals the sum of Average AppCache time, Average redirection time, and Average browser wait time. High values indicate that a request is delayed before DNS starts, and comparing the component measures shows whether redirection, AppCache, or browser waits drive this delay.",
+    "troubleshootingSteps": [
+      "Decompose Average browser initial request time into AppCache, redirection, and browser wait components for this country.",
+      "Minimize or streamline redirects that specifically affect users in this country.",
+      "Optimize AppCache usage or migrate to more modern caching mechanisms if AppCache time is a large part of this delay.",
+      "Reduce the number of concurrent requests to decrease queuing time in the browser for users from this country."
+    ]
+  },
+  {
+    "measurement": "Average browser wait time",
+    "description": "Indicates the time that requests from this country spent on the browser, waiting for another request to complete.",
+    "unit": "ms",
+    "interpretation": "This is the sum of time between consecutive events from navigationStart to requestStart. Because browsers limit active connections per domain, additional requests may wait in a queue. High browser wait time prolongs initial request time and negatively affects responsiveness. When Average browser initial request time is high, comparing this measure with Average AppCache time and Average redirection time helps determine whether long waits in the browser are the main cause.",
+    "troubleshootingSteps": [
+      "Reduce the number of resources requested in parallel on pages heavily visited by users in this country (bundle/minify where appropriate).",
+      "Adopt HTTP/2 multiplexing so that multiple resources can be fetched efficiently without hitting per‑domain connection limits.",
+      "Use domain sharding carefully (if still on HTTP/1.1) to increase concurrency for key assets without overcomplicating DNS.",
+      "Recommend or validate modern browsers for users in this country that support higher parallel connections and better resource scheduling."
+    ]
+  }
+]

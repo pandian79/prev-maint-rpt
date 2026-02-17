@@ -1,0 +1,77 @@
+[
+  {
+    "measurement": "Total fragmentation",
+    "description": "Indicates the percentage of this volume that has been fragmented.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be low. A high value indicates a highly fragmented volume, which can greatly increase data access time and lead to inefficient use of storage space. Such situations usually require defragmentation, which reorders fragments so reading and writing to disk becomes much faster. Preemptive techniques can reduce future fragmentation by appending data in place when possible and preallocating longer extents, while retroactive techniques use defragmentation tools to reorder file fragments and improve locality of reference.",
+    "troubleshootingSteps": [
+      "Monitor this value regularly and define a threshold at which defragmentation should be scheduled.",
+      "Run the built‑in or vendor‑provided defragmentation tool during low‑usage windows to minimize performance impact.",
+      "Review application behavior that causes heavy create/delete/update patterns and consider batching or reorganizing data to reduce fragmentation.",
+      "Ensure sufficient free space is available on the volume, as low free space can worsen fragmentation and limit the effectiveness of defragmentation.",
+      "Where supported, enable or tune preallocation/extents features so that frequently appended files are less likely to fragment."
+    ]
+  },
+  {
+    "measurement": "Average free space size",
+    "description": "Indicates the average size of the free space extents on this volume that has been fragmented.",
+    "unit": "MB",
+    "interpretation": "This measure reflects how large the typical contiguous free‑space regions are on a fragmented volume. Together with free space fragmentation and free space count, it describes free space fragmentation: when free space is broken into many scattered parts rather than a few large contiguous regions. High free space fragmentation can complicate data file creation and extension. These free‑space measures are available only on Windows 2008 or above.",
+    "troubleshootingSteps": [
+      "If the average free space size is small, plan defragmentation to consolidate free space into larger extents.",
+      "Avoid running the volume nearly full; maintain a healthy free space buffer so the file system has room to create larger contiguous areas.",
+      "Analyze workloads that frequently create and delete variable‑sized files and consider using dedicated volumes for such workloads.",
+      "After defragmentation, verify that the average free space size has increased as expected."
+    ]
+  },
+  {
+    "measurement": "Free space fragmentation",
+    "description": "Indicates the percentage of free space on this volume that has been fragmented.",
+    "unit": "Percent",
+    "interpretation": "Free space fragmentation means that empty space is broken into many scattered areas instead of one or a few large contiguous regions. It is often caused by deletion or truncation of files, though some file systems intentionally insert free‑space “bubbles” to help file growth. Fragmented free space should ideally be low; high values can make file creation and growth difficult and even odd spikes typically justify defragmentation.",
+    "troubleshootingSteps": [
+      "When this percentage is high, schedule a disk defragmentation operation focusing on consolidating free space.",
+      "Combine this measure with average free space size and free space count to judge how fragmented free space really is.",
+      "Reduce patterns that rapidly create and delete many files of varying sizes, or isolate such workloads on their own volumes.",
+      "Maintain adequate free capacity on the volume, since nearly full disks are more prone to severe free space fragmentation.",
+      "Recheck the metric after defragmentation to ensure free space fragmentation has been reduced."
+    ]
+  },
+  {
+    "measurement": "Free space count",
+    "description": "Indicates the number of free space extents on this volume that has been fragmented.",
+    "unit": "Number",
+    "interpretation": "This shows how many separate free‑space regions exist on the volume. A large number of free extents indicates that free space is broken up into many pieces, contributing to free space fragmentation. High counts, especially alongside small average free space size, can hinder efficient allocation of new or growing files. This measure is available only on Windows 2008 or above.",
+    "troubleshootingSteps": [
+      "If the free space count is high, run defragmentation to reduce the number of extents and consolidate free space.",
+      "Combine this value with free space fragmentation percentage and average free space size to decide when action is required.",
+      "Monitor trends over time; a steadily increasing free space count suggests workload patterns that fragment the disk.",
+      "Consider reorganizing file layout or archiving/deleting old data to free large contiguous areas."
+    ]
+  },
+  {
+    "measurement": "Largest free space size",
+    "description": "Indicates the size of the largest free space extent on this volume that has been fragmented.",
+    "unit": "MB",
+    "interpretation": "This measure shows the size of the single largest contiguous free‑space region on the volume. A larger value means there is at least one area where large files or extensions can be placed without fragmentation. Very small values indicate that even the largest free region is small, which can impact allocation of large files. This measure is available only on Windows 2008 or above.",
+    "troubleshootingSteps": [
+      "If the largest free space extent is small relative to the sizes of files you need to create or extend, schedule defragmentation.",
+      "Use this metric to verify that defragmentation has successfully created larger contiguous free areas.",
+      "Plan placement of large, performance‑sensitive files (e.g., databases, VHDs) on volumes with sufficiently large free extents.",
+      "Avoid filling the volume close to capacity, as this tends to reduce the largest free extent significantly."
+    ]
+  },
+  {
+    "measurement": "File fragmentation",
+    "description": "The percentage of files that are fragmented on this volume.",
+    "unit": "Percent",
+    "interpretation": "This measure shows how many files are split into multiple fragments on disk. A high value indicates a severe lack of sequential data, making data retrieval slower and more CPU‑ and I/O‑intensive. Excessive file fragmentation can noticeably degrade application performance, and defragmentation is typically required to restore efficient sequential access.",
+    "troubleshootingSteps": [
+      "When file fragmentation is high, run a defragmentation job to reorder file fragments and improve sequential access.",
+      "Prioritize defragmentation of volumes hosting performance‑critical workloads such as databases or virtual machine images.",
+      "Identify applications that frequently modify large files in place and consider configuration changes to reduce fragmentation (e.g., preallocation).",
+      "Schedule regular preventive defragmentation during maintenance windows to keep file fragmentation at acceptable levels.",
+      "Monitor application performance (e.g., response times, I/O latency) before and after defragmentation to confirm benefits."
+    ]
+  }
+]

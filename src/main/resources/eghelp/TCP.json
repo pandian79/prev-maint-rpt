@@ -1,0 +1,32 @@
+[
+  {
+    "Measurement": "In connection rate",
+    "Description": "Connections per second received by the server.",
+    "MeasurementUnit": "Conns/Sec",
+    "Interpretation": "A high value can indicate an increase in input load."
+  },
+  {
+    "Measurement": "Out connection rate",
+    "Description": "Connections per second initiated by the server.",
+    "MeasurementUnit": "Conns/Sec",
+    "Interpretation": "A high value can indicate that one or more of the applications executing on the host have started using a number of TCP connections to some other host(s)."
+  },
+  {
+    "Measurement": "Current connections",
+    "Description": "Currently established connections.",
+    "MeasurementUnit": "Number",
+    "Interpretation": "A sudden increase in the number of connections established on a host can indicate either an increase in load to one or more of the applications executing on the host, or that one or more of the applications are experiencing a problem (e.g., a slow down). The Current connections on Microsoft Windows includes TCP connections in ESTABLISHED or CLOSE_WAIT state. The detailed diagnosis of this test lists the top-10 hosts that have established the maximum number of TCP connections with the monitored host."
+  },
+  {
+    "Measurement": "Connection drops",
+    "Description": "Rate of established TCP connections dropped from the TCP listen queue.",
+    "MeasurementUnit": "Conns/Sec",
+    "Interpretation": "This value should be 0 for most of the time. Any non-zero value implies that one or more applications on the host are under overload or that the bandwidth of your server is insufficient. With ample bandwidth, the server can establish and serve connections before they time out. If bandwidth is insufficient, the connections fail or are dropped."
+  },
+  {
+    "Measurement": "Connection failures",
+    "Description": "Rate of half open TCP connections dropped from the listen queue.",
+    "MeasurementUnit": "Conns/Sec",
+    "Interpretation": "TCP counts a connection as having failed when it goes directly from sending (SYN-SENT) or receiving (SYN-RCVD) to CLOSED, or from receiving (SYN-RCVD) to listening (LISTEN). This value should be 0 for most of the time. A prolonged non-zero value can indicate either that the server is under SYN attack or that there is a problem with the network link to the server that is resulting in connections being dropped without completion. It could also indicate a bandwidth shortage. If the server has sufficient bandwidth, it can establish and serve connections before they time out. If bandwidth is insufficient, the connections fail or are dropped. This measure is not available in the Windows version of the product."
+  }
+]

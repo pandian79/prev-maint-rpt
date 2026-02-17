@@ -1,0 +1,106 @@
+[
+  {
+    "measurement": "Average memory usage for current queries",
+    "description": "Indicates the average amount of memory that is currently used by all sessions of this MS SQL server.",
+    "unit": "KB",
+    "interpretation": "A high value indicates that one or more MS SQL sessions consume large amounts of memory while executing queries. Use the detailed diagnosis of the \"Maximum memory usage for current queries\" measure to find which session uses the most memory and which query it is running. Typical remediation involves optimizing that query, checking disk and index fragmentation, and possibly adding indexes or hints to reduce memory usage.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis or DMVs (for example, sys.dm_exec_sessions, sys.dm_exec_requests, sys.dm_exec_query_memory_grants) to identify sessions and queries with the highest memory usage.",
+      "Examine execution plans for high-memory queries to see if large sorts, hashes, or spool operators are driving memory grants; add or tune indexes to reduce the need for large in-memory operations.",
+      "Check index and table fragmentation and perform appropriate index maintenance (rebuild or reorganize) where fragmentation is harming plan quality and memory usage.",
+      "Review query filters and joins so that they process fewer rows, reducing the size of intermediate result sets and associated memory needs.",
+      "Where appropriate, use query hints or max grant settings cautiously to cap excessive memory grants for specific problem queries, testing thoroughly for side effects."
+    ]
+  },
+  {
+    "measurement": "Maximum memory usage for current queries",
+    "description": "Indicates the maximum memory used by the SQL server sessions.",
+    "unit": "KB",
+    "interpretation": "This measure highlights the single session consuming the most memory. Detailed diagnosis shows session ID, database, login, start times, wait information, duration, CPU time, memory usage, I/O counts, and the query text, allowing you to pinpoint resource-intensive sessions and statements.",
+    "troubleshootingSteps": [
+      "Inspect the detailed diagnosis for the top memory-consuming session and review the associated SQL text and execution plan for large memory grants or spills.",
+      "Determine whether the query pattern is expected (for example, batch reporting) or if it indicates an inefficient or ad-hoc workload that should be reworked.",
+      "Tune problematic queries by adding or refining indexes, reducing unnecessary columns and joins, or breaking massive operations into smaller steps.",
+      "Monitor tempdb for spills (hash/sort warnings in execution plans) that may indicate insufficient memory grants or poorly designed queries.",
+      "If one session repeatedly consumes excessive memory and impacts other workloads, consider scheduling it for off-peak times or applying targeted resource governor limits."
+    ]
+  },
+  {
+    "measurement": "Average CPU time for current queries",
+    "description": "Indicates the average time for which the SQL sessions used the CPU resources of the SQL server.",
+    "unit": "Seconds",
+    "interpretation": "A high value indicates that one or more MS SQL sessions are consuming excessive CPU time. Use the detailed diagnosis of the \"Maximum CPU time for current queries\" measure to identify which session is hogging CPU and which query it is executing. Remediation often involves query optimization, index tuning, and addressing disk or index fragmentation.",
+    "troubleshootingSteps": [
+      "Identify sessions and queries with the highest CPU time using detailed diagnosis or DMVs such as sys.dm_exec_query_stats joined to sys.dm_exec_sql_text.[web:141]",
+      "Review execution plans for CPU-heavy queries to remove unnecessary operations (complex expressions, scalar functions, large sorts) and ensure selective indexes are used.",
+      "Check index fragmentation and statistics; rebuild or reorganize important indexes and update statistics where poor plans are increasing CPU cost.",
+      "Consider adjusting MAXDOP and cost threshold for parallelism so that parallel plans are used appropriately but do not overwhelm CPU.",
+      "If CPU remains saturated after tuning key queries, evaluate scaling up CPU resources or scaling out read workloads to replicas."
+    ]
+  },
+  {
+    "measurement": "Maximum CPU time for current queries",
+    "description": "Indicates the maximum time for which the SQL sessions used the CPU.",
+    "unit": "Seconds",
+    "interpretation": "This measure identifies the single session that has consumed the most CPU. Detailed diagnosis provides full context (session, login, wait types, I/O, memory, and SQL text) so you can trace the most CPU-intensive query and its impact on the system.",
+    "troubleshootingSteps": [
+      "Use the detailed diagnosis to pinpoint the session and query with the highest CPU time and verify whether it is still running or completing frequently.[web:141]",
+      "Determine if the high CPU query is part of a scheduled job, ad-hoc report, or OLTP workload, and adjust scheduling or expectations accordingly.",
+      "Optimize the offending query by improving indexes, rewriting inefficient joins or subqueries, and reducing data volume processed.",
+      "Check whether the query is incurring significant waits (for example, PAGEIOLATCH, CXPACKET/CXCONSUMER); balancing CPU vs I/O waits can guide whether to tune I/O, parallelism, or the query itself.",
+      "If terminating the session is acceptable, kill the process as a short-term mitigation, while implementing permanent query and index fixes."
+    ]
+  },
+  {
+    "measurement": "Average wait time for current queries",
+    "description": "Indicates the average time for which the SQL sessions were waiting.",
+    "unit": "Seconds",
+    "interpretation": "A high value indicates that one or more MS SQL sessions are spending too long waiting, typically to execute a query. Use the detailed diagnosis of the \"Maximum wait time for current queries\" measure to identify which sessions are waiting the most and which queries they are running. Reducing wait time usually involves optimizing queries and addressing fragmentation or indexing issues.",
+    "troubleshootingSteps": [
+      "Drill into detailed diagnosis and DMVs (sys.dm_exec_requests, sys.dm_os_wait_stats) to see the dominant wait types affecting long-wait sessions (for example, PAGEIOLATCH, LCK_*, ASYNC_NETWORK_IO).",
+      "For I/O-related waits, check disk latency and file placement (data, log, tempdb) and consider moving hot files to faster or dedicated storage.",
+      "For lock-related waits, analyze blocking chains and transaction design, shortening transactions and reducing lock contention where possible.",
+      "Optimize queries that show high wait times by adding indexes, reducing scanned data, and avoiding operations that cause excessive blocking or I/O.",
+      "Monitor wait distributions over time to confirm that tuning efforts reduce average wait times for active sessions."
+    ]
+  },
+  {
+    "measurement": "Maximum wait time for current queries",
+    "description": "Indicates the maximum time for which the SQL sessions waited.",
+    "unit": "Seconds",
+    "interpretation": "This measure surfaces the single session with the longest total wait time. Detailed diagnosis describes its waits, CPU, memory, I/O, and query text so you can identify whether it is blocked, I/O-bound, or suffering from other bottlenecks, and which query is responsible.",
+    "troubleshootingSteps": [
+      "Identify the session with the maximum wait time and inspect its current wait type and blocking relationships using DMVs or tools like sp_WhoIsActive.[web:100]",
+      "If the session is blocked, investigate the root blocker and resolve the blocking via query tuning, transaction changes, or in extreme cases, by terminating the blocker.[web:99]",
+      "If waits are I/O-bound (for example, PAGEIOLATCH, WRITELOG), review storage performance, file layout, and problematic queries driving heavy I/O.",
+      "If waits relate to CPU scheduling or memory (for example, SOS_SCHEDULER_YIELD, RESOURCE_SEMAPHORE), tune CPU‑intensive or memory‑grant‑heavy queries and adjust server resources or configuration.",
+      "Confirm post-fix that maximum wait times drop and that long-wait sessions no longer dominate performance metrics."
+    ]
+  },
+  {
+    "measurement": "Average I/O time for current queries",
+    "description": "Indicates the average time taken by current queries for I/O processing.",
+    "unit": "Seconds",
+    "interpretation": "A low value is desired. A high value indicates that one or more queries are I/O-intensive and spend significant time reading from or writing to disk, which can slow overall performance.",
+    "troubleshootingSteps": [
+      "Correlate average I/O time with wait types like PAGEIOLATCH_*, IO_COMPLETION, and with disk latency metrics to confirm I/O bottlenecks.",
+      "Identify queries with high read/write I/O using DMVs (sys.dm_exec_query_stats joined to sys.dm_exec_sql_text and sys.dm_exec_query_plan) and optimize them to reduce data scanned or written.",
+      "Improve indexing to avoid full scans and to support selective predicates and joins, thereby reducing physical I/O.",
+      "Ensure that data, log, and tempdb files are placed on appropriate storage (separate, fast volumes) and that there is sufficient throughput for the workload.",
+      "Consider partitioning large tables or archiving cold data to lessen I/O pressure on critical datasets."
+    ]
+  },
+  {
+    "measurement": "Maximum I/O time for current queries",
+    "description": "Indicates the maximum time that the current queries took for I/O processing.",
+    "unit": "Seconds",
+    "interpretation": "If this value exceeds 10 seconds, it indicates significant I/O latency. You should examine the disk I/O subsystem and file placement (for example, separating LDF and MDF files, moving tempdb and hot tables to appropriate drives). I/O can also be reduced when SQL Server uses a covering index instead of relying solely on a clustered index or scans.",
+    "troubleshootingSteps": [
+      "For queries with very high I/O time, inspect their execution plans for scans and heavy read/write operations, and introduce or refine covering indexes to minimize I/O.",
+      "Verify that data files, log files, and tempdb are distributed across suitable disks or storage tiers to avoid contention and hot spots.",
+      "Measure storage latency (read/write) and throughput; upgrade or reconfigure storage if it cannot handle peak I/O demands.",
+      "Reduce I/O volume by pruning result sets, filtering earlier, avoiding unnecessary ORDER BY/GROUP BY on large datasets, and eliminating redundant queries.",
+      "After changes, monitor maximum I/O times to ensure they fall below the 10‑second threshold and remain stable under normal load."
+    ]
+  }
+]

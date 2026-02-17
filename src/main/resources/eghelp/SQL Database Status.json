@@ -1,0 +1,17 @@
+[
+  {
+    "measurement": "Database status",
+    "description": "Indicates the current state of this database.",
+    "unit": "Text with numeric equivalents",
+    "interpretation": "This measure reports the high‑level state of the database using a numeric code and textual state. The main states are: 0 = ONLINE (database available; primary filegroup online, recovery undo may still be completing), 1 = RESTORING (files are being restored; database unavailable), 2 = RECOVERING (database recovery in progress; if successful it becomes ONLINE, otherwise SUSPECT; database unavailable), 3 = RECOVERY_PENDING (a resource-related error occurred during recovery; database is not damaged but cannot start until the issue is resolved; unavailable), 4 = SUSPECT (primary filegroup may be damaged and the database cannot be recovered during startup; unavailable, manual intervention required), 5 = EMERGENCY (database forced into single-user, READ_ONLY, minimally logged mode for sysadmin-only troubleshooting, typically set when a database is SUSPECT), and 6 = OFFLINE (database taken offline by user and remains unavailable until explicitly brought online again). Detailed diagnosis typically includes user access mode, recovery model, and log reuse wait state, which are essential to understand how the database is being used and how log space is managed.",
+    "troubleshootingSteps": [
+      "For ONLINE (0), no immediate action is required; periodically review access mode, recovery model, and log reuse wait reasons to ensure they align with operational and recovery objectives.",
+      "For RESTORING (1), verify that restore operations are progressing as expected and that all required backup files (full, differential, log) are available and applied in the correct order.",
+      "For RECOVERING (2), monitor the database until it transitions to ONLINE; if it moves instead to SUSPECT or RECOVERY_PENDING, investigate error logs for recovery failures and take corrective action.",
+      "For RECOVERY_PENDING (3), examine SQL Server error logs and system event logs for missing files, disk issues, or resource shortages, correct the underlying problem (for example, restore missing files or free disk space), and then reattempt recovery.",
+      "For SUSPECT (4), immediately back up any accessible data if possible, then follow documented recovery procedures (for example, EMERGENCY mode plus repair or restore from a known good backup) to return the database to a healthy state.",
+      "For EMERGENCY (5), treat the database as damaged; use this state only for troubleshooting as a sysadmin, extract or repair critical data where feasible, and then either restore from backup or repair and bring the database back ONLINE.",
+      "For OFFLINE (6), confirm that this state is intentional (for example, for maintenance or file moves); when ready, bring the database online and verify that all dependent applications reconnect successfully."
+    ]
+  }
+]

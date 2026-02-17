@@ -1,0 +1,314 @@
+[
+  {
+    "measurement": "Total Page views",
+    "description": "Indicates the total number of times pages in the web site/web application were viewed by users using this device type.",
+    "unit": "Number",
+    "interpretation": "This is a good measure of the traffic to your web site/web application from a given device type. Sudden, but significant spikes in the page view count could be a cause for concern, as it could be owing to a malicious virus attack or an unscrupulous attempt to hack your web site/web application. An abnormally high value for this measure may not always be a cause for concern, as agent restarts or agent‑collector disconnections can cause historical metrics to be cumulated and reported in the current period, leading to an apparent surge.",
+    "troubleshootingSteps": [
+      "Investigate sudden spikes in total page views from a specific device type to rule out bots, scripts, or attack traffic using logs and WAF data.",
+      "Correlate page‑view surges with monitoring agent restarts or agent‑collector reconnection events to identify artificial metric inflation.",
+      "Compare traffic patterns for this device type against others over the same interval to see if the increase is device‑specific or global.",
+      "If spikes appear malicious and device‑specific (e.g., only from certain mobile OS versions), apply targeted blocking, throttling, or CAPTCHA for that device segment."
+    ]
+  },
+  {
+    "measurement": "Apdex score",
+    "description": "Indicates the apdex score of the web site/web application based on the experience of users using this device type.",
+    "unit": "Number",
+    "interpretation": "Apdex converts multiple performance measurements into a single 0‑to‑1 score (0 = no users satisfied, 1 = all users satisfied). The Apdex formula is ApdexT = (Satisfied Count + Tolerating Count / 2) / Total Samples. A score of 1.0 is ideal; values less than 1.0 indicate that user experience on this device type has been less than satisfactory.",
+    "troubleshootingSteps": [
+      "Break down the Apdex score for this device type into satisfied, tolerating, and frustrated counts to see which segment is driving the score down.",
+      "Correlate low Apdex on this device with Average page load time, error rates, and slow endpoints to locate problematic areas.",
+      "Investigate device‑specific limitations (CPU, memory, OS/browser combinations) that may make performance worse than on other device types.",
+      "Tune Apdex threshold T appropriately for mobile or low‑power devices if their acceptable response times differ from desktop users."
+    ]
+  },
+  {
+    "measurement": "Average page load time",
+    "description": "Indicates the average time that pages accessed using this device took to load completely on the device.",
+    "unit": "ms",
+    "interpretation": "This is the average interval between when a user initiates a request and when page load completes in the browser on this device, including Ajax requests until the response is completely processed. Comparing this metric across device types helps identify devices that experience higher load times. Detailed analysis across Average browser initial request time, Average network time, Average server time, Average content download time, and Average browser render time helps determine whether slowness is due to the device, network, or backend.",
+    "troubleshootingSteps": [
+      "Compare Average page load time across device types (desktop vs mobile vs tablet) to identify devices with abnormal slowness.",
+      "For this device type, break down timing into browser initial request time, network time, server time, content download time, and render time to isolate bottlenecks.",
+      "Use detailed diagnostics to identify which pages are slow on this device and whether they are also slow on other devices or only here.",
+      "Optimize front‑end behavior for constrained devices (lighter assets, fewer blocking scripts, responsive images) to reduce load times."
+    ]
+  },
+  {
+    "measurement": "Unique user session",
+    "description": "Indicates the number of distinct users who are currently accessing the web site/web application using this device type.",
+    "unit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Validate session tracking mechanisms (cookies, local storage, tokens) across different device types to ensure uniqueness is measured consistently.",
+      "Compare unique sessions per device type with Total Page views to identify abnormal session lengths or churn.",
+      "Correlate changes in unique sessions for a device type with OS/browser updates or app releases that might affect login or session persistence.",
+      "Check for device‑specific issues such as aggressive background tab killing or privacy settings that may reset sessions unexpectedly."
+    ]
+  },
+  {
+    "measurement": "Page views per minute",
+    "description": "Indicates the number of times the pages in the web site/web application were viewed per minute using this device type.",
+    "unit": "Number",
+    "interpretation": "This is a good indicator of the level of activity on the web site. An unusually high value for this measure may require investigation.",
+    "troubleshootingSteps": [
+      "Monitor page views per minute by device type and detect spikes that are not explained by normal traffic patterns.",
+      "Identify top IPs, user agents, or app versions on this device type driving high activity to detect automated or abusive behavior.",
+      "Correlate spikes with performance metrics (CPU, memory, bandwidth) to ensure infrastructure can handle device‑specific surges.",
+      "Apply rate limiting or bot‑detection rules for problematic device/user‑agent combinations if traffic appears non‑human."
+    ]
+  },
+  {
+    "measurement": "Normal page view percentage",
+    "description": "Indicates the percentage of page views from this device type that delivered a satisfactory experience to users.",
+    "unit": "Percent",
+    "interpretation": "This indicates the percentage of page views in which users have neither experienced slowness nor encountered JavaScript errors. Ideally, it should be 100%. Values slightly below 100% indicate sub‑optimal experience, while values below 50% indicate serious issues where most views are slow or error‑prone. Comparing Slow page view percentage and JavaScript error page view percentage for this device reveals whether slow pages or JavaScript errors dominate.",
+    "troubleshootingSteps": [
+      "Track Normal page view percentage alongside Slow page view percentage and JavaScript error page view percentage per device type.",
+      "If slow pages dominate, use Slow page views – Tolerating & Frustrated diagnostics to see whether slowness is tied to device performance, network, or backend.",
+      "If JavaScript errors dominate, use JavaScript error page view percentage diagnostics to find device‑specific errors and affected pages.",
+      "Investigate device compatibility issues (e.g., CSS/JS features not supported on older devices) when this metric is low for specific device families."
+    ]
+  },
+  {
+    "measurement": "Slow page view percentage",
+    "description": "Indicates the percentage of page views that are slow in loading on this device type.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that more than half of the page views are slow. Detailed diagnostics of Slow page views – Tolerating & Frustrated help identify slow pages and whether the root cause is the device, the network, or the backend.",
+    "troubleshootingSteps": [
+      "Use Slow page views – Tolerating & Frustrated diagnostics to determine which URLs are most frequently slow on this device type.",
+      "Analyze timing components (network vs server vs rendering) for these pages to assess whether device performance constraints play a key role.",
+      "Optimize images, script execution, and layout for this device type to reduce client‑side overhead causing slow views.",
+      "Where network is the culprit, consider adaptive strategies such as lower‑resolution assets or reduced requests on slow or mobile networks."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page view percentage",
+    "description": "Indicates the percentage of page views that have encountered JavaScript errors on this device.",
+    "unit": "Percent",
+    "interpretation": "Ideally, this value should be 0. A value over 50% implies that over half of the page views from this device type experience JavaScript errors. Detailed diagnostics show which pages and which JavaScript errors occur, aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Inspect JavaScript error diagnostics for this device type to identify common errors and their stack traces.",
+      "Check whether certain OS/browser combinations or app webviews on this device type are more affected.",
+      "Apply polyfills or conditional code paths for older or limited browsers commonly used on this device type.",
+      "Monitor this percentage after deploying fixes to ensure JavaScript error rates drop for the affected device segment."
+    ]
+  },
+  {
+    "measurement": "Satisfied page views",
+    "description": "Indicates the number of times pages were viewed from this device without any slowness.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF; if not, it is deemed satisfactory. Ideally, Satisfied page views should equal Total Page views. If this measure is much lower than Tolerating and Frustrated page views, it clearly indicates below‑par experience for users on this device type.",
+    "troubleshootingSteps": [
+      "Compare Satisfied page views with Total Page views for this device type to gauge overall satisfaction levels.",
+      "Monitor when Satisfied views decrease and Tolerating/Frustrated views increase to correlate with deployments or traffic shifts.",
+      "Tune SLOW TRANSACTION CUTOFF appropriately for device capabilities and network conditions, especially on mobile.",
+      "Use Tolerating and Frustrated diagnostics to address the main factors preventing more views from being classified as satisfied."
+    ]
+  },
+  {
+    "measurement": "Slow page views - Tolerating & Frustrated",
+    "description": "Indicates the number of slow page views on this device.",
+    "unit": "Number",
+    "interpretation": "A page view is considered slow when its average load time exceeds the SLOW TRANSACTION CUTOFF. Ideally, pages should load quickly, so the desired value is 0. A high value indicates users frequently experience slowness when accessing pages using this device type; detailed diagnostics show which views are slow and why.",
+    "troubleshootingSteps": [
+      "Identify which URLs have the highest counts of slow views on this device type and group them by feature or screen.",
+      "Compare slow views for this device against other devices to determine whether slowness is device‑specific.",
+      "Optimize server responses, caching, and front‑end assets specifically for device constraints (CPU, memory, screen size, network). ",
+      "Monitor slow view counts after optimizations to validate improvements for this device type."
+    ]
+  },
+  {
+    "measurement": "JavaScript error page views",
+    "description": "Indicates the number of times JavaScript errors occurred when accessing pages using this device.",
+    "unit": "Number",
+    "interpretation": "Ideally, this value should be 0. A high value indicates many JavaScript errors when viewing pages, and detailed diagnostics pinpoint error pages and specific errors, greatly aiding troubleshooting.",
+    "troubleshootingSteps": [
+      "Aggregate JavaScript error counts by error type and page for this device type to identify the most impactful issues.",
+      "Look for device‑specific differences such as older JS engines or webview quirks that cause unique errors here.",
+      "Deploy fixes or guards around fragile code paths, then track error counts over time for this device type.",
+      "Set up alerts for sudden jumps in JS error page views on particular devices or OS versions."
+    ]
+  },
+  {
+    "measurement": "Tolerating page views",
+    "description": "Indicates the number of tolerating page views from this device type.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page exceeds the SLOW TRANSACTION CUTOFF but is less than 4 times that cutoff, the view is considered tolerating. Ideally, this value should be 0; if it exceeds Satisfied page views, overall experience on this device type is less than satisfactory. Diagnostics help isolate whether tolerating views are due to device, network, or backend issues.",
+    "troubleshootingSteps": [
+      "Monitor the ratio of Tolerating to Satisfied page views for this device type to spot early signs of degradation.",
+      "Analyze timing profiles for tolerating views to see whether they are network‑bound, server‑bound, or render‑bound on this device.",
+      "Optimize moderate bottlenecks (e.g., reducing asset sizes, improving caching) to move tolerating views into the satisfied band.",
+      "Test under realistic network conditions (3G, 4G, Wi‑Fi) representative of this device’s typical usage patterns."
+    ]
+  },
+  {
+    "measurement": "Frustrated page views",
+    "description": "Indicates the number of frustrated page views experienced by users on this device.",
+    "unit": "Number",
+    "interpretation": "If the Average page load time of a page is greater than 4 times the SLOW TRANSACTION CUTOFF, the view is considered frustrated. Ideally, this value should be 0; if it exceeds Satisfied page views, user experience on this device type is clearly poor. Diagnostics help determine whether the cause is device performance, network, or backend issues.",
+    "troubleshootingSteps": [
+      "Identify the pages with the highest frustrated view counts on this device and prioritize them for remediation.",
+      "Correlate frustrated views with server errors, timeouts, or resource saturation, especially for mobile backends or APIs.",
+      "Investigate network quality for typical networks used by this device type (cellular vs Wi‑Fi) during frustrated periods.",
+      "Consider rolling back recent changes or implementing device‑specific fallbacks if frustrated counts spike after deployments."
+    ]
+  },
+  {
+    "measurement": "Average browser render time",
+    "description": "Indicates the time taken to complete the download of remaining resources, including images, and to finish rendering the page in the browser on this device type.",
+    "unit": "ms",
+    "interpretation": "High values indicate that page rendering is taking too long, often due to in‑optimal HTML document architecture, complex CSS (deeply nested rules, slow selectors, complex effects), and large images. When Average page load time is high, comparing this measure with Average browser initial request time, Average network time, Average server time, and Average content download time helps pinpoint whether rendering on this device is the bottleneck.",
+    "troubleshootingSteps": [
+      "Profile rendering performance on representative devices of this type using browser or remote debugging tools.",
+      "Simplify layouts, reduce heavy CSS effects, and resize/compress images tailored for the device’s screen and DPI.",
+      "Use responsive images and conditional loading so smaller or fewer resources are used on constrained devices.",
+      "Offload non‑critical work to after first meaningful paint or use lazy loading to reduce initial render time."
+    ]
+  },
+  {
+    "measurement": "Average content download time",
+    "description": "Indicates the time to make the complete HTML document (DOM) available for JavaScript to apply rendering logic on the pages accessed using this device.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and documentContentLoadedEventStart. It equals the sum of Average DOM download time and Average DOM processing time, so abnormal increases in either will increase this measure. When content download is unusually long, comparing these components reveals whether server/cache/local resource responsiveness or DOM processing is at fault.",
+    "troubleshootingSteps": [
+      "Decompose Average content download time into Average DOM download time and Average DOM processing time for this device type.",
+      "Reduce HTML document size via minification and removal of unused markup or embedded assets.",
+      "Ensure server and CDN compression are effective for HTML responses to this device type.",
+      "Optimize DOM processing (see Average DOM processing time) where parsing and script execution dominate this metric."
+    ]
+  },
+  {
+    "measurement": "Average DOM download time",
+    "description": "Indicates the time taken to download the complete HTML document for page view requests on this device.",
+    "unit": "ms",
+    "interpretation": "This is the time between responseStart and responseEnd. Higher download time increases the time needed to make the document available for rendering, negatively impacting user experience; a low value is desired at all times.",
+    "troubleshootingSteps": [
+      "Monitor network bandwidth and latency for common networks used by this device type to detect slow paths.",
+      "Shrink HTML responses (remove inline base64 assets, unnecessary scripts/styles) to reduce payload size for this device.",
+      "Verify that CDN edges close to this device’s geography are serving HTML to minimize network distance.",
+      "Evaluate whether server‑side streaming or chunked responses could improve perceived speed for large documents."
+    ]
+  },
+  {
+    "measurement": "Average DOM processing time",
+    "description": "Indicates the time taken by the browser to build the Document Object Model (DOM) for the pages accessed using this device and make it available for JavaScript to apply rendering logic.",
+    "unit": "ms",
+    "interpretation": "An unusually high value indicates that DOM building is taking longer than normal, delaying page rendering and adversely impacting user experience when this device is used. Ideally, this value should be low.",
+    "troubleshootingSteps": [
+      "Reduce DOM complexity and node count for views heavily used on this device type, especially on low‑power hardware.",
+      "Avoid heavy synchronous JavaScript execution during initial parsing that blocks DOM construction on this device.",
+      "Split large pages into smaller chunks or use pagination/infinite scroll so initial DOM is lighter for this device.",
+      "Audit third‑party scripts and tags that may inject large or inefficient DOM fragments impacting this device type."
+    ]
+  },
+  {
+    "measurement": "Average server time",
+    "description": "Indicates the interval between the start of processing of a request on the browser on this device type to when this device type receives the response.",
+    "unit": "ms",
+    "interpretation": "Average server time is the interval between requestStart and responseStart. Ideally, it should be low, as high values hurt the Apdex score. It is mainly influenced by the processing ability and configuration of the web or application server. Backend slowdowns due to insufficient resources or misconfiguration increase this metric. Navigation Timing issues in IE 11 can cause inaccuracies, and Business Transactions traces can be used as a workaround.",
+    "troubleshootingSteps": [
+      "Monitor backend resource usage (CPU, memory, I/O, DB, external services) during periods of high Average server time for this device segment.",
+      "Use APM/BTM to trace slow transactions from this device type and identify the slowest spans (queries, APIs, etc.).",
+      "Scale or tune backend components that are frequently accessed by this device type (e.g., mobile APIs) to reduce processing time.",
+      "Watch for configuration issues (thread pools, connection pools, GC settings) that manifest under this device’s traffic patterns."
+    ]
+  },
+  {
+    "measurement": "Average network time",
+    "description": "Indicates the elapsed time since a user using this device type initiates a request and the start of fetching the response document from the server or application.",
+    "unit": "ms",
+    "interpretation": "Average network time is the interval between navigationStart and requestStart and includes DNS lookup and TCP connection times. It equals the sum of Average DNS lookup time and Average TCP connection time. Ideally, it should be low; very high values delay page loading and degrade service quality. Navigation Timing inaccuracies in IE 11 can affect this measure for those browsers.",
+    "troubleshootingSteps": [
+      "Break down Average network time into Average DNS lookup time and Average TCP connection time for this device type.",
+      "Investigate network quality for typical networks used by this device (cellular, Wi‑Fi) and their routes to your servers/CDN.",
+      "Use CDNs and additional PoPs located closer to the geographies where this device type is popular.",
+      "Enable connection reuse and modern protocols (HTTP/2/3) to minimize per‑request network overhead."
+    ]
+  },
+  {
+    "measurement": "Average DNS lookup time",
+    "description": "Indicates the time taken by this device type to perform the domain lookup for connecting to the web site/web application.",
+    "unit": "ms",
+    "interpretation": "A high value affects DNS lookup itself and also increases Average network time and Average page load time, which negatively impacts user experience.",
+    "troubleshootingSteps": [
+      "Verify DNS provider performance and resolution paths for regions and networks where this device type is prevalent.",
+      "Avoid excessive CNAME indirection, especially for domains critical to this device’s experience (APIs, static assets). ",
+      "Tune DNS TTL to maximize cache effectiveness without hindering responsiveness to changes.",
+      "Monitor DNS error and timeout rates for traffic from common networks used by this device type."
+    ]
+  },
+  {
+    "measurement": "Average TCP connection time",
+    "description": "Indicates the time taken by this device type to establish a TCP connection with the server.",
+    "unit": "ms",
+    "interpretation": "A bad network connection between the browser client and the server can delay TCP connections, increasing Average network time and impacting overall page load time and user experience.",
+    "troubleshootingSteps": [
+      "Check server and load balancer connection metrics (SYN backlog, connection limits) during high TCP connection time for this device type.",
+      "Ensure that this device type connects to the closest data center or CDN edge to minimize RTT.",
+      "Encourage persistent connections and TLS session resumption to avoid repeated full TCP/TLS handshakes per request.",
+      "Investigate intermediate network devices (firewalls, proxies) for performance issues on paths commonly used by this device type."
+    ]
+  },
+  {
+    "measurement": "Average SSL handshake time",
+    "description": "Indicates the time taken by requests to complete the SSL handshake on this browser.",
+    "unit": "ms",
+    "interpretation": "An SSL handshake occurs when a browser makes a secure HTTPS request and negotiates encrypted keys and certificates with the server. This negotiation adds to Average network time and page load time; DNS lookup, TCP handshake, and SSL handshake together add several round trips. Using HTTP/2 and proper caching can reduce SSL setup to a single round trip.",
+    "troubleshootingSteps": [
+      "Optimize TLS configuration (protocol versions, cipher suites) to minimize handshake cost for devices most often using HTTPS.",
+      "Enable TLS session resumption and verify that clients on this device type take advantage of it.",
+      "Terminate TLS at nearby CDN or edge nodes to reduce round‑trip times during handshake.",
+      "Monitor SSL handshake time by device and region to detect patterns that suggest certificate chain or network issues."
+    ]
+  },
+  {
+    "measurement": "Average AppCache time",
+    "description": "Indicates the time taken to check whether/not the requests received from this device can be serviced by the AppCache.",
+    "unit": "ms",
+    "interpretation": "HTML5 AppCache allows offline use by caching specified resources. A high AppCache time indicates that requests are spending too much time in AppCache, introducing page load latency. Common issues include incorrect manifest media type, wrong origin, path‑relative URL mistakes, and frequent manifest changes that force synchronous re‑downloads.",
+    "troubleshootingSteps": [
+      "Ensure the manifest file is served with media type text/cache‑manifest and from the same origin as the host page.",
+      "Verify that relative URLs in the manifest are relative to the manifest file itself, not to the referencing HTML document.",
+      "Avoid unnecessary manifest changes that cause full resource re‑downloads for this device type.",
+      "Consider loading Application Cache from a simple HTML file in an iframe to avoid synchronous downloads blocking page load."
+    ]
+  },
+  {
+    "measurement": "Average redirection time",
+    "description": "Indicates the time that requests received from this device spent in redirection before fetching the pages.",
+    "unit": "ms",
+    "interpretation": "This is the elapsed time between redirectStart and redirectEnd. Redirects are used for mobile versions, secure pages, latest content, geo‑specific pages, and canonical URLs, but each redirect adds latency via additional DNS and HTTP requests. Multiple, invalid, or looping redirects can significantly increase page load time and cause errors.",
+    "troubleshootingSteps": [
+      "Identify redirect chains affecting this device type (e.g., mobile redirect flows) and collapse them to a single redirect where possible.",
+      "Remove or repair invalid or obsolete redirects that result in 404s or unnecessary hops for this device’s users.",
+      "Ensure device‑specific redirects (e.g., m‑dot vs responsive) are configured efficiently and correctly.",
+      "Monitor Average redirection time together with Average page load time to confirm improvements after redirect optimizations."
+    ]
+  },
+  {
+    "measurement": "Average browser wait time",
+    "description": "Indicates the time that requests from this device spent on the browser, waiting for another request to complete.",
+    "unit": "ms",
+    "interpretation": "This is the sum of the time between consecutive events from navigationStart to requestStart. Since browsers limit active connections per domain, additional requests may wait in a queue. High browser wait time prolongs initial request time and reduces responsiveness. Comparing this metric with Average AppCache time and Average redirection time helps determine whether long waits are the main cause of initial delays.",
+    "troubleshootingSteps": [
+      "Reduce the number of concurrently requested resources (scripts, styles, images) on pages used by this device type.",
+      "Use HTTP/2 multiplexing or domain sharding (where appropriate) to increase effective concurrency and reduce queuing.",
+      "Encourage or test browsers that support higher parallel connections when targeting users on this device type.",
+      "Prioritize critical resources and defer or lazy‑load non‑critical assets to reduce browser queueing for important requests."
+    ]
+  },
+  {
+    "measurement": "Average browser initial request time",
+    "description": "Indicates the interval between when a request was received from users, when it followed a redirect, to when it was processed in the AppCache, on this device.",
+    "unit": "ms",
+    "interpretation": "This is the time between navigationStart and domainLookupStart and includes time spent waiting on the browser, in AppCache, and following redirects. It equals the sum of Average AppCache time, Average redirection time, and Average browser wait time. High values indicate that requests are delayed before DNS resolution even begins, and comparing the three component measures shows whether redirection, AppCache, or browser wait is responsible.",
+    "troubleshootingSteps": [
+      "Decompose Average browser initial request time into its components (AppCache, redirection, browser wait) for this device type and address the dominant contributor.",
+      "Minimize or streamline redirects for this device type, especially device‑specific redirection logic.",
+      "Optimize or replace AppCache where necessary to avoid long processing times before requests proceed.",
+      "Reduce the number of parallel requests so that key initial requests spend less time queued in the browser on this device."
+    ]
+  }
+]

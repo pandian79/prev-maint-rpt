@@ -1,0 +1,74 @@
+[
+  {
+    "measurement": "Unsigned scripts executed",
+    "description": "Indicates the number of unsigned PowerShell scripts that are currently executing on the target Windows host.",
+    "unit": "Number",
+    "interpretation": "Ideally, this value should be low. A high value means many unsigned scripts are being executed, increasing the probability that malicious or unvetted scripts are running, which can compromise system security and stability. Detailed diagnosis can reveal which unsigned scripts were executed, how often, and from which folders so that administrators can review and decide whether they should be allowed to run.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list unsigned scripts currently or recently executed, including their paths and execution counts.",
+      "Review each unsigned script for legitimacy, source, and purpose; remove or restrict scripts that are not approved.",
+      "Tighten PowerShell execution policies or code‑signing requirements so that only trusted, signed scripts can run where feasible.",
+      "Implement additional monitoring or alerts for spikes in unsigned script execution, as these may indicate attack activity such as malware or lateral movement."
+    ]
+  },
+  {
+    "measurement": "Scripts executed with unrestricted execution policy",
+    "description": "Indicates the number of scripts that are running with the Unrestricted execution policy.",
+    "unit": "Number",
+    "interpretation": "The Unrestricted execution policy allows unsigned scripts to run and therefore represents a potential security risk for critical Windows servers or systems. A low value is desirable; a high value indicates that many scripts are executing under a permissive policy that may allow unsafe code to run.",
+    "troubleshootingSteps": [
+      "Check detailed diagnosis to identify scripts running under the Unrestricted policy and where they are stored.",
+      "Review those scripts for security issues such as hard‑coded credentials, unsafe operations, or unvalidated input.",
+      "Where possible, change the policy to a more restrictive one (e.g., AllSigned or RemoteSigned) on systems that do not require Unrestricted.",
+      "Educate script authors and administrators to avoid relying on Unrestricted and instead use signing and safer policies."
+    ]
+  },
+  {
+    "measurement": "Scripts executed with remote signed execution policy",
+    "description": "Indicates the number of scripts that are currently running with the RemoteSigned execution policy.",
+    "unit": "Number",
+    "interpretation": "RemoteSigned allows scripts downloaded from the internet to run only if they are signed by a trusted publisher. While more secure than Unrestricted, it still permits unsigned scripts written locally and unblocked downloaded scripts to run, introducing some risk on mission‑critical systems. Any non‑zero value warrants inspection of which scripts are using this policy.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list scripts running under the RemoteSigned policy and their storage locations.",
+      "Review these scripts to confirm they come from trusted sources and do not perform unsafe operations.",
+      "Consider moving highly sensitive systems to stricter policies such as AllSigned where feasible, limiting the use of RemoteSigned.",
+      "Regularly audit scripts that rely on RemoteSigned to ensure they remain trustworthy as they evolve over time."
+    ]
+  },
+  {
+    "measurement": "Scripts executed with bypass execution policy",
+    "description": "Indicates the number of scripts that are currently running with the Bypass execution policy.",
+    "unit": "Number",
+    "interpretation": "Bypass is one of the less‑safe execution policies because it allows scripts to run without any prompts, warnings, or blocking. Ideally this value should be low; a high value suggests that many scripts are circumventing normal policy checks, which can hide malicious or unintended activity.",
+    "troubleshootingSteps": [
+      "Inspect detailed diagnosis to identify scripts running with the Bypass policy, including how frequently they run and their locations.",
+      "Investigate why Bypass is required for each script; replace it with a safer configuration (such as proper signing) wherever possible.",
+      "Restrict who can configure or invoke PowerShell with Bypass, using Group Policy and administrative controls.",
+      "Set up alerts for increases in Bypass‑policy usage, as this may indicate attempts to evade security controls."
+    ]
+  },
+  {
+    "measurement": "System PowerShell execution policy",
+    "description": "Indicates the PowerShell execution policy that is currently set at the Windows server or system level.",
+    "unit": "Text with numeric equivalents",
+    "interpretation": "This measure reports the effective system‑level policy using named values mapped to numeric codes: AllSigned=1, Undefined=2, Default=3, Restricted=4, RemoteSigned=5, Bypass=6, Unrestricted=7. Comparing this measure with script‑level policy usage helps determine whether the system policy is being overridden during script execution and if the overall configuration is as secure as intended.",
+    "troubleshootingSteps": [
+      "Check whether the reported system policy aligns with your organization’s security standards (e.g., AllSigned or Restricted for sensitive servers).",
+      "If scripts frequently run under more permissive policies (RemoteSigned, Bypass, Unrestricted) than the system policy, investigate user‑ or process‑level overrides.",
+      "Use Group Policy to enforce consistent, secure execution policies across servers and prevent local weakening of the configuration.",
+      "Periodically review this measure to detect unauthorized policy changes that may expose the system to elevated risk."
+    ]
+  },
+  {
+    "measurement": "IO_data_rate",
+    "description": "Indicates the rate at which PowerShell processes are reading and writing bytes in I/O operations.",
+    "unit": "KB/Sec",
+    "interpretation": "An unusually high IO data rate suggests that one or more PowerShell processes are performing I/O‑intensive activities, such as large file operations or bulk data transfers. This can impact system performance and, in combination with lax execution policies, may be a sign of suspicious automation or data exfiltration.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis of the “Number of processes running” or related measures to identify which PowerShell processes are responsible for high I/O.",
+      "Inspect the commands and scripts associated with those processes to verify that their behavior matches legitimate administrative or application tasks.",
+      "Monitor filesystem and network activity for those processes to rule out malicious behaviors such as unauthorized data movement.",
+      "If high I/O is expected for certain maintenance scripts, schedule them during off‑peak hours to reduce impact on normal workloads."
+    ]
+  }
+]

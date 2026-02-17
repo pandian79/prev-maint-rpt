@@ -1,0 +1,134 @@
+[
+  {
+    "measurement": "Last mail send status",
+    "description": "Indicates the status of last Email that was sent by the eG manager.",
+    "unit": "Success/Failure (internally 100/0)",
+    "interpretation": "This shows whether the most recently sent email alert from the eG manager was delivered successfully or not. A value of 100 represents Success and 0 represents Failure; graphs display these numeric values even though the measure itself is reported as Success/Failure in the UI.",
+    "troubleshootingSteps": [
+      "If the value is Failure (0), use the detailed diagnosis of related mail measures (for example, mail send failures) to see exception text, timestamps, and recipient details.[web:268]",
+      "Verify SMTP server configuration, credentials, ports, and encryption settings on the eG manager when repeated failures occur.[web:266][web:268]",
+      "Check for DNS, firewall, or network connectivity issues between the eG manager and the mail server.[web:268]",
+      "Correlate failures with spikes in mail volume (Mails sent, Mail thread utilization, Mail manager busy) to see if throttling or rate limits are being hit.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Last SMS send status",
+    "description": "Indicates the status of last SMS that was sent by the eG manager.",
+    "unit": "Success/Failure (internally 100/0)",
+    "interpretation": "This shows whether the most recently sent SMS alert from the eG manager was delivered successfully. A value of 100 represents Success and 0 represents Failure; graphs display these numeric values even though the measure itself is reported as Success/Failure in the UI.",
+    "troubleshootingSteps": [
+      "If the value is Failure (0), inspect detailed diagnosis of the SMS failure measures to review the recipient, timestamp, and any exception recorded.[web:268]",
+      "Verify SMS gateway configuration (provider endpoint, credentials, sender ID, and routing rules) defined for the eG manager.[web:271]",
+      "Check network connectivity and any provider-side limits or outages that might affect SMS delivery.[web:271]",
+      "Compare SMS failures with overall SMS messages sent and message failures to identify patterns such as specific destinations or time windows affected.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Mails sent",
+    "description": "Indicates the total number of mails sent from the eG manager.",
+    "unit": "Number",
+    "interpretation": "This indicates the total count of email alerts successfully processed for sending by the eG manager over the measurement period. It reflects outgoing alert volume and helps you understand how heavily email-based alerting is being used.[web:268]",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to review each mail: manager IP, user, alarm description, recipient address, delivery status, send time, time taken, and any exception.[web:268]",
+      "Monitor trends in mail volume to detect unusual spikes that may indicate alert storms or misconfigured thresholds.[web:268]",
+      "If volume is consistently high, consider tuning alert rules or escalation policies to reduce noise and load on the mail infrastructure.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Mails failed to send",
+    "description": "Indicates the number of mails that the eG manager failed to send.",
+    "unit": "Number",
+    "interpretation": "This reports how many email messages could not be sent by the eG manager in the last period. Persistent or increasing failures are a strong indicator of configuration problems, connectivity issues, or mail-server-side errors.[web:268]",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to inspect failed mails, checking recipient address, error/exception, time sent, and time taken.[web:268]",
+      "Validate SMTP settings (server, port, authentication, TLS/SSL) and ensure credentials are correct and not expired.[web:266][web:268]",
+      "Check for issues like invalid recipient addresses, mailbox quotas, or anti-spam policies blocking alerts at the mail server.[web:268]",
+      "Correlate failure spikes with infrastructure/network changes or with very high mail volumes that may trigger throttling.[web:268]"
+    ]
+  },
+  {
+    "measurement": "SMS messages sent",
+    "description": "Indicates the total number of SMS messages from the eG manager.",
+    "unit": "Number",
+    "interpretation": "This shows the total count of SMS alerts that the eG manager attempted and processed for sending during the measurement period. It reflects reliance on SMS as an alerting channel.[web:268]",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to inspect each SMS: manager IP, user, alarm description, recipient, delivery status, send time, time taken, and any exception recorded.[web:268]",
+      "Track the metric over time to identify normal vs. peak SMS alert volumes.[web:268]",
+      "When SMS volume is high, ensure SMS gateway quotas and rate limits are not exceeded and adjust alert policies if necessary.[web:271]"
+    ]
+  },
+  {
+    "measurement": "SMS messages failed to send",
+    "description": "Indicates the number of SMS messages that the eG manager failed to send.",
+    "unit": "Number",
+    "interpretation": "This reports how many SMS alerts could not be successfully sent. A rising value can indicate gateway configuration issues, provider outages, or invalid recipient numbers.[web:268]",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to review failed SMS messages, including recipient, error/exception, and timestamps.[web:268]",
+      "Confirm that SMS gateway settings and credentials are valid and that the provider is reachable from the eG manager.[web:271]",
+      "Check for problems such as invalid phone numbers, unsupported destination networks, or provider-side blocking.[web:271]",
+      "If failures occur during high-volume bursts, evaluate whether provider throttling or quota limits are being reached.[web:268][web:271]"
+    ]
+  },
+  {
+    "measurement": "Escalation mails sent",
+    "description": "Indicates the number escalation mails sent from the eG manager.",
+    "unit": "Number",
+    "interpretation": "This shows how many escalation emails were generated and sent, typically when primary alerts are not acknowledged or cleared within configured time windows. Higher values may indicate recurring unresolved issues or aggressive escalation policies.[web:268]",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to review escalation emails, including alarm description, recipient, send time, and delivery status.[web:268]",
+      "Verify that escalation policies (timers, levels, recipients) are configured as intended to avoid unnecessary noise.[web:268]",
+      "If escalation volume is high, investigate underlying alerts to address root causes rather than only tuning escalation behaviour.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Escalation mails failed to send",
+    "description": "Indicates the number of escalation mails that the eG manager failed to send.",
+    "unit": "Number",
+    "interpretation": "This reports the count of escalation emails that could not be delivered. Failures here can prevent critical stakeholders from being notified of persistent problems.[web:268]",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to examine failed escalation mails, including recipient, error, and timestamps.[web:268]",
+      "Check that escalation recipients’ addresses are valid and that they are not blocked or filtered by mail policies.[web:268]",
+      "Confirm that underlying SMTP and network settings are healthy, especially if both normal and escalation mails fail concurrently.[web:266][web:268]"
+    ]
+  },
+  {
+    "measurement": "Average time to send mail",
+    "description": "Indicates the average time taken for sending mails.",
+    "unit": "ms",
+    "interpretation": "This shows the average latency, in milliseconds, for the eG manager to send email alerts during the measurement period. Higher values indicate slower mail processing or slower interaction with the mail server.[web:268]",
+    "troubleshootingSteps": [
+      "Monitor this value alongside Maximum time to send mail and Mail manager busy to assess overall mail sending performance.[web:268]",
+      "If the average time rises, check for network latency between the manager and the mail server and review mail server performance.[web:268]",
+      "During sustained high alert volume, consider increasing mail threads allocated or optimizing alert rules to reduce load.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Maximum time to send mail",
+    "description": "Indicates the maximum time taken for sending mails.",
+    "unit": "ms",
+    "interpretation": "This records the worst-case mail send time in the period. Ideally, this value should be low; large spikes may reflect transient network problems, mail server slowness, or contention on mail threads.[web:268]",
+    "troubleshootingSteps": [
+      "Investigate periods where this value spikes, correlating with mail server logs and network monitoring data.[web:268]",
+      "Check whether spikes occur during alert storms or maintenance windows, which might slow mail processing.[web:268]",
+      "If high maxima are frequent, tune mail infrastructure (e.g., SMTP server capacity, network path) and consider increasing mail threads allocated.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Mail threads allocated",
+    "description": "Indicates the number of threads allocated for sending mails.",
+    "unit": "Number",
+    "interpretation": "This shows how many worker threads are available in the eG manager for processing and sending email alerts. It effectively represents the configured parallelism for outbound mail operations.[web:268]",
+    "troubleshootingSteps": [
+      "Compare this value with Mail thread utilization and Mail manager busy to determine whether the current thread pool size is adequate.[web:268]",
+      "If utilization is consistently high and mail send times are increasing, consider safely increasing the number of mail threads, subject to system capacity.[web:268]",
+      "Avoid over-allocating threads on resource-constrained managers, as this may cause contention and reduce overall performance.[web:268]"
+    ]
+  },
+  {
+    "measurement": "Mail threads utilization",
+    "description": "Indicates the percentage of threads utilized for sending the mails.",
+    "unit": "Percent",
+    "interpretation": "This reflects how much of the available mail-sending thread capacity is actually in use. Sustained high utilization suggests that the mail thread pool is running near capacity and may become a bottleneck under additional load.[web:268]",
+    "troubleshootingSteps": [
+      "Monitor this measure together with Mail threads allocated and mail send times to judge whether thread capacity is sufficient.[web:268]",
+      "If utilization is often near 100%, consider increasing mail threads alloc

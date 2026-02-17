@@ -1,0 +1,37 @@
+[
+  {
+    "measurement": "License status",
+    "description": "Indicates the current status of the license.",
+    "measurementUnit": null,
+    "interpretation": "Licensed - Permanently activated=1, Licensed - Time-based=2, Unknown=3, Within the grace period=4, Notification=5, Extended grace=6, Error=7, Expired=8. Detailed diagnosis lists the server name, product key channel, and license details.",
+    "troubleshootingSteps": [
+      "If status is 'Licensed - Permanently activated' or 'Licensed - Time-based', periodically verify that activation remains valid and that volume/KMS services (if used) are healthy; no immediate action is required.[web:129][web:130][web:131][web:133]",
+      "If status is 'Within the grace period', ensure a valid product key and activation path are configured (KMS/MAK/Retail) and complete activation before the grace period ends to avoid reduced functionality.[web:129][web:130][web:131][web:133][web:136][web:139]",
+      "If status is 'Notification', treat this as a warning that the product is not properly activated or is past the grace period; review activation logs, correct the key or activation method, and activate or renew the license.[web:129][web:130][web:131][web:133][web:136][web:139]",
+      "If status is 'Extended grace', 'Error', or 'Expired', immediately investigate activation errors (slmgr /dlv or OS logs), validate license compliance, and either renew the license, correct KMS/MAK configuration, or contact the vendor/Microsoft for remediation.[web:129][web:130][web:131][web:133][web:136][web:139]",
+      "Implement centralized license and expiry monitoring/notifications so upcoming expirations and grace-period entries are acted on before users lose functionality.[web:135][web:138][web:141]"
+    ]
+  },
+  {
+    "measurement": "Time to license expiry",
+    "description": "Indicates the number of days beyond which the license will expire.",
+    "measurementUnit": "Days",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Set operational thresholds (for example, alerts at 30, 15, and 7 days before expiry) so administrators have time to renew or replace licenses without service interruption.[web:135][web:138][web:139][web:141]",
+      "When remaining days are low, confirm renewal has been purchased/approved, update license keys or subscriptions, and verify the new expiry date is reflected in monitoring outputs.[web:135][web:138][web:139][web:141]",
+      "For time-based evaluation or trial licenses approaching expiry, plan migrations, upgrades, or decommissioning to avoid systems reverting to reduced or non-functional modes.[web:129][web:130][web:131][web:139]"
+    ]
+  },
+  {
+    "measurement": "Remaining Windows rearm count",
+    "description": "Indicates the number of times the license can be uninstalled and set to trial mode in case of transferring the license to another system.",
+    "measurementUnit": "Number",
+    "interpretation": "",
+    "troubleshootingSteps": [
+      "Use slmgr /dlv to confirm the remaining rearm count and understand how many times the system can be reset to a grace/trial state without entering a new key.[web:134][web:137][web:140][web:143]",
+      "Avoid consuming rearms unnecessarily in production; instead, activate Windows with valid keys as soon as possible so you are not dependent on remaining rearm operations.[web:134][web:137][web:140][web:143]",
+      "If the rearm count is low or zero and you still rely on trial/grace mode, plan to move to a properly licensed state (valid key, KMS, or MAK) to prevent the system from entering a non-genuine or restricted mode.[web:134][web:137][web:139][web:140][web:143]"
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "Measurement": "Number of messages",
+    "Description": "Shows the number of error or warnings found in a syslog file for the configured pattern.",
+    "MeasurementUnit": "Number",
+    "Interpretation": ""
+  }
+]

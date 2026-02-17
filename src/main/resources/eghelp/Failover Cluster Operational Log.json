@@ -1,0 +1,55 @@
+[
+  {
+    "measurement": "Information messages",
+    "description": "This refers to the number of information events generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A change in the value of this measure may indicate infrequent but successful operations performed by one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering/Operational Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Review the Operational log for successful status changes (for example, resources coming online, groups moving, or nodes joining) to establish a baseline of normal cluster activity.[web:333][web:337][web:338]",
+      "If the count of information messages spikes unexpectedly, investigate whether the cluster is 'flapping' (repeatedly failing over and recovering) or restarting services unnecessarily.[web:325][web:338][web:343]"
+    ]
+  },
+  {
+    "measurement": "Warnings",
+    "description": "This refers to the number of warnings that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A high value of this measure indicates application problems that may not have an immediate impact, but may cause future problems in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering/Operational Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Analyze warning events in the Operational log (such as timeouts, partial failures, or network latency warnings) to identify potential stability risks before they cause an outage.[web:325][web:333][web:343]",
+      "Run the Cluster Validation Wizard to check for configuration drifts or hardware issues that might be triggering these warnings.[web:337][web:341]",
+      "Investigate network and storage paths if warnings relate to missed heartbeats or slow I/O responses.[web:333][web:338][web:343]"
+    ]
+  },
+  {
+    "measurement": "Error messages",
+    "description": "This refers to the number of application error events that were generated.",
+    "measurementUnit": "Number",
+    "interpretation": "A very low value (zero) indicates that the system is in a healthy state. An increasing trend or high value indicates the existence of problems like loss of functionality or data in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering/Operational Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Examine error events (such as resource failures, failed failover attempts, or dependency issues) in the Operational log to pinpoint the failing component.[web:333][web:343][web:346]",
+      "Check the state of individual cluster resources and services corresponding to the error timestamps.[web:329][web:333][web:346]",
+      "If errors persist, generate the cluster debug log (Get-ClusterLog) for a more detailed sequence of events leading up to the failure.[web:327][web:341][web:342]"
+    ]
+  },
+  {
+    "measurement": "Critical messages",
+    "description": "This refers to the number of critical error events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "A critical event is one that an application or a component cannot automatically recover from. A very low value (zero) indicates that the system is in a healthy state. An increasing trend or high value indicates the existence of fatal/irrepairable problems in one or more applications. Please check the Application and Services/Microsoft/Windows/FailoverClustering/Operational Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Treat critical events (such as node evictions, cluster service termination, or quorum loss) as high-priority outages and investigate immediately.[web:325][web:332][web:333]",
+      "Restore service by manually bringing resources online or restarting cluster nodes if automatic recovery has failed.[web:332][web:337][web:343]",
+      "Analyze the root cause (e.g., complete network isolation, storage subsystem failure) to prevent recurrence of these fatal errors.[web:332][web:341][web:342]"
+    ]
+  },
+  {
+    "measurement": "Verbose messages",
+    "description": "This refers to the number of verbose events that were generated when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "Verbose logging provides more details in the log entry, which will enable you to troubleshoot issues better. This measure is applicable only for Windows 2008/Windows Vista/Windows 7 systems. Please check the Application and Services/Microsoft/Windows/FailoverClustering/Operational Logs in the Event Log Viewer for more details.",
+    "troubleshootingSteps": [
+      "Enable verbose logging (Cluster Log Level 5 or DiagnosticVerbose channel) only when reproducing a specific issue, as it generates high volume data.[web:327][web:341][web:342]",
+      "Use verbose entries to trace the exact sequence of internal cluster state transitions and API calls during complex troubleshooting scenarios.[web:327][web:341][web:342]"
+    ]
+  }
+]

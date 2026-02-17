@@ -1,0 +1,48 @@
+[
+  {
+    "measurement": "Internet availability",
+    "description": "Indicates the availability of internet.",
+    "measurementUnit": "Percent",
+    "interpretation": "Represents the percentage of time during the measurement period that the internet connection was reachable and responsive.",
+    "troubleshootingSteps": [
+      "If availability is low or intermittent, check your ISP’s status page for outages and maintenance notifications.[web:635][web:643]",
+      "Power cycle modem, router, and any intermediate switches to clear transient faults and re-establish fresh connections.[web:631][web:635][web:638]",
+      "Test connectivity with continuous ping or monitoring tools to identify packet loss and whether issues occur on the local network or beyond your gateway.[web:634][web:635][web:640][web:643]",
+      "Inspect local cabling and Wi‑Fi conditions; replace damaged Ethernet cables, reduce wireless interference, or switch to wired connections for critical systems.[web:631][web:635][web:640]",
+      "If issues occur only at peak times, consider that bandwidth saturation or router overload may be responsible and upgrade equipment or service accordingly.[web:635][web:640][web:643]"
+    ]
+  },
+  {
+    "measurement": "Downloaded data",
+    "description": "Indicates the size of file to be downloaded from URL.",
+    "measurementUnit": "MB",
+    "interpretation": "Represents the configured test file size used to simulate and measure download performance.",
+    "troubleshootingSteps": [
+      "Use a sufficiently large test file (tens or hundreds of MB) to obtain a realistic measure of sustained throughput instead of short‑burst speeds.[web:636][web:639][web:642][web:645]",
+      "Ensure the test server itself is not the bottleneck; when diagnosing your own connection, download from well‑provisioned endpoints (e.g., speed test services or CDN‑backed files).[web:639][web:643]"
+    ]
+  },
+  {
+    "measurement": "Time taken to download the configured file",
+    "description": "Indicates the time taken for downloading the file from URL.",
+    "measurementUnit": "Secs",
+    "interpretation": "Higher values indicate slower effective throughput or higher latency/congestion between client and server.",
+    "troubleshootingSteps": [
+      "Compare actual download time against the theoretical time calculated from your line speed (file size ÷ bandwidth) to estimate efficiency.[web:636][web:639][web:642][web:645]",
+      "If downloads are much slower than expected, check for competing traffic (streaming, backups, large updates) and pause or schedule them off‑peak.[web:631][web:635][web:640][web:643]",
+      "Run traceroute or path analysis to identify where along the path latency or loss increases, and provide this evidence to your ISP if the slowdown is outside your LAN.[web:635][web:638][web:640][web:643]"
+    ]
+  },
+  {
+    "measurement": "Download speed",
+    "description": "Indicates the download speed over time.",
+    "measurementUnit": "Mbps",
+    "interpretation": "The effective throughput achieved during the test; strongly influenced by test file size, network congestion, server capacity, and protocol overhead.",
+    "troubleshootingSteps": [
+      "Distinguish between Mbps (megabits per second) and MBps (megabytes per second); remember that 1 MBps ≈ 8 Mbps when comparing to ISP‑advertised speeds.[web:636][web:639][web:642][web:645]",
+      "Measure latency and packet loss alongside download speed; high latency or loss can significantly reduce TCP throughput even on high‑bandwidth links.[web:634][web:640][web:643]",
+      "Test from both wired and wireless connections; if Wi‑Fi speeds are much lower than wired, optimize Wi‑Fi channel, placement, or upgrade access points.[web:631][web:635][web:640]",
+      "Verify that your router and modem can handle your subscribed bandwidth; older or low‑end hardware may cap throughput below the ISP plan speed.[web:640][web:643]"
+    ]
+  }
+]

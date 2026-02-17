@@ -1,0 +1,116 @@
+[
+  {
+    "measurement": "Total threads",
+    "description": "Indicates the total number of threads (including daemon and non-daemon threads).",
+    "unit": "Number",
+    "interpretation": "This is the current overall thread count in the JVM, covering all live daemon and non‑daemon threads. Tracking it over time helps reveal thread leaks or abnormal growth in concurrency."
+  },
+  {
+    "measurement": "Runnable threads",
+    "description": "Indicates the current number of threads in a runnable state.",
+    "unit": "Number",
+    "interpretation": "These threads are either actively executing or ready to execute on the CPU. If this value is high relative to CPU capacity, it can indicate contention for CPU. Detailed diagnosis can be used to see per‑thread CPU usage and time spent in blocked or waiting states."
+  },
+  {
+    "measurement": "Blocked threads",
+    "description": "Indicates the number of threads that are currently in a blocked state.",
+    "unit": "Number",
+    "interpretation": "Blocked threads are waiting to acquire a lock held by another thread before entering a synchronized block. A higher value can point to lock contention or potential bottlenecks; detailed diagnosis provides more information about the blocked threads."
+  },
+  {
+    "measurement": "Waiting threads",
+    "description": "Indicates the number of threads that are currently in a waiting state.",
+    "unit": "Number",
+    "interpretation": "Waiting threads have entered a synchronized block and are waiting to be notified that a lock has been released. This value should generally be low; a very high value suggests excessive waiting, which degrades the application’s ability to complete work and increases end‑user response times. Detailed diagnosis can identify which threads are waiting."
+  },
+  {
+    "measurement": "Timed waiting threads",
+    "description": "Indicates the number of threads in a TIMED_WAITING state.",
+    "unit": "Number",
+    "interpretation": "These threads are waiting for another thread to perform some action but will give up after a configured timeout. A large number can indicate time‑based coordination or delays; detailed diagnosis shows which threads are in this state."
+  },
+  {
+    "measurement": "Low CPU threads",
+    "description": "Indicates the number of threads that are currently consuming CPU lower than the value configured in the PCT LOW CPU UTIL THREADS setting.",
+    "unit": "Number",
+    "interpretation": "This is the count of relatively idle threads under the low‑CPU threshold. It helps you understand how many threads are active but not using much CPU."
+  },
+  {
+    "measurement": "Medium CPU threads",
+    "description": "Indicates the number of threads that are currently consuming CPU higher than the PCT LOW CPU UTIL THREADS threshold and lower than or equal to the PCT MEDIUM CPU UTIL THREADS threshold.",
+    "unit": "Number",
+    "interpretation": "This shows how many threads are using a moderate amount of CPU. It helps segment workload between lightly loaded and heavily loaded threads."
+  },
+  {
+    "measurement": "High CPU threads",
+    "description": "Indicates the number of threads that are currently consuming CPU higher than the PCT MEDIUM CPU UTIL THREADS threshold or up to the PCT HIGH CPU UTIL THREADS threshold (depending on configuration).",
+    "unit": "Number",
+    "interpretation": "These are the most CPU‑intensive threads. Ideally this count should be very low; a high value indicates CPU contention and potential performance issues. Detailed diagnosis helps you pinpoint which threads are consuming excessive CPU."
+  },
+  {
+    "measurement": "Peak threads",
+    "description": "Indicates the highest number of live threads since JVM started.",
+    "unit": "Number",
+    "interpretation": "This is the historical peak of concurrent live threads for the current JVM run. It is useful for capacity planning and detecting whether thread usage has ever spiked to problematic levels."
+  },
+  {
+    "measurement": "Started threads",
+    "description": "Indicates the total number of threads started (including daemon, non-daemon, and terminated) since JVM started.",
+    "unit": "Number",
+    "interpretation": "This cumulative count shows how many threads have been created over the JVM’s lifetime. A steadily and unexpectedly increasing value may indicate thread creation patterns that could lead to resource exhaustion."
+  },
+  {
+    "measurement": "Daemon threads",
+    "description": "Indicates the current number of live daemon threads.",
+    "unit": "Number",
+    "interpretation": "Daemon threads provide background services and do not prevent JVM shutdown. Monitoring their count helps ensure background activity remains within expected limits."
+  },
+  {
+    "measurement": "Deadlock threads",
+    "description": "Indicates the current number of deadlocked threads.",
+    "unit": "Number",
+    "interpretation": "This should normally be 0. A non‑zero value indicates threads are mutually blocking each other and the application’s work may stall. Detailed diagnosis lists deadlocked threads and their resource usage so you can investigate and resolve the deadlock."
+  },
+  {
+    "measurement": "CPU usage of all Low CPU threads",
+    "description": "Indicates the average CPU usage of those threads that are consuming CPU lower than the value configured in the PCT MEDIUM CPU UTIL THREADS setting.",
+    "unit": "Percent",
+    "interpretation": "This is the average CPU usage across all low‑CPU threads and confirms how little CPU these threads are using. To see which specific threads are in this group, use detailed diagnosis for the Low CPU threads measure."
+  },
+  {
+    "measurement": "CPU usage of all Medium CPU threads",
+    "description": "Indicates the average CPU usage of those threads that are consuming CPU higher than the PCT MEDIUM CPU UTIL THREADS setting and lower than or equal to the PCT HIGH CPU UTIL THREADS setting.",
+    "unit": "Percent",
+    "interpretation": "This is the average CPU load for threads in the medium utilization band. It helps you understand how much CPU is used by moderately active threads; detailed diagnosis for Medium CPU threads reveals the actual threads in this band."
+  },
+  {
+    "measurement": "CPU usage of all High CPU threads",
+    "description": "Indicates the average CPU usage of those threads that are consuming CPU greater than the percentage configured in the PCT HIGH CPU UTIL THREADS setting.",
+    "unit": "Percent",
+    "interpretation": "This is the average CPU utilization for the most CPU‑intensive threads. A high value here indicates that a few threads may be dominating CPU resources. Detailed diagnosis for High CPU threads identifies those threads; you can then correlate with CPU usage of Web/HTTP, RMI, GC/internal, and other threads to understand what work they are doing."
+  },
+  {
+    "measurement": "CPU usage of Web/HTTP threads",
+    "description": "Indicates the percentage of CPU resources utilized by threads that are serving Web/HTTP requests.",
+    "unit": "Percent",
+    "interpretation": "This shows how much CPU is spent processing web or HTTP requests. Comparing it with CPU usage of RMI, GC/internal activity, and other threads helps determine whether front‑end request handling is the main CPU consumer."
+  },
+  {
+    "measurement": "CPU usage of RMI threads",
+    "description": "Indicates the percentage of CPU resources utilized by threads engaged in RMI activity.",
+    "unit": "Percent",
+    "interpretation": "This indicates the CPU share used by remote method invocation (RMI) related threads, such as those supporting JMX connections between JVMs. Comparing this with Web/HTTP, GC/internal, and other thread CPU usage highlights whether RMI activity is a major CPU driver."
+  },
+  {
+    "measurement": "CPU usage of GC and Internal Activity",
+    "description": "Indicates the percentage of CPU resources utilized by threads engaged in garbage collection and other JVM internal activity.",
+    "unit": "Percent",
+    "interpretation": "This shows how much CPU is being consumed by GC and other internal JVM operations. High values suggest significant overhead from JVM internals, which can reduce CPU available for application work; compare it with Web/HTTP, RMI, and other threads to see where CPU time is going."
+  },
+  {
+    "measurement": "CPU usage of other threads",
+    "description": "Indicates the percentage of CPU resources utilized by threads involved in JVM activities other than web/HTTP request processing, RMI activity, GC, and internal activity.",
+    "unit": "Percent",
+    "interpretation": "This captures CPU consumption by all remaining thread types not classified as Web/HTTP, RMI, or GC/internal. Comparing this metric with the other CPU usage measures helps you determine if some unclassified workload is consuming a significant share of CPU."
+  }
+]

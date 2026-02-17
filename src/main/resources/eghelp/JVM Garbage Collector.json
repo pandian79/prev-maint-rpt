@@ -1,0 +1,20 @@
+[
+  {
+    "measurement": "No of garbage collections started",
+    "description": "Indicates the number of times garbage collection started to release dead objects from memory during the last measurement period.",
+    "unit": "Number",
+    "interpretation": "This shows how frequently the JVM triggered garbage collection in the last interval; more frequent collections can indicate higher allocation/turnover of objects and may impact application pause times if excessive."
+  },
+  {
+    "measurement": "Time taken for garbage collection",
+    "description": "Indicates the time taken to perform the current garbage collection operation.",
+    "unit": "Secs",
+    "interpretation": "This is the duration of a garbage collection cycle. Ideally this should be low because the application is typically paused or partially paused during GC; longer GC times mean longer pauses before normal processing can resume."
+  },
+  {
+    "measurement": "Percent of time spent by JVM for garbage collection",
+    "description": "Indicates the percentage of time spent by JVM in garbage collection during the last measurement period.",
+    "unit": "Percent",
+    "interpretation": "This expresses how much of the JVM’s time in the last period was consumed by garbage collection. Lower values are preferred; a high or rising percentage suggests GC overhead is significantly affecting overall application performance."
+  }
+]

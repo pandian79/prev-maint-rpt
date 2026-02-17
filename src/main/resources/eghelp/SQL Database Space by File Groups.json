@@ -1,0 +1,122 @@
+[
+  {
+    "measurement": "Total size",
+    "description": "Indicates the space allocated to a database (excluding its log files).",
+    "unit": "MB",
+    "interpretation": "This is the total allocated size of the database data files only. It does not include the size of database log files. This measure is reported only for a database.",
+    "troubleshootingSteps": [
+      "Track total size over time to understand database growth trends and plan capacity and storage needs.",
+      "If total size is growing rapidly, review data retention policies and consider archiving or purging old data.",
+      "Verify that autogrowth settings and file layouts are appropriate so size increases do not cause fragmentation or unexpected disk exhaustion.",
+      "Ensure that storage systems have enough free capacity to accommodate projected increases in total database size."
+    ]
+  },
+  {
+    "measurement": "Reserved space percent",
+    "description": "Indicates the percentage of space reserved for tables and indexes of a database.",
+    "unit": "Percent",
+    "interpretation": "If this value reaches 100%, all allocated space in the database has been reserved for tables and indexes, and no additional objects can be created until the database size is increased. This measure is reported only for a database.",
+    "troubleshootingSteps": [
+      "When reserved space percent is high or approaching 100%, increase the database size or add datafiles/filegroups before space errors occur.",
+      "Identify large tables or indexes that could be archived, compressed, or purged to free space.",
+      "Review index usage and remove or consolidate unused or redundant indexes that consume reserved space.",
+      "Implement proactive monitoring and alerting on reserved space percent to avoid sudden allocation failures."
+    ]
+  },
+  {
+    "measurement": "Reserved space",
+    "description": "Indicates the amount of space allocated to the tables and indexes created on a database.",
+    "unit": "MB",
+    "interpretation": "If reserved space equals total size, the database is fully allocated and new tables or indexes cannot be created until the database size is increased. This measure is reported only for a database.",
+    "troubleshootingSteps": [
+      "Compare reserved space with total size to determine how much of the allocated database space is already reserved.",
+      "If reserved space is close to total size, grow the database files to provide additional room for new objects and growth.",
+      "Review large or fast-growing tables and indexes to see whether data can be archived, partitioned, or compressed.",
+      "Regularly reassess database sizing to ensure reserved space does not repeatedly reach total size unexpectedly."
+    ]
+  },
+  {
+    "measurement": "Data space",
+    "description": "Indicates the amount of space used by data.",
+    "unit": "MB",
+    "interpretation": "This is the data portion of allocated space in a database. The total allocated space in use is the sum of Data space and Index space. This measure is reported only for a database.",
+    "troubleshootingSteps": [
+      "Monitor data space growth to understand how quickly user data is expanding.",
+      "Identify largest tables and evaluate data retention policies; consider archiving or purging historical data where appropriate.",
+      "Consider table compression or partitioning to manage very large data sets more efficiently.",
+      "Ensure that growth in data space is aligned with business expectations and storage capacity."
+    ]
+  },
+  {
+    "measurement": "Index space",
+    "description": "Indicates the amount of space used by indexes.",
+    "unit": "MB",
+    "interpretation": "This is the space consumed by indexes in the database. Together with Data space, it represents total allocated space in use. This measure is reported only for a database.",
+    "troubleshootingSteps": [
+      "Review index usage statistics to identify unused or rarely used indexes that can be dropped to reclaim space.",
+      "Check for overlapping or redundant indexes and consolidate them where possible.",
+      "Consider index compression and partitioning strategies to reduce index space on very large tables.",
+      "Balance index maintenance (rebuild/reorganize) to keep fragmentation and space usage under control without excessive overhead."
+    ]
+  },
+  {
+    "measurement": "Unused space",
+    "description": "Indicates the amount of free space available in the database.",
+    "unit": "MB",
+    "interpretation": "This equals Total size minus Reserved space and represents currently unallocated free space within the database. This measure is reported only for a database.",
+    "troubleshootingSteps": [
+      "Monitor unused space to ensure there is sufficient headroom for expected data and index growth.",
+      "If unused space is very low, proactively expand the database or datafiles to avoid allocation failures.",
+      "If unused space is consistently very high, consider whether allocated space can be reduced (where supported) to reclaim disk capacity.",
+      "Coordinate unused space thresholds with reserved space percent alerts for a complete picture of capacity risk."
+    ]
+  },
+  {
+    "measurement": "Is auto growth enabled?",
+    "description": "Indicates whether or not auto-growth is enabled for this file group.",
+    "unit": "Boolean (Yes/No with numeric equivalents 100/0)",
+    "interpretation": "Auto-growth allows SQL Server to automatically expand database files when they run out of space. If any file in the file group has auto-growth enabled, this measure reports Yes (100); otherwise it reports No (0). In graphs, the numeric values 100 and 0 are used. This measure is reported only for file groups.",
+    "troubleshootingSteps": [
+      "For critical file groups, ensure auto-growth is enabled on at least one file to prevent unexpected application failures due to out-of-space conditions.",
+      "Review auto-growth increment settings (fixed size vs percent) to avoid too-frequent small growths or excessively large growth steps.",
+      "If auto-growth is disabled (No/0), monitor free space closely and manage file size increases manually as part of capacity planning.",
+      "Avoid relying solely on reactive auto-growth; combine it with proactive growth and monitoring to maintain performance and stability."
+    ]
+  },
+  {
+    "measurement": "Maximum file size",
+    "description": "Indicates the maximum size up to which the database files in this file group can grow.",
+    "unit": "MB",
+    "interpretation": "This measure, reported only for file groups, is derived from each file’s auto-growth configuration. For files without auto-growth, it is their originally allocated size. For files with auto-growth and an explicit size limit, it is that limit; for files with unrestricted growth, it is the total capacity of the disk containing the file. The Max file size of a file group is the sum of these values across its files.",
+    "troubleshootingSteps": [
+      "Compare current usage and free space against Max file size to determine how close the file group is to its growth limits.",
+      "If Max file size is constrained and growth is expected, increase file size limits or add additional files/disks to the file group.",
+      "Ensure that files set to grow until disk capacity are on disks with sufficient free space and appropriate monitoring.",
+      "Regularly validate that Max file size configurations align with storage capacity and organizational growth policies."
+    ]
+  },
+  {
+    "measurement": "Free space",
+    "description": "Indicates the amount of disk space that is currently available for use for this file group.",
+    "unit": "MB",
+    "interpretation": "A high value means the database files in the file group have adequate room for growth. A low value suggests that disk space is nearly exhausted and that auto-growth or manual growth settings may need adjustment. This measure is reported only for file groups.",
+    "troubleshootingSteps": [
+      "Monitor free space and set alerts when it drops below agreed thresholds, allowing time to extend files or add storage.",
+      "If free space is low, evaluate increasing file sizes, adding files, or moving files to larger disks.",
+      "Coordinate free space with workload growth projections to avoid sudden space-related outages.",
+      "For file groups with abundant free space, ensure that allocation and autogrowth settings are still appropriate and not excessively over-provisioned."
+    ]
+  },
+  {
+    "measurement": "Percentage of free space",
+    "description": "Indicates the percentage of Max file size that is currently available for use for this file group.",
+    "unit": "Percent",
+    "interpretation": "This measure, reported only for file groups, is calculated as Free space / Max file size * 100. For file groups with many files set to auto-grow to disk capacity, a high value indicates ample room for growth, while a low value signals little remaining capacity for file growth.",
+    "troubleshootingSteps": [
+      "Use this percentage to quickly assess which file groups are at highest risk of running out of space.",
+      "When the percentage of free space becomes low, plan and execute storage expansion or filegroup reconfiguration before capacity is exhausted.",
+      "Review and, if necessary, adjust auto-growth settings and Max file size limits based on this metric and growth trends.",
+      "Combine this measure with absolute Free space (MB) to balance relative and absolute perspectives on capacity planning."
+    ]
+  }
+]
