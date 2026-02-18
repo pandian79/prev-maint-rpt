@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.Set;
 import java.util.UUID;
@@ -22,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.eg.api.client.EgRequestHeader;
@@ -222,10 +225,10 @@ public class AlarmProcessingService {
 	}
 
 	private String normalize(String text) {
-		text = text.replaceAll(" ", "_");
+		text = text.replaceAll(" ", "-");
 		text = text.replaceAll(":", "_");
-		text = text.replaceAll("/", "_");
-		text = text.replace("\\", "_");
+		text = text.replaceAll("/", "");
+		text = text.replace("\\", "");
 		text = text.replaceAll("#", "_");
 		return text;
 	}
@@ -278,6 +281,8 @@ public class AlarmProcessingService {
 		String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"));
 		String zipFileName = "eg_preventive_maintenance_" + formattedTime + ".zip";
 		
+		Properties fileCategoryMapping = loadFileCategoryMapping();
+		
 		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFileName))) {
             ObjectMapper objectMapper = new ObjectMapper();
             
@@ -293,10 +298,12 @@ public class AlarmProcessingService {
 			}
 			
 			logger.info("Analysing capacity of {} components: ", selectedServers.size());
+			int c=0;
+			int total = selectedServers.size();
 			for (ManagedComponent component : selectedServers) {
-				logger.info("Processing component:  {}/{} - {}",
-						selectedServers.indexOf(component)+1, selectedServers.size(), component.getComponentName());
-				System.out.println("Processing component:  "+(selectedServers.indexOf(component)+1)+"/"+selectedServers.size()+" - "+component.getComponentName());
+				c++;
+				System.out.println("Processing component "+c+"/"+total+": "+component.getComponentName()+" of type "+component.getComponentType());
+				logger.info("Processing component:  {}/{} - {}", c, total, component.getComponentName());
 				
 				Map<String, String> bodyMap = new HashMap<>();
 				bodyMap.put("componentName", component.getComponentName());
@@ -335,15 +342,16 @@ public class AlarmProcessingService {
 						continue;
 					}
 					
+					List<String> enabledTests = enabledDisabledTests.getEnabledTests();
 					logger.info("Enabled tests for component {}: {}", 
-							component.getComponentName(), enabledDisabledTests.getEnabledTests().size());
-					
-					enabledDisabledTests.getEnabledTests().forEach(test -> {
+							component.getComponentName(), enabledTests.size());
+					for (String test : enabledTests) {
 						System.out.println("Processing test: "+
-								enabledDisabledTests.getEnabledTests().indexOf(test)+1+"/"+
-								enabledDisabledTests.getEnabledTests().size()+
+								enabledTests.indexOf(test)+1+"/"+
+								enabledTests.size()+
 								"for "+component.getComponentType()+" "+component.getComponentName());
 						logger.info("Enabled test for component {}: {}", component.getComponentName(), test);
+						
 						testMapping.keySet().forEach(internalTest ->{
 							if (testMapping.get(internalTest).equals(test)) {
 								logger.info("Getting metrics for test {} (internal name: {}) for component {}", 
@@ -353,6 +361,17 @@ public class AlarmProcessingService {
 										logger.info("Getting metrics for measure {} (display name: {}) for test {} for component {}", 
 												testMeasure, measureMapping.get(testMeasure), test, component.getComponentName());
 										String measureName = measureMapping.get(testMeasure);
+										
+										String fileNameSuffix = test+"_"+ measureName+ ".json";
+										fileNameSuffix = normalize(fileNameSuffix);
+										logger.info("Checking file category mapping for suffix: {}", fileNameSuffix);
+										String property = fileCategoryMapping.getProperty(fileNameSuffix, null);
+										logger.info("File category mapping for {}: {}", fileNameSuffix, property);
+										if (property==null) {
+											logger.info("File category mapping not found for {}",fileNameSuffix);
+											return;
+										}
+										
 										Map<String, String> historyBodyMap = new HashMap<>();
 										historyBodyMap.put("timeline", this.environment.getProperty("analysis.timeline", "24 hours"));
 										historyBodyMap.put("componentName", component.getComponentName()+":"+component.getPort());
@@ -364,7 +383,7 @@ public class AlarmProcessingService {
 										// 2. Get Detailed Diagnosis Data
 										DiagnosisDataRequestBody diagReq = new DiagnosisDataRequestBody();
 										diagReq.setTimeline("1 days");
-										diagReq.setComponentName(component.getComponentName()+":"+component.getPort());
+										diagReq.setComponentName(component.getComponentNameWithOrWithoutPort());
 										diagReq.setComponentType(component.getComponentType());
 										diagReq.setTest(test);
 										diagReq.setMeasure(measureName);
@@ -376,12 +395,9 @@ public class AlarmProcessingService {
 												+ "_"
 												+ component.getComponentName()
 												+ "_"
-												+ historyBodyMap.get("test")+"_"
-												+ measureName
-												+ ".json";
-										name = name.replaceAll(" ", "-");
-										name = name.replaceAll(":", "-");
-										name = name.replaceAll("/", "-");
+												+ fileNameSuffix;
+										name = this.normalize(name);
+										
 										ZipEntry zipEntry = new ZipEntry(name);
 										String jsonOutput = null;
 										Map<String, Object> outputMap = new HashMap<>();
@@ -421,7 +437,15 @@ public class AlarmProcessingService {
 											}else {
 												logger.info("historical data has single descrtiptor, fetching diagnosis data with info as null for component {} test {} measure {}", 
 														component.getComponentName(), test, measureName);
-												List<Map<String, String>> diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
+												List<Map<String, String>> diagnosisData;
+												try {
+													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
+												} catch (TestNotAssociatedException e) {
+													logger.warn("Test {} or measure {} may not be associated with component {}, skipping diagnosis data fetch for this measure. Error: {}", 
+															test, measureName, component.getComponentName(), e.getMessage());
+													diagnosisData = new ArrayList<>();
+													diagnosisData.add(Map.of("Error", e.toString()));
+												}
 												historicalDataMap.put("diagnosisDataMetaData", diagReq);
 												Set<String> keySet = historicalData.keySet();
 												if (historicalDataMap.get("message")!=null) {
@@ -474,7 +498,7 @@ public class AlarmProcessingService {
 							}
 						}
 						);
-					});
+					};
 				} catch (Exception e) {
 					logger.error("Failed to fetch historical data for component {}", component.getComponentName(), e);
 				}
@@ -484,5 +508,25 @@ public class AlarmProcessingService {
 			logger.error("Error writing CPU utilization zip file", e);
 		}
 	}
+	
+	/**
+     * Load the file category mapping properties
+	 * @return 
+     */
+    private Properties loadFileCategoryMapping() {
+        Properties fileCategoryMapping = new Properties();
+        try {
+            Resource resource = new ClassPathResource("fileCategoryMapping.properties");
+            if (resource.exists()) {
+                fileCategoryMapping.load(resource.getInputStream());
+                logger.info("Loaded {} file category mappings", fileCategoryMapping.size());
+            } else {
+                logger.warn("fileCategoryMapping.properties not found in classpath");
+            }
+        } catch (IOException e) {
+            logger.error("Error loading fileCategoryMapping.properties", e);
+        }
+        return fileCategoryMapping;
+    }
 
 }

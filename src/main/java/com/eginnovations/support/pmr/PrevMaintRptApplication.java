@@ -168,6 +168,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 			logger.info("Fetching measure mapping");
 			Map<String, String> measureMapping = testDataDao.getMeasureMapping(egRequestHeader);
 			logger.info("Measure mapping size: {}", measureMapping.size());
+			
 			if (doAlarmAnalysis.equalsIgnoreCase("true")) {
 				System.out.println("Processing alarms and preparing preventive maintenance report...");
 				this.alarmProcessingService.extractAlarms(egRequestHeader);
