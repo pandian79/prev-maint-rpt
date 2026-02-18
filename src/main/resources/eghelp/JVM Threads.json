@@ -3,114 +3,260 @@
     "measurement": "Total threads",
     "description": "Indicates the total number of threads (including daemon and non-daemon threads).",
     "unit": "Number",
-    "interpretation": "This is the current overall thread count in the JVM, covering all live daemon and non‑daemon threads. Tracking it over time helps reveal thread leaks or abnormal growth in concurrency."
+    "interpretation": "This is the current overall thread count in the JVM, covering all live daemon and non‑daemon threads. Tracking it over time helps reveal thread leaks or abnormal growth in concurrency.",
+    "troubleshootingSteps": [
+      "Capture a thread dump (jstack) and compare with historical dumps to identify new or growing thread counts.",
+      "Check application logs for repeated thread creation or errors that trigger retries/threads.",
+      "Review thread pool configuration (max threads, queue sizes) and adjust to expected load patterns.",
+      "Look for leaked executor services or timers that are not being shutdown properly in application lifecycle code.",
+      "Correlate thread count spikes with recent deployments or configuration changes and roll back if needed for testing."
+    ]
   },
   {
     "measurement": "Runnable threads",
     "description": "Indicates the current number of threads in a runnable state.",
     "unit": "Number",
-    "interpretation": "These threads are either actively executing or ready to execute on the CPU. If this value is high relative to CPU capacity, it can indicate contention for CPU. Detailed diagnosis can be used to see per‑thread CPU usage and time spent in blocked or waiting states."
+    "interpretation": "These threads are either actively executing or ready to execute on the CPU. If this value is high relative to CPU capacity, it can indicate contention for CPU. Detailed diagnosis can be used to see per‑thread CPU usage and time spent in blocked or waiting states.",
+    "troubleshootingSteps": [
+      "Collect thread and CPU profiles (async-profiler, YourKit) to identify which threads consume CPU.",
+      "Examine thread dumps to correlate runnable threads with application stacks and hotspots.",
+      "Check for runaway loops, tight polling, or busy-wait patterns in application code.",
+      "Review and tune thread pool sizing to match available CPU cores and expected concurrency.",
+      "If CPU-bound, consider scaling horizontally or upgrading instance types to provide more cores."
+    ]
   },
   {
     "measurement": "Blocked threads",
     "description": "Indicates the number of threads that are currently in a blocked state.",
     "unit": "Number",
-    "interpretation": "Blocked threads are waiting to acquire a lock held by another thread before entering a synchronized block. A higher value can point to lock contention or potential bottlenecks; detailed diagnosis provides more information about the blocked threads."
+    "interpretation": "Blocked threads are waiting to acquire a lock held by another thread before entering a synchronized block. A higher value can point to lock contention or potential bottlenecks; detailed diagnosis provides more information about the blocked threads.",
+    "troubleshootingSteps": [
+      "Capture thread dumps and inspect stack traces for threads in BLOCKED state to find the lock owner.",
+      "Identify hotspots where locks are held for long durations and refactor to reduce lock scope or use concurrent collections.",
+      "Consider replacing synchronized blocks with finer-grained locking or using java.util.concurrent primitives.",
+      "Monitor application metrics (latency, queue lengths) to gauge user impact and prioritize fixes.",
+      "If necessary, instrument code paths to log lock acquisition and hold times for deeper analysis."
+    ]
   },
   {
     "measurement": "Waiting threads",
     "description": "Indicates the number of threads that are currently in a waiting state.",
     "unit": "Number",
-    "interpretation": "Waiting threads have entered a synchronized block and are waiting to be notified that a lock has been released. This value should generally be low; a very high value suggests excessive waiting, which degrades the application’s ability to complete work and increases end‑user response times. Detailed diagnosis can identify which threads are waiting."
+    "interpretation": "Waiting threads have entered a synchronized block and are waiting to be notified that a lock has been released. This value should generally be low; a very high value suggests excessive waiting, which degrades the application’s ability to complete work and increases end‑user response times. Detailed diagnosis can identify which threads are waiting.",
+    "troubleshootingSteps": [
+      "Inspect thread dumps to identify why threads are in WAITING (object.wait, LockSupport.park, etc.) and which component is responsible.",
+      "Check for misuse of wait/notify patterns or missing notify calls causing indefinite waits.",
+      "Validate thread pool designs to ensure worker threads are not blocked waiting for I/O or external resources.",
+      "Add timeouts to waits where appropriate to prevent indefinite blocking.",
+      "Correlate waiting threads with external dependencies (DB, HTTP) latency and remediate slow downstream services."
+    ]
   },
   {
     "measurement": "Timed waiting threads",
     "description": "Indicates the number of threads in a TIMED_WAITING state.",
     "unit": "Number",
-    "interpretation": "These threads are waiting for another thread to perform some action but will give up after a configured timeout. A large number can indicate time‑based coordination or delays; detailed diagnosis shows which threads are in this state."
+    "interpretation": "These threads are waiting for another thread to perform some action but will give up after a configured timeout. A large number can indicate time‑based coordination or delays; detailed diagnosis shows which threads are in this state.",
+    "troubleshootingSteps": [
+      "Analyze thread dumps to see why threads are in TIMED_WAITING (sleep, wait with timeout, join with timeout).",
+      "Check scheduled tasks and timer usage for misconfiguration or overly aggressive scheduling.",
+      "Ensure timeouts are reasonable and that callers handle timeouts gracefully.",
+      "Investigate whether timed waits are compensating for slow upstream services and address root causes.",
+      "Use metrics to correlate timed-wait spikes with load patterns or deployments."
+    ]
   },
   {
     "measurement": "Low CPU threads",
     "description": "Indicates the number of threads that are currently consuming CPU lower than the value configured in the PCT LOW CPU UTIL THREADS setting.",
     "unit": "Number",
-    "interpretation": "This is the count of relatively idle threads under the low‑CPU threshold. It helps you understand how many threads are active but not using much CPU."
+    "interpretation": "This is the count of relatively idle threads under the low‑CPU threshold. It helps you understand how many threads are active but not using much CPU.",
+    "troubleshootingSteps": [
+      "Use thread dumps and profiler snapshots to identify these threads and their typical stack frames.",
+      "Ensure idle threads are expected (worker pools awaiting work) and not blocked by misconfiguration.",
+      "Confirm thread pools allow idle threads to be released if not needed (keep-alive settings).",
+      "Investigate whether threads are starved due to scheduling or priority inversion issues.",
+      "Monitor trends to detect sudden increases that may indicate reduced throughput or stalled producers."
+    ]
   },
   {
     "measurement": "Medium CPU threads",
     "description": "Indicates the number of threads that are currently consuming CPU higher than the PCT LOW CPU UTIL THREADS threshold and lower than or equal to the PCT MEDIUM CPU UTIL THREADS threshold.",
     "unit": "Number",
-    "interpretation": "This shows how many threads are using a moderate amount of CPU. It helps segment workload between lightly loaded and heavily loaded threads."
+    "interpretation": "This shows how many threads are using a moderate amount of CPU. It helps segment workload between lightly loaded and heavily loaded threads.",
+    "troubleshootingSteps": [
+      "Profile representative threads to see what work they are performing and whether optimization is possible.",
+      "Review JVM GC behavior—moderate CPU usage may be caused by frequent small GCs; tune GC if needed.",
+      "Check for I/O waits that cause threads to appear in medium CPU band intermittently.",
+      "Adjust thread pool sizing to balance work across available cores and avoid over-subscription.",
+      "Compare across services or endpoints to locate uneven load distribution."
+    ]
   },
   {
     "measurement": "High CPU threads",
     "description": "Indicates the number of threads that are currently consuming CPU higher than the PCT MEDIUM CPU UTIL THREADS threshold or up to the PCT HIGH CPU UTIL THREADS threshold (depending on configuration).",
     "unit": "Number",
-    "interpretation": "These are the most CPU‑intensive threads. Ideally this count should be very low; a high value indicates CPU contention and potential performance issues. Detailed diagnosis helps you pinpoint which threads are consuming excessive CPU."
+    "interpretation": "These are the most CPU‑intensive threads. Ideally this count should be very low; a high value indicates CPU contention and potential performance issues. Detailed diagnosis helps you pinpoint which threads are consuming excessive CPU.",
+    "troubleshootingSteps": [
+      "Capture CPU flame graphs or profiler samples to identify hot methods and optimize them.",
+      "Check for uncontrolled concurrency, busy loops, or expensive computations that can be offloaded or batched.",
+      "Consider throttling or backpressure on sources of high work to avoid saturating CPU.",
+      "Ensure native libraries or JNI calls are not causing CPU spikes; update or isolate problematic native code.",
+      "If appropriate, scale out to additional JVM instances to distribute CPU-bound work."
+    ]
   },
   {
     "measurement": "Peak threads",
     "description": "Indicates the highest number of live threads since JVM started.",
     "unit": "Number",
-    "interpretation": "This is the historical peak of concurrent live threads for the current JVM run. It is useful for capacity planning and detecting whether thread usage has ever spiked to problematic levels."
+    "interpretation": "This is the historical peak of concurrent live threads for the current JVM run. It is useful for capacity planning and detecting whether thread usage has ever spiked to problematic levels.",
+    "troubleshootingSteps": [
+      "Compare peak thread counts against configured pool limits to ensure headroom was not exceeded.",
+      "Review historical metrics and incidents that coincide with peaks to identify triggers.",
+      "Audit code paths that create threads dynamically and prefer pooled executors when possible.",
+      "Run load tests to reproduce peak conditions and validate scaling/configuration choices.",
+      "If peaks are unexpected, add guards or quotas to prevent excessive thread creation."
+    ]
   },
   {
     "measurement": "Started threads",
     "description": "Indicates the total number of threads started (including daemon, non-daemon, and terminated) since JVM started.",
     "unit": "Number",
-    "interpretation": "This cumulative count shows how many threads have been created over the JVM’s lifetime. A steadily and unexpectedly increasing value may indicate thread creation patterns that could lead to resource exhaustion."
+    "interpretation": "This cumulative count shows how many threads have been created over the JVM’s lifetime. A steadily and unexpectedly increasing value may indicate thread creation patterns that could lead to resource exhaustion.",
+    "troubleshootingSteps": [
+      "Instrument thread-creation code paths to log where threads are created and ensure reuse via executors.",
+      "Identify and fix code that creates threads per-request instead of using a pooled approach.",
+      "Look for third-party libraries or drivers that spawn threads and ensure they are configured appropriately.",
+      "Check for thread leaks where threads are not terminating due to blocked or waiting conditions.",
+      "Consider limiting thread creation with guards and fail-fast behaviors under overload."
+    ]
   },
   {
     "measurement": "Daemon threads",
     "description": "Indicates the current number of live daemon threads.",
     "unit": "Number",
-    "interpretation": "Daemon threads provide background services and do not prevent JVM shutdown. Monitoring their count helps ensure background activity remains within expected limits."
+    "interpretation": "Daemon threads provide background services and do not prevent JVM shutdown. Monitoring their count helps ensure background activity remains within expected limits.",
+    "troubleshootingSteps": [
+      "Inspect which daemon threads are running using thread dumps and identify their responsibilities.",
+      "Ensure background services clean up properly on application shutdown to avoid stale threads.",
+      "Confirm scheduled tasks and timers are configured with expected frequencies and lifecycles.",
+      "If daemon threads are numerous, aggregate work into fewer long-lived worker threads or scheduled executors.",
+      "Review library usage that creates daemon threads (metrics, monitoring agents) and tune their configurations."
+    ]
   },
   {
     "measurement": "Deadlock threads",
     "description": "Indicates the current number of deadlocked threads.",
     "unit": "Number",
-    "interpretation": "This should normally be 0. A non‑zero value indicates threads are mutually blocking each other and the application’s work may stall. Detailed diagnosis lists deadlocked threads and their resource usage so you can investigate and resolve the deadlock."
+    "interpretation": "This should normally be 0. A non‑zero value indicates threads are mutually blocking each other and the application’s work may stall. Detailed diagnosis lists deadlocked threads and their resource usage so you can investigate and resolve the deadlock.",
+    "troubleshootingSteps": [
+      "Capture a thread dump and use tools (jstack -l, jconsole, VisualVM) to detect and list deadlocked threads and locks.",
+      "Identify the lock ordering or resource cycle causing the deadlock and refactor to a consistent lock ordering or use tryLock with timeouts.",
+      "Replace coarse-grained locks with finer-grained concurrency mechanisms or lock-free algorithms where appropriate.",
+      "If deadlocks are intermittent, add diagnostic logging around lock acquisition and release to reproduce the sequence.",
+      "Consider restarting the affected JVM as a last resort after collecting diagnostics and implementing a long-term fix."
+    ]
   },
   {
     "measurement": "CPU usage of all Low CPU threads",
     "description": "Indicates the average CPU usage of those threads that are consuming CPU lower than the value configured in the PCT MEDIUM CPU UTIL THREADS setting.",
     "unit": "Percent",
-    "interpretation": "This is the average CPU usage across all low‑CPU threads and confirms how little CPU these threads are using. To see which specific threads are in this group, use detailed diagnosis for the Low CPU threads measure."
+    "interpretation": "This is the average CPU usage across all low‑CPU threads and confirms how little CPU these threads are using. To see which specific threads are in this group, use detailed diagnosis for the Low CPU threads measure.",
+    "troubleshootingSteps": [
+      "Profile representative low-CPU threads to validate they are idle or waiting as expected.",
+      "Ensure producers/consumers are balanced so low-CPU threads are not starved of work or blocked unnecessarily.",
+      "Check for thread scheduling issues or priority inversion that could cause apparent low CPU usage.",
+      "Use monitoring to detect sudden changes in this metric that might indicate shifting workload patterns.",
+      "Consider reducing idle thread counts if they persist and are unnecessary."
+    ]
   },
   {
     "measurement": "CPU usage of all Medium CPU threads",
     "description": "Indicates the average CPU usage of those threads that are consuming CPU higher than the PCT MEDIUM CPU UTIL THREADS setting and lower than or equal to the PCT HIGH CPU UTIL THREADS setting.",
     "unit": "Percent",
-    "interpretation": "This is the average CPU load for threads in the medium utilization band. It helps you understand how much CPU is used by moderately active threads; detailed diagnosis for Medium CPU threads reveals the actual threads in this band."
+    "interpretation": "This is the average CPU load for threads in the medium utilization band. It helps you understand how much CPU is used by moderately active threads; detailed diagnosis for Medium CPU threads reveals the actual threads in this band.",
+    "troubleshootingSteps": [
+      "Collect CPU and thread profiles to identify common code paths among medium-CPU threads.",
+      "Tune JVM GC and application parameters if medium CPU usage is caused by GC pauses or frequent collections.",
+      "Validate I/O operations and caches to ensure threads are not performing inefficient I/O-bound work.",
+      "Adjust thread pool policies to better distribute work and avoid frequent context switches.",
+      "Monitor service-level metrics to detect whether medium utilization correlates with higher request latencies."
+    ]
   },
   {
     "measurement": "CPU usage of all High CPU threads",
     "description": "Indicates the average CPU usage of those threads that are consuming CPU greater than the percentage configured in the PCT HIGH CPU UTIL THREADS setting.",
     "unit": "Percent",
-    "interpretation": "This is the average CPU utilization for the most CPU‑intensive threads. A high value here indicates that a few threads may be dominating CPU resources. Detailed diagnosis for High CPU threads identifies those threads; you can then correlate with CPU usage of Web/HTTP, RMI, GC/internal, and other threads to understand what work they are doing."
+    "interpretation": "This is the average CPU utilization for the most CPU‑intensive threads. A high value here indicates that a few threads may be dominating CPU resources. Detailed diagnosis for High CPU threads identifies those threads; you can then correlate with CPU usage of Web/HTTP, RMI, GC/internal, and other threads to understand what work they are doing.",
+    "troubleshootingSteps": [
+      "Use sampling or instrumentation profilers to capture hot methods and optimize them or introduce batching.",
+      "If specific requests trigger high CPU, add throttling or rate limiting to protect the system under load.",
+      "Investigate garbage collection activity—unexpected GC patterns can cause CPU spikes; tune or change GC algorithm if needed.",
+      "Check for expensive native operations or JNI calls and replace or limit them where possible.",
+      "Scale horizontally or add CPU capacity if the workload legitimately requires more compute."
+    ]
   },
   {
     "measurement": "CPU usage of Web/HTTP threads",
     "description": "Indicates the percentage of CPU resources utilized by threads that are serving Web/HTTP requests.",
     "unit": "Percent",
-    "interpretation": "This shows how much CPU is spent processing web or HTTP requests. Comparing it with CPU usage of RMI, GC/internal activity, and other threads helps determine whether front‑end request handling is the main CPU consumer."
+    "interpretation": "This shows how much CPU is spent processing web or HTTP requests. Comparing it with CPU usage of RMI, GC/internal activity, and other threads helps determine whether front‑end request handling is the main CPU consumer.",
+    "troubleshootingSteps": [
+      "Profile web request handlers to find slow or expensive endpoints and optimize them (caching, DB query tuning).",
+      "Enable request tracing to identify slow back-end calls that make web threads busy waiting.",
+      "Use circuit breakers or request timeouts to prevent stuck web threads from accumulating.",
+      "Scale front-end instances or add more worker threads if CPU usage is consistently high and workload justifies it.",
+      "Review web server thread pool and connector settings (maxThreads, keepAlive) to match expected traffic patterns."
+    ]
   },
   {
     "measurement": "CPU usage of RMI threads",
     "description": "Indicates the percentage of CPU resources utilized by threads engaged in RMI activity.",
     "unit": "Percent",
-    "interpretation": "This indicates the CPU share used by remote method invocation (RMI) related threads, such as those supporting JMX connections between JVMs. Comparing this with Web/HTTP, GC/internal, and other thread CPU usage highlights whether RMI activity is a major CPU driver."
+    "interpretation": "This indicates the CPU share used by remote method invocation (RMI) related threads, such as those supporting JMX connections between JVMs. Comparing this with Web/HTTP, GC/internal, and other thread CPU usage highlights whether RMI activity is a major CPU driver.",
+    "troubleshootingSteps": [
+      "Audit RMI/JMX endpoints to ensure they are not receiving excessive or malicious traffic.",
+      "Optimize remote call frequency and payload sizes; batch or debounce frequent calls where possible.",
+      "Secure and limit monitoring endpoints to trusted consumers to avoid unnecessary load.",
+      "Profile RMI handlers to detect heavy processing triggered by remote calls and optimize them.",
+      "If RMI monitoring causes load, consider offloading metrics collection to a separate JVM or agent."
+    ]
   },
   {
     "measurement": "CPU usage of GC and Internal Activity",
     "description": "Indicates the percentage of CPU resources utilized by threads engaged in garbage collection and other JVM internal activity.",
     "unit": "Percent",
-    "interpretation": "This shows how much CPU is being consumed by GC and other internal JVM operations. High values suggest significant overhead from JVM internals, which can reduce CPU available for application work; compare it with Web/HTTP, RMI, and other threads to see where CPU time is going."
+    "interpretation": "This shows how much CPU is being consumed by GC and other internal JVM operations. High values suggest significant overhead from JVM internals, which can reduce CPU available for application work; compare it with Web/HTTP, RMI, and other threads to see where CPU time is going.",
+    "troubleshootingSteps": [
+      "Analyze GC logs (with -Xlog:gc* or GC logging flags) to determine frequency and duration of garbage collections.",
+      "Tune heap size and GC algorithm (G1, ZGC, Shenandoah) appropriate to application characteristics.",
+      "Reduce allocation rates in application code (reuse objects, optimize hot paths) to lower GC pressure.",
+      "Consider off-heap caches or pooling to reduce JVM allocation churn where appropriate.",
+      "If CPU spent on GC remains high, provision more CPU or re-evaluate JVM tuning for the workload."
+    ]
   },
   {
     "measurement": "CPU usage of other threads",
     "description": "Indicates the percentage of CPU resources utilized by threads involved in JVM activities other than web/HTTP request processing, RMI activity, GC, and internal activity.",
     "unit": "Percent",
-    "interpretation": "This captures CPU consumption by all remaining thread types not classified as Web/HTTP, RMI, or GC/internal. Comparing this metric with the other CPU usage measures helps you determine if some unclassified workload is consuming a significant share of CPU."
+    "interpretation": "This captures CPU consumption by all remaining thread types not classified as Web/HTTP, RMI, or GC/internal. Comparing this metric with the other CPU usage measures helps you determine if some unclassified workload is consuming a significant share of CPU.",
+    "troubleshootingSteps": [
+      "Drill into other thread groups by capturing thread dumps and CPU profiles to identify dominating workloads.",
+      "Review background tasks, scheduled jobs, and async processing for optimization opportunities.",
+      "Ensure third-party libraries or agents are not unexpectedly consuming CPU; update or reconfigure them.",
+      "Separate heavy background processing into dedicated JVMs or offload to worker clusters to reduce impact on the primary JVM.",
+      "Correlate these CPU patterns with application metrics to prioritize tuning work."
+    ]
+  } ,
+  {
+    "measurement": "Blocking Threads",
+    "description": "Indicates the number of unique threads that hold a lock that is being requested by other threads.",
+    "unit": "Percent",
+    "interpretation": "The detailed diagnosis of this measure, if enabled, provides in-depth information related to all the threads that are blocking other threads by holding a lock.",
+    "troubleshootingSteps": [
+      "Take thread dumps and identify blocking threads along with the resources they hold and the threads they block.",
+      "Refactor code to reduce lock granularity or use concurrent data structures to minimize blocking.",
+      "Introduce timeouts or tryLock patterns to avoid long-term blocking and detect problematic code paths.",
+      "Instrument lock acquisition durations in critical sections to find hotspots that need optimization.",
+      "If blocking is caused by external I/O, move that work off critical lock paths or use asynchronous patterns."
+    ]
   }
 ]

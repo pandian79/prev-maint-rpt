@@ -4,7 +4,7 @@
     "description": "Indicates the total number of requests received for transactions of this pattern during the last measurement period. For the Summary descriptor, this reveals the total number of transaction requests received by the target JVM.",
     "measurementUnit": "Number",
     "interpretation": "Identifies the most popular transaction patterns and overall workload. Detailed diagnosis reveals specific transactions.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Avg response time",
@@ -21,14 +21,14 @@
     "description": "Indicates the number of healthy transactions of this pattern.",
     "measurementUnit": "Number",
     "interpretation": "For Summary, reports total healthy transactions on the target JVM.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Healthy transactions percentage",
     "description": "Indicates what percentage of the total number of transactions of this pattern is healthy.",
     "measurementUnit": "Percent",
     "interpretation": "For Summary, reports overall percentage of healthy transactions on the target JVM.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Slow transactions",
@@ -54,7 +54,7 @@
     "description": "Indicates what percentage of the total number of transactions of this pattern is currently slow.",
     "measurementUnit": "Percent",
     "interpretation": "Drill down to identify specific slow transactions and their causes.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Error transactions",
@@ -70,14 +70,14 @@
     "description": "Indicates the average duration for which the transactions of this pattern were processed before an error condition was detected.",
     "measurementUnit": "Msecs",
     "interpretation": "Helps discern if error transactions were also slow.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Error transactions percentage",
     "description": "Indicates what percentage of the total number of transactions of this pattern is experiencing errors.",
     "measurementUnit": "Percent",
     "interpretation": "Use detailed diagnosis to isolate error transactions and determine the cause.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Stalled transactions",
@@ -94,14 +94,14 @@
     "description": "Indicates the average time taken by the stalled transactions of this pattern to execute.",
     "measurementUnit": "Msecs",
     "interpretation": "For Summary, reports average response time of all stalled transactions on the target JVM.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Stalled transactions percentage",
     "description": "Indicates what percentage of the total number of transactions of this pattern is stalling.",
     "measurementUnit": "Percent",
     "interpretation": "Use detailed diagnosis to drill down and identify causes of stalling.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "SQL statements executed",
@@ -155,7 +155,7 @@
     "description": "Indicates the number of transactions of this pattern that are executed per minute.",
     "measurementUnit": "Number",
     "interpretation": "Indicator of transaction processing ability.",
-    "troubleshootingSteps": "none"
+    "troubleshootingSteps": ["none"]
   },
   {
     "measurement": "Error transactions per minute",
@@ -164,6 +164,15 @@
     "interpretation": "A very low value is desired. Compare across patterns to find error-prone transactions.",
     "troubleshootingSteps": [
       "Monitor error rates closely; a sudden spike indicates a potential service outage or critical bug that needs immediate rollback or fix.[web:540]"
+    ]
+  },
+  {
+    "measurement": "Satisfaction score",
+    "description": "Indicates the Apdex score / Satisfaction score of the transactions of this pattern.",
+    "measurementUnit": "Number",
+    "interpretation": "Apdex (Application Performance Index) is an open standard developed by an alliance of companies. It defines a standard method for reporting and comparing the performance of software applications in computing. Its purpose is to convert measurements into insights about user satisfaction, by specifying a uniform way to analyze and report on the degree to which measured performance meets user expectations. The Apdex method converts many measurements into one number on a uniform scale of 0-to-1 (0 = no users satisfied, 1 = all users satisfied). The resulting Apdex score is a numerical measure of user satisfaction with the performance of enterprise applications. This metric can be used to report on any source of end-user performance measurements for which a performance objective has been defined. The Apdex formula is: Apdext = (Satisfied Count + Tolerating Count / 2) / Total Samples. This is nothing but the number of satisfied samples plus half of the tolerating samples plus none of the frustrated samples, divided by all the samples. A score of 1.0 means all responses were satisfactory. A score of 0.0 means none of the responses were satisfactory. Tolerating responses half satisfy a user. For example, if all responses are tolerating, then the Apdex score would be 0.50. Ideally therefore, the value of this measure should be 1.0. A value less than 1.0 indicates that the user experience with the transactions has been less than satisfactory. ",
+    "troubleshootingSteps": [
+      "Not available. This is a calculated metric based on the response time of transactions and the configured Apdex threshold. To improve the satisfaction score, focus on optimizing transaction response times and reducing the number of slow transactions."
     ]
   }
 ]

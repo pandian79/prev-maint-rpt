@@ -1,0 +1,181 @@
+[
+  {
+    "measurement": "User sessions",
+    "description": "Represents the current number of sessions for a particular user",
+    "measurementUnit": "Number",
+    "interpretation": "A value of 0 indicates that the user is not currently connected to the Terminal server.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify offending processes/applications and capture PIDs and command lines.",
+      "Compare this metric across users and correlate with system-level metrics (CPU, memory, disk, network).",
+      "Collect session logs and, if necessary, log off or restart the problematic user session after investigation.",
+      "If sessions are unexpectedly high, investigate authentication systems and automated scripts that may be spawning sessions."
+    ]
+  },
+  {
+    "measurement": "CPU usage of user processes",
+    "description": "The CPU utilization for a session is the percentage of time that all of the threads/processes of a user session used the processor to execute instructions. If a user is connected via multiple sessions, the value reported is the sum of all CPU utilizations across all the sessions.",
+    "measurementUnit": "Percent",
+    "interpretation": "This value indicates the percentage of CPU resources that are used by a specific user. Excessive CPU usage by a user can impact performance for other users. Check the detailed diagnosis to view the offending processes/applications.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify offending processes/applications and capture PIDs and command lines.",
+      "Compare this metric across users and correlate with overall CPU usage and load balancing across cores.",
+      "Collect process-level CPU samples and consider restarting or limiting CPU for runaway processes.",
+      "Apply OS updates, check for known application bugs, and consider moving heavy workloads off the RDS host."
+    ]
+  },
+  {
+    "measurement": "Memory usage of user processes",
+    "description": "This value represents the ratio of the resident set size of the memory utilized by the user to the physical memory of the host system, expressed as a percentage. If a user is connected via multiple sessions, the value reported is the sum of all memory utilizations across all the sessions.",
+    "measurementUnit": "Percent",
+    "interpretation": "This value indicates the percentage of memory resources that are used up by a specific user. By comparing this value across users, an administrator can identify the most heavy users of the Terminal server. Check the detailed diagnosis to view the offending processes/applications.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify offending processes/applications and capture memory usage per process.",
+      "Compare memory usage across users and correlate with available physical memory and paging activity.",
+      "Collect memory dumps for suspect processes if leaks are suspected.",
+      "Restart or patch offending applications and consider increasing host memory or redistributing user load."
+    ]
+  },
+  {
+    "measurement": "Input bandwidth",
+    "description": "Indicates the average bandwidth used for client to server communications for all the sessions of a user.",
+    "measurementUnit": "KB/Sec",
+    "interpretation": "This measure will not be available for Terminal servers running on Windows 2008 Service Pack 1 (or above). When available, it indicates average client->server network usage for that user's sessions and can help identify bandwidth-heavy users.",
+    "troubleshootingSteps": [
+      "Check network utilization and packet loss between the client and server; correlate with system network counters.",
+      "Use detailed diagnosis to identify which sessions or applications are using the most bandwidth.",
+      "Investigate client-side behavior (e.g., file transfers, streaming, screen-sharing) and limit or schedule heavy transfers.",
+      "Consider network QoS, segmentation, or additional network capacity if bandwidth contention is confirmed."
+    ]
+  },
+  {
+    "measurement": "Input errors",
+    "description": "The average number of input errors of all types for all the sessions of a user. Example: Lost ACKs, badly formed packets, etc.",
+    "measurementUnit": "Errors/Sec",
+    "interpretation": "This measure will not be available for Terminal servers running on Windows 2008 Service Pack 1 (or above). When available, a high value indicates network reliability issues affecting client->server traffic and may cause session problems.",
+    "troubleshootingSteps": [
+      "Collect network error counters, interface statistics, and packet loss/CRC error metrics.",
+      "Check client and server NIC drivers, duplex/MTU settings and any intermediate network devices for errors.",
+      "If errors are localized to specific clients, inspect their network configuration and connectivity.",
+      "Work with network operations to remediate physical or configuration faults."
+    ]
+  },
+  {
+    "measurement": "Output bandwidth",
+    "description": "Indicates the average bandwidth used for server to client communications for all the sessions of a user.",
+    "measurementUnit": "KB/Sec",
+    "interpretation": "This measure will not be available for Terminal servers running on Windows 2008 Service Pack 1 (or above). When available, it indicates server->client network usage; high values may indicate streaming or large data transfers to the client.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify which sessions or applications are generating the most server->client traffic.",
+      "Correlate with disk I/O and application logs if the traffic is driven by file reads or streaming services.",
+      "Apply network QoS or rate-limiting where appropriate, and consider offloading heavy transfers."
+    ]
+  },
+  {
+    "measurement": "Output errors",
+    "description": "The average number of output errors of all types for all the sessions of a user. Example: Lost ACKs, badly formed packets, etc.",
+    "measurementUnit": "Errors/Sec",
+    "interpretation": "This measure will not be available for Terminal servers running on Windows 2008 Service Pack 1 (or above). When available, a high value indicates problems in server->client communication and may indicate network device or driver issues.",
+    "troubleshootingSteps": [
+      "Collect network interface error counters and compare across interfaces and time windows.",
+      "Check for client-side issues if errors are tied to specific endpoints.",
+      "Validate NIC driver versions and patch the OS or drivers if known bugs exist.",
+      "Coordinate with networking teams to isolate and remediate the fault."
+    ]
+  },
+  {
+    "measurement": "I/O read rate for user processes",
+    "description": "The rate of I/O reads done by all processes being run by a user.",
+    "measurementUnit": "KBps",
+    "interpretation": "These metrics measure the collective I/O activity (which includes file, network and device I/Os) generated by all the processes being executed by a user. When viewed along with the system I/O metrics reported by the DiskActivityTest, these measures help you determine the network I/O. Comparison across users helps identify the user who is running the most I/O-intensive processes. Check the detailed diagnosis for the offending processes/applications.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list processes and files contributing to high I/O.",
+      "Correlate with system disk activity and network I/O to determine the source of reads.",
+      "Investigate application design (caching, buffering) to reduce read activity where possible.",
+      "Consider storage tuning, caching, or moving heavy workloads to dedicated hosts."
+    ]
+  },
+  {
+    "measurement": "I/O write rate for user processes",
+    "description": "The rate of I/O writes done by all processes being run by a user.",
+    "measurementUnit": "KBps",
+    "interpretation": "These metrics measure the collective I/O activity (which includes file, network and device I/Os) generated by all the processes being executed by a user. When viewed along with the system I/O metrics reported by the DiskActivityTest, these measures help you determine the network I/O. Comparison across users helps identify the user who is running the most I/O-intensive processes. Check the detailed diagnosis for the offending processes/applications.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to list processes and files contributing to high I/O.",
+      "Correlate with system disk activity and network I/O to determine the source of writes.",
+      "Investigate application behavior that causes frequent small writes (buffering, logging) and optimize.",
+      "Consider storage tiering or isolating heavy writers to reduce impact on other users."
+    ]
+  },
+  {
+    "measurement": "Faults for user processes",
+    "description": "The rate of page faults seen by all processes being run by a user.",
+    "measurementUnit": "Faults/Sec",
+    "interpretation": "Page faults occur when a thread refers to a virtual memory page that is not in its working set in main memory. If the page is on the standby list or shared by another process, the fault may be resolved without disk access. Excessive page faults could result in decreased performance. Compare values across users to identify which user is causing the most page faults.",
+    "troubleshootingSteps": [
+      "Correlate page fault rates with available physical memory and paging activity.",
+      "Identify memory-hungry processes and consider restarting or tuning them.",
+      "Collect memory usage patterns and investigate potential memory leaks.",
+      "Consider adding physical memory or adjusting paging/working set policies if warranted."
+    ]
+  },
+  {
+    "measurement": "Virtual memory of user processes",
+    "description": "The total virtual memory being used by all processes being run by a user.",
+    "measurementUnit": "MB",
+    "interpretation": "Comparison across users reveals the user who is being a drain on the virtual memory space.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify processes consuming large virtual memory.",
+      "Collect process memory maps and investigate excessive allocations or leaked objects.",
+      "Restart or patch offending applications and consider redistributing workloads.",
+      "If virtual address space exhaustion is suspected, consider 64-bit processes or address-space configuration changes."
+    ]
+  },
+  {
+    "measurement": "Handles used by user processes",
+    "description": "The total number of handles being currently held by all processes of a user.",
+    "measurementUnit": "Number",
+    "interpretation": "A consistent increase in the handle count over a period of time is indicative of malfunctioning programs. Compare this value across users to see which user is using a lot of handles. Check detailed diagnosis for further information.",
+    "troubleshootingSteps": [
+      "Use detailed diagnosis to identify processes with growing handle counts and capture handle type information.",
+      "Investigate for handle leaks in applications and apply vendor patches or code fixes.",
+      "Restart the specific processes or user sessions when safe to reclaim handles.",
+      "Monitor over time to ensure the handle growth has stopped after remediation."
+    ]
+  },
+  {
+    "measurement": "CPU time used by user's sessions",
+    "description": "Indicates the percentage of time, across all processors, this user hogged the CPU.",
+    "measurementUnit": "Percent",
+    "interpretation": "This measure reports the total CPU usage of a user across all his/her sessions and across all processors the target RDS server supports. It is a truer indicator of CPU usage in environments where load is not well-balanced across cores. A high value or a consistent increase is serious and demands immediate attention. Use the detailed diagnosis of the CPU usage measure to identify CPU-intensive activities performed by the user.",
+    "troubleshootingSteps": [
+      "Compare this metric with per-process CPU usage to find offending applications.",
+      "Collect CPU profiles or sample stacks from suspect processes to pinpoint hot code paths.",
+      "Limit or relocate heavy workloads and apply patches or optimizations to offending software.",
+      "If necessary, enforce session or CPU quotas to prevent a single user from degrading host performance."
+    ]
+  },
+  {
+    "measurement": "Input delay for user's sessions - max",
+    "description": "Indicates the maximum amount of time lag detected between the user's input through any input device (e.g., mouse, keyboard) and the time at which the application detected the input.",
+    "measurementUnit": "Seconds",
+    "interpretation": "These measures will be reported only for the Windows 2019 desktops on the target RDS server. Ideally the values should be very low. High values can impact application access speed and greatly degrade user experience.",
+    "troubleshootingSteps": [
+      "Correlate input delay with CPU, GPU and network latency to find the bottleneck.",
+      "Check client-side responsiveness and remote display protocol settings (compression, visual effects).",
+      "Update graphics and input drivers on the host and ensure virtualization/remote display stacks are patched.",
+      "If delays are persistent, consider moving users to less-loaded hosts or optimizing remote display settings."
+    ]
+  },
+  {
+    "measurement": "Input delay for user's sessions - avg",
+    "description": "Indicates the average amount of time lag detected between the user's input through any input device (e.g., mouse, keyboard) and the time at which the application detected the input.",
+    "measurementUnit": "Seconds",
+    "interpretation": "These measures will be reported only for the Windows 2019 desktops on the target RDS server. Ideally the values should be very low; sustained high averages indicate degraded user experience and require investigation.",
+    "troubleshootingSteps": [
+      "Correlate input delay with CPU, GPU and network latency to find the bottleneck.",
+      "Check client-side responsiveness and remote display protocol settings (compression, visual effects).",
+      "Update graphics and input drivers on the host and ensure virtualization/remote display stacks are patched.",
+      "If delays are persistent, consider moving users to less-loaded hosts or optimizing remote display settings."
+    ]
+  }
+]

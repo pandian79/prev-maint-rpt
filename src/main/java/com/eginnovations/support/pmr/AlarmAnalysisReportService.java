@@ -271,7 +271,7 @@ public class AlarmAnalysisReportService {
 					logger.warn("No 'Measurement' field found in help file for test '{}'", test);
 					throw new MeasureHelpNotFoundException("No 'Measurement' field found in help file for test: " + test);
 				}
-				if (jsonNode.asText().equals(measure)) {
+				if (jsonNode.asText().equalsIgnoreCase(measure)) {
                     alarmReport.setInterpretation("found");
                     alarmReport.setInterpretationDescription(extractedJsonNode(measurement, "Description").asText());
                     JsonNode unitNode;
@@ -338,7 +338,11 @@ public class AlarmAnalysisReportService {
 					try {
 						measurementUnit = this.extractedJsonNode(measurement, "MeasurementUnit");
 					} catch (Exception e) {
-						measurementUnit = this.extractedJsonNode(measurement, "Unit");
+						try {
+							measurementUnit = this.extractedJsonNode(measurement, "measurementUnit");
+						} catch (Exception e1) {
+							measurementUnit = this.extractedJsonNode(measurement, "Unit");
+						}
 					}
 					
 					String prompt = "Not enough information available.";

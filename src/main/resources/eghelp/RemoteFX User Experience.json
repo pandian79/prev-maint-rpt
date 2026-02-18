@@ -1,0 +1,284 @@
+[
+  {
+    "measurement": "User's connection quality indicator",
+    "description": "Indicates the connectivity of this user with this environment. Values map to discrete measure values (Poor, Weak, Strong, None).",
+    "measurementUnit": "Number",
+    "interpretation": "This measure reports categorical values (Poor connection, Weak connection, Strong connection, None) which are represented numerically in graphs. A major alert is raised for 'Poor connection'; a minor alert for 'Weak connection'.",
+    "troubleshootingSteps": [
+      "Verify the user has an active session on the RDS host and check session host and broker logs for authentication/session errors.",
+      "Confirm network connectivity (ping/traceroute) between client and server; check for high latency or packet loss.",
+      "Ensure the user account is enabled, not locked out, and that RDS licensing (CALs) is available.",
+      "Test from a different client or network to determine if the problem is client-specific.",
+      "Collect timelines and session creation logs to correlate with reported poor-quality events."
+    ]
+  },
+  {
+    "measurement": "Average frames encoding time",
+    "description": "Indicates the average time taken for encoding the frames of this user.",
+    "measurementUnit": "Secs",
+    "interpretation": "Compare this value across users to find which user's frames took longer to encode; high values may indicate CPU/GPU contention on the host.",
+    "troubleshootingSteps": [
+      "Check RDS host CPU and GPU utilization during the affected period for contention.",
+      "Verify graphics codec and GPU driver versions on the host and update if needed.",
+      "Ensure hardware acceleration is enabled when supported and not oversubscribed by other sessions.",
+      "Temporarily reduce client resolution or color depth to validate if encoding time improves.",
+      "Review host-side background tasks that may spike CPU or GPU usage and reschedule them."
+    ]
+  },
+  {
+    "measurement": "Frame quality",
+    "description": "Indicates the quality of the output frame expressed as a percentage of the quality of the source frame for this user.",
+    "measurementUnit": "Percent",
+    "interpretation": "Higher percentages indicate better fidelity. Compare across users to identify the user with the poorest visual quality.",
+    "troubleshootingSteps": [
+      "Compare frame quality across affected and unaffected users to isolate client vs server issues.",
+      "Check network bandwidth, packet loss and jitter; poor network conditions reduce frame quality.",
+      "Verify codec and compression settings on the RDS host and consider reducing compression where bandwidth allows.",
+      "Update Remote Desktop client and client display drivers; test from a different client to isolate the issue.",
+      "Capture screenshots or short session recordings for visual analysis."
+    ]
+  },
+  {
+    "measurement": "Frames skipped due to insufficient client resources",
+    "description": "Indicates the rate at which frames were skipped for this user due to insufficient client resources.",
+    "measurementUnit": "Frames/Sec",
+    "interpretation": "A low value is desired; high values indicate the client device may lack CPU/GPU/memory resources.",
+    "troubleshootingSteps": [
+      "Confirm the client device meets minimum Remote Desktop requirements and is not CPU or memory constrained.",
+      "Check client-side CPU, GPU and memory usage and close unnecessary applications.",
+      "Update the Remote Desktop client and client display drivers; verify thin client firmware if applicable.",
+      "Reduce client resolution or color depth to lower rendering workload and validate improvement.",
+      "Test the session from a known-good client to determine if the issue is client-specific."
+    ]
+  },
+  {
+    "measurement": "Frames skipped due to insufficient network resources",
+    "description": "Indicates the rate at which frames were skipped for this user due to insufficient network resources.",
+    "measurementUnit": "Frames/Sec",
+    "interpretation": "A low value is desired; high values point to undersized or lossy networks between client and server.",
+    "troubleshootingSteps": [
+      "Measure client-to-server bandwidth and latency (iperf, speedtest, ping) during the issue window.",
+      "Check for packet loss, congestion or interface errors on the LAN/WAN path; use traceroute or mtr where available.",
+      "If the client is on Wi‑Fi, test on a wired connection to rule out wireless issues.",
+      "Inspect QoS policies that may throttle RDP/UDP traffic and adjust as necessary.",
+      "Capture network traces (pcap) on client and server for detailed analysis."
+    ]
+  },
+  {
+    "measurement": "Frames skipped due to insufficient server resources",
+    "description": "Indicates the rate at which frames were skipped for this user due to insufficient server resources.",
+    "measurementUnit": "Frames/Sec",
+    "interpretation": "A low value is desired; high values suggest host-side resource contention or overload.",
+    "troubleshootingSteps": [
+      "Monitor host CPU, memory and GPU utilization during affected sessions to identify contention.",
+      "Check concurrent session counts and host capacity; consider scaling out or load balancing.",
+      "Verify hypervisor GPU passthrough/configuration and driver health on the host.",
+      "Migrate the affected user to a different host to determine if the issue follows a host.",
+      "Schedule heavy background tasks outside peak hours and tune per-session resource limits."
+    ]
+  },
+  {
+    "measurement": "Graphics compression ratio",
+    "description": "Indicates the ratio of the number of bytes encoded to the number of bytes input for this user.",
+    "measurementUnit": "Percent",
+    "interpretation": "Higher compression ratios typically reduce picture quality; lower values are preferred (closer to 0).",
+    "troubleshootingSteps": [
+      "Review encoder/compression settings on the RDS host and reduce compression if bandwidth permits.",
+      "Check for network constraints that force higher compression; improving bandwidth may allow better quality.",
+      "Verify client and server codec compatibility and update drivers/firmware as needed.",
+      "Test the session from a different client or network to confirm if compression is network-driven or host-driven."
+    ]
+  },
+  {
+    "measurement": "Input frames",
+    "description": "Indicates the number of source frames provided per second as input to the RemoteFX graphics for this user.",
+    "measurementUnit": "Frames/Sec",
+    "interpretation": "Higher input frame rates indicate more change at the source (video, animations); compare across users to find heavy graphical workloads.",
+    "troubleshootingSteps": [
+      "Identify applications generating frequent screen updates (video players, dashboards) and reduce unnecessary activity.",
+      "If undesirable, ask the user to close or reduce visual workloads to lower input frames.",
+      "Profile source applications for refresh loops or misbehaving components and fix where possible.",
+      "Use a test session to reproduce and capture recordings to correlate activity with input frame spikes."
+    ]
+  },
+  {
+    "measurement": "Output frames",
+    "description": "Indicates the number of source frames sent per second to this user as output of RemoteFX graphics.",
+    "measurementUnit": "Frames/Sec",
+    "interpretation": "Output frames show how many frames are delivered to the client. Low output relative to input may indicate throttling, compression, or drops.",
+    "troubleshootingSteps": [
+      "Compare input versus output frames to determine whether frames are being dropped or aggregated.",
+      "Check network transmission metrics (bandwidth, packet loss, latency) that may force frame reduction.",
+      "Inspect server encoding performance and latency that could limit output frame rate.",
+      "Verify client capabilities (refresh rate, display settings) that might limit rendered output frames."
+    ]
+  },
+  {
+    "measurement": "Source frames",
+    "description": "Indicates number of frames per second composed at the source for this user.",
+    "measurementUnit": "Frames/Sec",
+    "interpretation": "Reflects how often the server-side desktop changes; high values indicate dynamic content, low values indicate stability.",
+    "troubleshootingSteps": [
+      "Identify windows or applications that cause frequent redraws and reduce refresh intervals if possible.",
+      "Check for background tasks or scripts that frequently update the UI and adjust them.",
+      "Profile composition operations and enable or verify GPU acceleration where helpful.",
+      "Capture screen recordings to correlate source activity with frame composition rates."
+    ]
+  },
+  {
+    "measurement": "Current TCP bandwidth",
+    "description": "Indicates the amount of data currently carried over TCP for this user.",
+    "measurementUnit": "Kbps",
+    "interpretation": "A steady rise could indicate that TCP traffic to/from the user is consuming bandwidth excessively; compare across users to find high usage.",
+    "troubleshootingSteps": [
+      "Monitor per-user TCP throughput over time to determine whether high usage is sustained or bursty.",
+      "Identify applications or transfers generating high TCP traffic and validate expected behavior.",
+      "Apply QoS or traffic-shaping policies to limit per-user bandwidth if appropriate.",
+      "Run controlled throughput tests (iperf) to validate end-to-end capacity and isolate bottlenecks."
+    ]
+  },
+  {
+    "measurement": "Current UDP bandwidth",
+    "description": "Indicates the amount of data currently carried over UDP for this user.",
+    "measurementUnit": "Kbps",
+    "interpretation": "A consistent rise could indicate UDP traffic is consuming bandwidth; compare across users to find intensive flows.",
+    "troubleshootingSteps": [
+      "Monitor UDP throughput and correlate with application behavior (audio/video, real-time streams).",
+      "Check for UDP policers, ACLs or filtering on network devices that may limit traffic.",
+      "Test from a different network or wired connection to rule out local path constraints.",
+      "Capture UDP flows for timing analysis and work with the network team to ensure low-latency paths."
+    ]
+  },
+  {
+    "measurement": "Forward error correction",
+    "description": "Indicates the percentage of forward error corrections performed for this user.",
+    "measurementUnit": "Percent",
+    "interpretation": "FEC is used to recover lost UDP packets; a higher value indicates more recovered packets and may improve responsiveness.",
+    "troubleshootingSteps": [
+      "If FEC rate is high, validate whether recovery prevented user impact and examine underlying loss sources.",
+      "If loss is high but FEC is low, confirm FEC is enabled and configured correctly on both ends.",
+      "Capture UDP flows to validate FEC packets and recovery behavior for sample sessions.",
+      "Work with network team to reduce underlying packet loss rather than relying only on FEC."
+    ]
+  },
+  {
+    "measurement": "Loss",
+    "description": "Indicates the percentage of packets lost when being transmitted to this user.",
+    "measurementUnit": "Percent",
+    "interpretation": "High values indicate significant packet loss that will degrade experience; compare across users to find worst-affected connections.",
+    "troubleshootingSteps": [
+      "Run continuous pings and packet captures to determine where loss is occurring (client, LAN, WAN, server).",
+      "Check physical links and switch/router interfaces for errors, CRC drops or configuration problems.",
+      "If on Wi‑Fi, test on a wired connection to rule out wireless-related loss.",
+      "Coordinate with ISP or network provider to remediate link-level issues if loss occurs outside the local network."
+    ]
+  },
+  {
+    "measurement": "Retransmissions",
+    "description": "Indicates the percentage of packets that have been retransmitted to this user.",
+    "measurementUnit": "Percent",
+    "interpretation": "Elevated retransmission rates (over ~5%) can indicate degraded LAN performance; extremely high values (>25%) greatly impact transfer times and UX.",
+    "troubleshootingSteps": [
+      "Correlate retransmission spikes with packet loss and latency metrics to identify root cause.",
+      "Inspect MTU settings and fragmentation that may cause retransmissions.",
+      "Validate NIC drivers and firmware on client and server and update if necessary.",
+      "Perform TCP diagnostics (netstat, counters) and capture traces to observe duplicate ACKs and retransmission triggers."
+    ]
+  },
+  {
+    "measurement": "TCP received rate",
+    "description": "Indicates the rate at which data is received over TCP for this user.",
+    "measurementUnit": "Kbps",
+    "interpretation": "Higher rates typically indicate healthy TCP throughput for inbound traffic.",
+    "troubleshootingSteps": [
+      "Confirm high received rates align with expected activity (downloads, streaming).",
+      "If rates are unexpectedly low, run iperf to test end-to-end TCP throughput and identify bottlenecks.",
+      "Inspect for packet loss or retransmissions that might reduce effective throughput.",
+      "Tune TCP window sizes or congestion control if applicable for the environment."
+    ]
+  },
+  {
+    "measurement": "TCP sent rate",
+    "description": "Indicates the rate at which data is sent over TCP for this user.",
+    "measurementUnit": "Kbps",
+    "interpretation": "Higher rates indicate higher outbound TCP throughput from the client to server.",
+    "troubleshootingSteps": [
+      "Validate server-side applications generating outbound TCP traffic and check logs for expected transfers.",
+      "Check server NIC settings (offload, checksumming) and egress queues for abnormalities.",
+      "Run controlled throughput tests to validate send capacity and eliminate network bottlenecks.",
+      "Coordinate with network team to ensure upstream capacity and QoS policies meet requirements."
+    ]
+  },
+  {
+    "measurement": "Base TCP round trip time",
+    "description": "Indicates the time between initiating a network request and receiving a response over TCP for this user.",
+    "measurementUnit": "Seconds",
+    "interpretation": "High values may indicate a bottleneck in TCP connectivity between the user terminal and the server. This measure may not be reported if both TCP Received Rate and TCP Sent Rate are 0.",
+    "troubleshootingSteps": [
+      "Measure baseline TCP RTT using ping or tcping and compare to historical baselines.",
+      "Check for device congestion, queuing or ISP issues along the path between client and server.",
+      "If using VPN or WAN links, validate tunnel health and any acceleration devices that might add latency.",
+      "Collect traceroute and packet captures for detailed path analysis."
+    ]
+  },
+  {
+    "measurement": "Current TCP round trip time",
+    "description": "Indicates the average time between initiating a network request and receiving a response over TCP for this user.",
+    "measurementUnit": "Seconds",
+    "interpretation": "High values indicate current TCP connectivity problems; this measure may not be reported if there is no active TCP traffic (sent and received rates are 0).",
+    "troubleshootingSteps": [
+      "Perform real-time latency tests (ping, tcping) from the client to the server to confirm current RTT.",
+      "Check for transient congestion, route changes or maintenance affecting latency during the observed window.",
+      "Inspect client local network (Wi‑Fi interference, duplex mismatches) for contributors to latency.",
+      "Collect packet traces during the event to identify retransmissions or delayed ACKs that inflate RTT."
+    ]
+  },
+  {
+    "measurement": "UDP received rate",
+    "description": "Indicates the rate at which data is received over UDP for this user.",
+    "measurementUnit": "Kbps",
+    "interpretation": "Higher values indicate higher UDP throughput for inbound traffic.",
+    "troubleshootingSteps": [
+      "Confirm UDP traffic corresponds to expected RemoteFX or real-time streams and not unexpected noise.",
+      "If received rate is low, check for UDP filtering, ACLs or policing that may limit traffic.",
+      "Measure UDP capacity with iperf (UDP mode) to validate path performance.",
+      "Capture UDP flows and work with network team to ensure low-latency handling for media."
+    ]
+  },
+  {
+    "measurement": "UDP sent rate",
+    "description": "Indicates the rate at which data is sent over UDP for this user.",
+    "measurementUnit": "Kbps",
+    "interpretation": "Higher values indicate higher outbound UDP throughput from the client to server.",
+    "troubleshootingSteps": [
+      "Verify the server/client are generating expected UDP streams and inspect for bursty patterns.",
+      "Check network devices for UDP policers, ACLs or rate limits that affect sending rates.",
+      "Capture UDP traffic to analyze timing, payloads and any FEC behavior.",
+      "Coordinate with network and server teams to prioritize real-time traffic where appropriate."
+    ]
+  },
+  {
+    "measurement": "Base UDP round trip time",
+    "description": "Indicates the time between initiating a network request and receiving a response over UDP for this user.",
+    "measurementUnit": "Seconds",
+    "interpretation": "High values may indicate a bottleneck in UDP connectivity; this measure may not be reported if both UDP Received Rate and UDP Sent Rate are 0.",
+    "troubleshootingSteps": [
+      "Measure UDP RTT using iperf (UDP mode) or specialized UDP latency tools and compare to baseline.",
+      "Check for packet loss and jitter on the path that can inflate UDP RTT.",
+      "Inspect intermediate devices for UDP rate-limiting, policing or NAT behavior adding delay.",
+      "Capture UDP flows for timing analysis and coordinate with the network team."
+    ]
+  },
+  {
+    "measurement": "Current UDP round trip time",
+    "description": "Indicates the average time between initiating a network request and receiving a response over UDP for this user.",
+    "measurementUnit": "Secs",
+    "interpretation": "High values indicate current UDP connectivity problems; this measure may not be reported if there is no active UDP traffic.",
+    "troubleshootingSteps": [
+      "Measure UDP RTT with UDP-capable tools and compare to baseline to detect anomalies.",
+      "Check for network jitter, packet loss, or intermediate buffering that affects UDP timing.",
+      "Test from a wired connection if the client is on Wi‑Fi to rule out wireless-induced issues.",
+      "If persistent, collect packet captures and work with network team or ISP to remediate."
+    ]
+  }
+]

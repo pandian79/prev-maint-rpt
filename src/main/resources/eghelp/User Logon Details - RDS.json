@@ -1,0 +1,46 @@
+[
+  {
+    "measurement": "Successful logons",
+    "description": "Indicates the total number of successful user logons during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Helps identify the number of users successfully accessing the system.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Failed logons",
+    "description": "Indicates the total number of failed user logons during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "High values may indicate incorrect credentials or potential security issues.",
+    "troubleshootingSteps": [
+      "Check if users are entering correct credentials.",
+      "Investigate if there are any ongoing brute force attacks or system issues."
+    ]
+  },
+  {
+    "measurement": "Logon duration - avg",
+    "description": "Indicates the average time taken for a user to log on successfully.",
+    "measurementUnit": "Msecs",
+    "interpretation": "High values may indicate system slowness or backend authentication delays.",
+    "troubleshootingSteps": [
+      "Analyze backend authentication services for delays.",
+      "Check network latency and server performance."
+    ]
+  },
+  {
+    "measurement": "Concurrent logons",
+    "description": "Indicates the number of users logging on concurrently during the last measurement period.",
+    "measurementUnit": "Number",
+    "interpretation": "Helps understand peak usage times and system load.",
+    "troubleshootingSteps": "none"
+  },
+  {
+    "measurement": "Logon errors percentage",
+    "description": "Indicates the percentage of logon attempts that resulted in errors.",
+    "measurementUnit": "Percent",
+    "interpretation": "High values may indicate widespread issues with the logon process.",
+    "troubleshootingSteps": [
+      "Investigate common error patterns in logon failures.",
+      "Ensure authentication services are operational and properly configured."
+    ]
+  }
+]

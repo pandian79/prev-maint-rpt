@@ -1,0 +1,20 @@
+[
+  {
+    "measurement": "Recent messages in the log",
+    "description": "Indicates the number of errors that were added to the error log file when the test was last executed.",
+    "measurementUnit": "Number",
+    "interpretation": "The value of this measure is a clear indicator of the number of ‘new’ alerts that were logged into the error log of the monitored eG agent.",
+    "troubleshootingSteps": [
+      "Examine the agent error log file and note the exact error messages and timestamps to identify recent failures or patterns.",
+      "Confirm the agent is running and communicating with the central server; check agent heartbeat/last-seen timestamp and network connectivity (firewall, ports).",
+      "Verify disk space and file permissions on the agent host to ensure the agent can write/read its log files and rotate logs properly.",
+      "Search for correlated events in system logs (OS event log, application logs) around the same timestamps to identify root causes.",
+      "If errors reference a specific plugin/module, validate that the plugin configuration and dependencies are correct and up to date.",
+      "Increase agent log verbosity (temporarily) and reproduce the issue to capture more detailed context, then revert verbosity when finished.",
+      "Check for recent configuration changes or software updates on the monitored host that could have introduced the errors; roll back if necessary.",
+      "Restart the agent service gracefully to see if errors clear; document whether errors reappear after restart to distinguish transient versus persistent issues.",
+      "Collect and attach the agent logs, configuration files, and environment details (OS, agent version) when escalating to support or the vendor.",
+      "If the agent is unable to send logs to the central server, test connectivity (telnet or equivalent to agent server port) and review certificate/SSL issues if secure channels are used."
+    ]
+  }
+]

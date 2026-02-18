@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -26,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import com.eginnovations.support.pmr.model.HistoricalDataRoot;
 import com.eginnovations.support.pmr.model.KPIComplianceResult;
-import com.eginnovations.support.pmr.model.MeasureHelp;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -211,8 +211,8 @@ public class PreventiveMaintenanceService {
             return null;
         }
         
-        // Get measure help information
-        MeasureHelp measureHelp = getMeasureHelp(metaData.getTest(), metaData.getMeasure());
+        // Get measure help information as a Map (case-insensitive keys handled by helpers)
+        Map<String, Object> measureHelpMap = getMeasureHelp(metaData.getTest(), metaData.getMeasure());
         
         // Build result object
         KPIComplianceResult result = new KPIComplianceResult();
@@ -223,10 +223,10 @@ public class PreventiveMaintenanceService {
         result.setMeasure(metaData.getMeasure());
         result.setTimeline(metaData.getTimeline());
         
-        if (measureHelp != null) {
-            result.setDescription(measureHelp.getDescription());
-            result.setInterpretation(measureHelp.getInterpretation());
-            result.setMeasurementUnit(measureHelp.getMeasurementUnit());
+        if (measureHelpMap != null) {
+            result.setDescription(getStringFromMap(measureHelpMap, "description"));
+            result.setInterpretation(getStringFromMap(measureHelpMap, "interpretation"));
+            result.setMeasurementUnit(getStringFromMap(measureHelpMap, "measurementunit"));
         }
         
         // Store raw data
@@ -262,14 +262,15 @@ public class PreventiveMaintenanceService {
     
     /**
      * Get measure help information from eghelp JSON files
+     * Now returns a Map&lt;String,Object&gt; instead of MeasureHelp to handle varied JSON key cases
      */
-    private MeasureHelp getMeasureHelp(String testName, String measureName) {
+    private Map<String, Object> getMeasureHelp(String testName, String measureName) {
         if (testName == null || measureName == null) {
             return null;
         }
         
         try {
-        	String tmpFileName = testName.replaceAll("/", "");
+            String tmpFileName = testName.replaceAll("/", "");
             String helpFileName = "eghelp/" + tmpFileName + ".json";
             Resource resource = new ClassPathResource(helpFileName);
             
@@ -283,16 +284,21 @@ public class PreventiveMaintenanceService {
                 StandardCharsets.UTF_8
             );
             
-            List<MeasureHelp> helpList = objectMapper.readValue(
-                helpJson, 
-                new TypeReference<List<MeasureHelp>>() {}
+            // Parse JSON into a list of maps so we can handle arbitrary key casing
+            List<Map<String, Object>> helpList = objectMapper.readValue(
+                helpJson,
+                new TypeReference<List<Map<String, Object>>>() {}
             );
             
-            // Find the matching measure
-            for (MeasureHelp help : helpList) {
-                if (measureName.equals(help.getMeasurement())) {
+            // Find the matching measurement entry (case-insensitive key and value matching)
+            for (Map<String, Object> measurement : helpList) {
+                String measurementValue = getStringFromMap(measurement, "measurement");
+                logger.info("Checking help entry for measure: {} against requested measure: {}",
+                            measurementValue, measureName);
+                if (measurementValue != null && measureName != null &&
+                    measurementValue.trim().equalsIgnoreCase(measureName.trim())) {
                     logger.debug("Found help for measure: {} in test: {}", measureName, testName);
-                    return help;
+                    return measurement;
                 }
             }
             
@@ -304,6 +310,76 @@ public class PreventiveMaintenanceService {
         }
         
         return null;
+    }
+    
+    /**
+     * Helper to retrieve a string value from a map using case-insensitive key matching.
+     */
+    private String getStringFromMap(Map<String, Object> map, String key) {
+        if (map == null || key == null) return null;
+        
+        // Normalize the search key: lowercase and remove spaces/underscores
+        String normalizedKey = normalizeKey(key);
+        
+        for (String k : map.keySet()) {
+            if (k == null) continue;
+            
+            // Normalize the map key the same way
+            String normalizedMapKey = normalizeKey(k);
+            
+            if (normalizedMapKey.equals(normalizedKey)) {
+                Object val = map.get(k);
+                return val == null ? null : String.valueOf(val);
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Helper to retrieve a list of strings from a map value (e.g., troubleshootingSteps)
+     */
+    @SuppressWarnings("unchecked")
+    private List<String> getStringListFromMap(Map<String, Object> map, String key) {
+        if (map == null || key == null) return null;
+        
+        // Normalize the search key: lowercase and remove spaces/underscores
+        String normalizedKey = normalizeKey(key);
+        
+        for (String k : map.keySet()) {
+            if (k == null) continue;
+            
+            // Normalize the map key the same way
+            String normalizedMapKey = normalizeKey(k);
+            
+            if (normalizedMapKey.equals(normalizedKey)) {
+                Object val = map.get(k);
+                if (val instanceof List) {
+                    List<?> raw = (List<?>) val;
+                    List<String> out = new ArrayList<>();
+                    for (Object o : raw) {
+                        out.add(o == null ? null : String.valueOf(o));
+                    }
+                    return out;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Normalize a key for case-insensitive matching: lowercase and remove spaces/underscores
+     */
+    private String normalizeKey(String key) {
+        if (key == null) return "";
+        
+        StringBuilder normalized = new StringBuilder();
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            if (c != ' ' && c != '_' && c != '-') {
+                normalized.append(Character.toLowerCase(c));
+            }
+        }
+        return normalized.toString();
     }
     
     /**

@@ -2,8 +2,8 @@ package com.eginnovations.support.pmr;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import com.eg.api.client.EgRequestHeader;
 import com.eg.api.client.dao.AlarmsRepository;
-import com.eg.api.client.dao.EgComponentDao;
 import com.eg.api.client.entity.ManagedComponent;
 import com.eg.api.client.dao.GenericApiRepository;
 import com.eg.api.client.dao.MetricsRepository;
@@ -40,83 +39,44 @@ import com.eg.api.client.entity.HistoricalDataRequestBody;
 import com.eg.api.client.entity.TestData;
 import com.eg.api.client.exception.ComponentNotAssociatedException;
 import com.eg.api.client.exception.InvalidRequestHeaderException;
+import com.eg.api.client.exception.TestNotAssociatedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Service class responsible for processing alarms, fetching historical data, diagnosis data, and preparing preventive maintenance reports.
+ * @author Murugapandian
+ * @since 2026-02
+ */
+
 @Service
 public class AlarmProcessingService {
-	private static final CharSequence COMPONENT_TYPE_IS_NOT_AVAILABLE_NOT_ASSOCIATED_WITH_THIS_USER = "Component Type is not available/ not associated with this user";
 	Logger logger = LoggerFactory.getLogger(AlarmProcessingService.class);
 	@Autowired
 	Environment env;
 	@Autowired
 	InventoryService inventoryService;
+	@Autowired
+	Environment environment;
 	
-	private EgComponentDao egComponentDao = new EgComponentDao();
 	private MetricsRepository metricsRepository = new MetricsRepository();
 	private GenericApiRepository genericApiRepository = new GenericApiRepository();
 	private AlarmsRepository alarmsRepository = new AlarmsRepository();
+	private TestRepository testRepository = new TestRepository();
 
 	void extractAlarms(EgRequestHeader egRequestHeader)
 			throws JsonMappingException, JsonProcessingException, InvalidRequestHeaderException, Exception {
 		AlarmHistoryRequestBody body = new AlarmHistoryRequestBody();
-		body.setTimeline("7 days");
+		body.setTimeline(this.environment.getProperty("analysis.timeline", "24 hours"));
 		logger.info("Step 4: Fetch Alarm History");
 		System.out.println("Fetching alarm history for all components...");
 		AlarmHistory alarmsHistory = alarmsRepository.getAlarmsHistory(egRequestHeader, body);
+		System.out.println("Total alarms fetched: " + (alarmsHistory.getProblemDetails() != null ? alarmsHistory.getProblemDetails().size() : 0));
 		logger.info("Others: Alarm History: {}", alarmsHistory.getSummary());
 		
 		analyzeGroupedAlarms("all-alarms", alarmsHistory, egRequestHeader);
 		
-		collectCpuUtilization(egRequestHeader);
-	}
-	
-	private void collectCpuUtilization(EgRequestHeader egRequestHeader) {
-		try {
-			logger.info("Step 5: Fetching managed components and their CPU utilization");
-			List<ManagedComponent> components = egComponentDao.showComponents(egRequestHeader, "eG Agent");
-			if (components == null || components.isEmpty()) {
-				logger.info("No eG Agents found.");
-				return;
-			}
-			logger.info("Found {} eG Agents", components.size());
-			
-			String zipFileName = "unknown_cpu_utilization_" + System.currentTimeMillis() + ".zip";
-			try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFileName))) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                
-				for (ManagedComponent component : components) {
-					logger.info("Processing component: {}", component.getComponentName());
-					
-					Map<String, String> bodyMap = new HashMap<>();
-					bodyMap.put("timeline", "7 days");
-					bodyMap.put("componentName", component.getComponentName());
-					bodyMap.put("componentType", component.getComponentType());
-					bodyMap.put("test", "System Details");
-					bodyMap.put("measure", "CPU utilization");
-					bodyMap.put("showDisplayName", "true");
-					
-					try {
-						Map<String, List<TestData>> historicalData = metricsRepository.getHistoricalData(egRequestHeader, bodyMap);
-						
-						String jsonOutput = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(historicalData);
-						ZipEntry zipEntry = new ZipEntry("cpu_" + component.getComponentName().replace(":", "_") + ".json");
-						zos.putNextEntry(zipEntry);
-						zos.write(jsonOutput.getBytes(StandardCharsets.UTF_8));
-						zos.closeEntry();
-					} catch (Exception e) {
-						logger.error("Failed to fetch historical data for component {}", component.getComponentName(), e);
-					}
-				}
-				logger.info("Saved CPU utilization data to {}", zipFileName);
-			} catch (IOException e) {
-				logger.error("Error writing CPU utilization zip file", e);
-			}
-
-		} catch (Exception e) {
-			logger.error("Error collecting CPU utilization", e);
-		}
 	}
 
 	/**
@@ -131,18 +91,22 @@ public class AlarmProcessingService {
 	private void analyzeGroupedAlarms(String fileName, AlarmHistory alarmHistory, EgRequestHeader egRequestHeader) {
 		logger.info("Analyzing grouped alarms from file: {}", fileName);
 		Map<String, List<AlarmHistoryRecord>> groupedAlarms = groupAlarms(alarmHistory);
+		System.out.println("Total alarm groups identified: " + groupedAlarms.size());
 		logger.info("Grouped Alarms Count: {}", groupedAlarms.size());
 		ObjectMapper objectMapper = new ObjectMapper();
 		String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"));
 		String zipFileName = "alarm_analysis_"+ fileName + "_" + formattedTime + ".zip";
-		zipFileName = zipFileName.replaceAll(" ", "_");
-		zipFileName = zipFileName.replaceAll(":", "_");
-		zipFileName = zipFileName.replaceAll("/", "_");
+		zipFileName = normalize(zipFileName);
 		
 		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFileName))) {
 			logger.info("Writing output to zip file: {}", zipFileName);
+			
+			int c=0;
+			int total = groupedAlarms.size();
 
 			for (Map.Entry<String, List<AlarmHistoryRecord>> entry : groupedAlarms.entrySet()) {
+				c++;
+				System.out.println("Processing alarm group "+c+"/"+total+": "+entry.getKey()+" with "+entry.getValue().size()+" alarms");
 				String groupId = UUID.randomUUID().toString();
 				List<AlarmHistoryRecord> records = entry.getValue();
 				if (records.isEmpty()) continue;
@@ -241,9 +205,8 @@ public class AlarmProcessingService {
 					// Serialize to file
 					String jsonOutput = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(serializedData);
 					String zipEntryName = entry.getKey()+"."+groupId + ".json";
-					zipEntryName = zipEntryName.replaceAll(" ", "_");
-					zipEntryName = zipEntryName.replaceAll(":", "_");
-					zipEntryName = zipEntryName.replaceAll("/", "_");
+					logger.info("Creating zip entry for group {} with name {}", groupId, zipEntryName);
+					zipEntryName = normalize(zipEntryName);
 					ZipEntry zipEntry = new ZipEntry(zipEntryName);
 					zos.putNextEntry(zipEntry);
 					zos.write(jsonOutput.getBytes(StandardCharsets.UTF_8));
@@ -256,6 +219,15 @@ public class AlarmProcessingService {
 		} catch (IOException e) {
 			logger.error("Error writing zip file", e);
 		}
+	}
+
+	private String normalize(String text) {
+		text = text.replaceAll(" ", "_");
+		text = text.replaceAll(":", "_");
+		text = text.replaceAll("/", "_");
+		text = text.replace("\\", "_");
+		text = text.replaceAll("#", "_");
+		return text;
 	}
 	
 	/**
@@ -283,9 +255,22 @@ public class AlarmProcessingService {
 		return grouped;
 	}
 	
+	/**
+	 * Prepares preventive maintenance data by fetching enabled tests for each component, then fetching historical data and diagnosis data for each test and measure.
+	 * Saves the collected data into a zip file containing JSON files named by component, test, and measure.
+	 * 
+	 * @param egRequestHeader Request header for EG Manager API calls
+	 * @param selectedServers List to be populated with components that are of type "eG Manager" or "eG Agent"
+	 * @param testDataDao Repository to fetch test data
+	 * @param testMapping Mapping of internal test names to display names
+	 * @param measureMapping Mapping of internal test:measure names to display names
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws InvalidRequestHeaderException
+	 */
 	public void preparePreventiveMaintenance(EgRequestHeader egRequestHeader,
 			List<ManagedComponent> selectedServers,
-			TestRepository testDataDao, Map<String, String> testMapping, 
+			Map<String, String> testMapping, 
 			Map<String, String> measureMapping)
 			throws JsonMappingException, JsonProcessingException, InvalidRequestHeaderException {
 		List<ManagedComponent> components = inventoryService.getComponents(egRequestHeader);
@@ -321,7 +306,35 @@ public class AlarmProcessingService {
 					
 					logger.info("Fetching enabled/disabled tests for component {} of type {}", 
 							component.getComponentName(), component.getComponentType());
-					EnabledDisabledTests enabledDisabledTests = testDataDao.showTests(egRequestHeader, bodyMap);
+					final AtomicReference<EnabledDisabledTests> enabledDisabledTestsRef = new AtomicReference<>();
+					try {
+						enabledDisabledTestsRef.set(testRepository.showTests(egRequestHeader, bodyMap));
+					} catch (RuntimeException e) {
+						// Non-admin users will fail with "User does not have privilege to do this administration activity"
+						// Fall back to loading from classpath
+						logger.warn("API call failed (likely {} is a non-admin user), loading from classpath instead: {}", egRequestHeader.getUser(), e.getMessage());
+						
+						String fileName = "showTests." + component.getComponentType() + ".json";
+						try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+							if (inputStream != null) {
+								enabledDisabledTestsRef.set(objectMapper.readValue(inputStream, EnabledDisabledTests.class));
+								logger.info("Loaded enabled/disabled tests from classpath file: {}", fileName);
+							} else {
+								logger.warn("File not found in classpath: {}, skipping component", fileName);
+								continue;
+							}
+						} catch (IOException ioException) {
+							logger.error("Failed to load or parse file {} from classpath", fileName, ioException);
+							continue;
+						}
+					}
+					
+					EnabledDisabledTests enabledDisabledTests = enabledDisabledTestsRef.get();
+					if (enabledDisabledTests == null) {
+						logger.warn("No enabled/disabled tests available for component {}, skipping", component.getComponentName());
+						continue;
+					}
+					
 					logger.info("Enabled tests for component {}: {}", 
 							component.getComponentName(), enabledDisabledTests.getEnabledTests().size());
 					
@@ -341,7 +354,7 @@ public class AlarmProcessingService {
 												testMeasure, measureMapping.get(testMeasure), test, component.getComponentName());
 										String measureName = measureMapping.get(testMeasure);
 										Map<String, String> historyBodyMap = new HashMap<>();
-										historyBodyMap.put("timeline", "7 days");
+										historyBodyMap.put("timeline", this.environment.getProperty("analysis.timeline", "24 hours"));
 										historyBodyMap.put("componentName", component.getComponentName()+":"+component.getPort());
 										historyBodyMap.put("componentType", component.getComponentType());
 										historyBodyMap.put("test", test);
@@ -374,7 +387,13 @@ public class AlarmProcessingService {
 										Map<String, Object> outputMap = new HashMap<>();
 										try {
 											//Step 1: collect historical data for the measure
-											historicalData = metricsRepository.getHistoricalData(egRequestHeader, historyBodyMap);
+											try {
+												historicalData = metricsRepository.getHistoricalData(egRequestHeader, historyBodyMap);
+											} catch (TestNotAssociatedException e) {
+												logger.warn("Test {} or measure {} may not be associated with component {}, skipping historical data and diagnosis data fetch for this measure. Error: {}", 
+														test, measureName, component.getComponentName(), e.getMessage());
+												historicalData = new HashMap<>();
+											}
 											int valueCount = historicalData.values().stream().mapToInt(List::size).sum();
 											logger.info("Fetched historical data for component {} test {} measure {}, data points: {}", 
 													component.getComponentName(), test, measureName, valueCount);
