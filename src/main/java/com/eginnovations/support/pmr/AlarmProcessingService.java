@@ -33,6 +33,7 @@ import com.eg.api.client.entity.ManagedComponent;
 import com.eg.api.client.dao.GenericApiRepository;
 import com.eg.api.client.dao.MetricsRepository;
 import com.eg.api.client.dao.TestRepository;
+import com.eg.api.client.dao.ThresholdRepository;
 import com.eg.api.client.entity.AlarmHistory;
 import com.eg.api.client.entity.AlarmHistoryRecord;
 import com.eg.api.client.entity.AlarmHistoryRequestBody;
@@ -44,6 +45,7 @@ import com.eg.api.client.entity.ThresholdDataRequestBody;
 import com.eg.api.client.exception.ComponentNotAssociatedException;
 import com.eg.api.client.exception.InvalidRequestHeaderException;
 import com.eg.api.client.exception.TestNotAssociatedException;
+import com.eg.api.client.exception.UserPrivilegeException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,6 +70,7 @@ public class AlarmProcessingService {
 	private GenericApiRepository genericApiRepository = new GenericApiRepository();
 	private AlarmsRepository alarmsRepository = new AlarmsRepository();
 	private TestRepository testRepository = new TestRepository();
+	private ThresholdRepository thresholdRepository = new ThresholdRepository();
 
 	void extractAlarms(EgRequestHeader egRequestHeader)
 			throws JsonMappingException, JsonProcessingException, InvalidRequestHeaderException, Exception {
@@ -428,12 +431,22 @@ public class AlarmProcessingService {
 											
 											//Step 2: collect historical dd for the measure
 											diagReq.setInfo(null);
+											thresholdBody.setInfo(null);
 											if (!historicalData.isEmpty()) {
 												//Handling API inconsistency where where test/info as key.
 												//Assume the key is test name.
 												List<Map<String, String>> diagnosisData=null;
+												List<Map<String, Integer>> thresholdData=null;
 												try {
 													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
+													thresholdData = this.thresholdRepository.getThresholdData(egRequestHeader, 
+															test, 
+															component.getComponentNameWithOrWithoutPort(), 
+															thresholdBody.getInfo(), 
+															measureName, 
+															thresholdBody.toMap());
+													logger.info("Fetched diagnosis data for component {} test {} measure {} with info as null, data points: {}", 
+															component.getComponentName(), test, measureName, diagnosisData.size());
 												} catch (Exception e) {
 													logger.warn("Step 2A (key as testname): Failed to fetch diagnosis data for component {} test {} measure {} with info as null, retrying with info as test name. Error: {}", 
 															component.getComponentName(), test, measureName, e.getMessage());
@@ -449,17 +462,27 @@ public class AlarmProcessingService {
 														Map<String, Object> diagnosisDataMap = new HashMap<>();
 														for (String info: keySet) {
 															diagReq.setInfo(info);
-															logger.info("Fetching diagnosis data for component {} test {} measure {} info {}", 
+															logger.info("Fetching diagnosis data/threshold for component {} test {} measure {} info {}", 
 																	component.getComponentName(), test, measureName, info);
 															//new code
 															
 															try {
 																diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
+																thresholdData = this.thresholdRepository.getThresholdData(egRequestHeader, 
+																		test, 
+																		component.getComponentNameWithOrWithoutPort(), 
+																		thresholdBody.getInfo(), 
+																		measureName, 
+																		thresholdBody.toMap());
 															} catch (TestNotAssociatedException e) {
 																logger.warn("Test {} or measure {} may not be associated with component {}, skipping diagnosis data fetch for this measure. Error: {}", 
 																		test, measureName, component.getComponentName(), e.getMessage());
 																continue;
-															}
+															} catch (UserPrivilegeException e) {
+																logger.warn("User does not have privilege to fetch diagnosis data/threshold for component {}, test {}, measure {}, info {}. Error: {}", 
+																		component.getComponentName(), test, measureName, info, e.getMessage());
+																continue;
+															} 
 															
 															if (ddNotFound) {
 																logger.warn("Retrying 2 DD for component {} port {} test {} measure {}: {}", 
@@ -471,20 +494,31 @@ public class AlarmProcessingService {
 																diagReq.setComponentName(component.getComponentName()+":"+component.getPort());
 																diagReq.setInfo(keySet.iterator().next());
 																diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
+																thresholdData = this.thresholdRepository.getThresholdData(egRequestHeader, 
+																		test, 
+																		component.getComponentNameWithOrWithoutPort(), 
+																		thresholdBody.getInfo(), 
+																		measureName, 
+																		thresholdBody.toMap());
 															}
 															
-															ddNotFound = diagnosisData==null || diagnosisData.isEmpty() || (diagnosisData.size()==1 && diagnosisData.get(0).containsKey("message"));
+															ddNotFound = diagnosisData==null 
+																	|| diagnosisData.isEmpty() 
+																	|| (diagnosisData.size()==1 && diagnosisData.get(0).containsKey("message"));
 															
 															//end new code
-															
-															
 															
 															if (!ddNotFound) {
 																Map<String, Object> historicalDetailedDiagnosisDataMap = new HashMap<>();
 																historicalDetailedDiagnosisDataMap.put("diagnosisDataMetaData", diagReq);
 																historicalDetailedDiagnosisDataMap.put("diagnosisData", diagnosisData);
+																historicalDetailedDiagnosisDataMap.put("thresholdData", thresholdData);
 																//outputMap.put("historicalDetailedDiagnosisData-"+info, historicalDetailedDiagnosisDataMap);
 																diagnosisDataMap.put(info, historicalDetailedDiagnosisDataMap);
+															}else {
+																logger.info("No diagnosis data found for component {} test {} measure {} info {} after retries, adding error info to output", 
+																		component.getComponentName(), test, measureName, info);
+																//diagnosisDataMap.put(info, List.of(Map.of("Error", "No diagnosis data found after retries")));
 															}
 													}
 													if (!diagnosisDataMap.isEmpty()) {
@@ -494,56 +528,11 @@ public class AlarmProcessingService {
 													Map<String, Object> historicalDetailedDiagnosisDataMap = new HashMap<>();
 													historicalDetailedDiagnosisDataMap.put("diagnosisDataMetaData", diagReq);
 													historicalDetailedDiagnosisDataMap.put("diagnosisData", diagnosisData);
+													historicalDetailedDiagnosisDataMap.put("thresholdData", thresholdData);
 													historicalDataMap.put("diagnosisData", historicalDetailedDiagnosisDataMap);
+													
 												}
-											}/*else {
-												logger.info("historical data has single descriptor, fetching diagnosis data with info as null for component {} test {} measure {}", 
-														component.getComponentName(), test, measureName);
-												List<Map<String, String>> diagnosisData;
-												try {
-													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
-												} catch (TestNotAssociatedException e) {
-													logger.warn("Test {} or measure {} may not be associated with component {}, skipping diagnosis data fetch for this measure. Error: {}", 
-															test, measureName, component.getComponentName(), e.getMessage());
-													diagnosisData = new ArrayList<>();
-													diagnosisData.add(Map.of("Error", e.toString()));
-												}
-												
-												Set<String> keySet = historicalData.keySet();
-												if (diagnosisData.size()==0 
-														|| (
-																diagnosisData.size()==1 
-																&& diagnosisData.get(0).containsKey("Error"))) {
-													logger.warn("Retrying DD for component {} test {} measure {}: {}", 
-															component.getComponentName(), test, measureName, historicalDataMap.get("message"));
-													diagReq.setComponentName(component.getComponentName());
-													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
-												}
-												if (diagnosisData==null || diagnosisData.isEmpty()) {
-													logger.warn("Retrying 2 DD for component {} test {} measure {}: {}", 
-															component.getComponentName(), test, measureName, historicalDataMap.get("message"));
-													diagReq.setComponentName(component.getComponentName());
-													diagReq.setInfo(keySet.iterator().next());
-													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
-												}
-												keySet = historicalData.keySet();
-												if (diagnosisData==null || diagnosisData.isEmpty()) {
-													logger.warn("Retrying 3 DD for component {} test {} measure {}: {}", 
-															component.getComponentName(), test, measureName, historicalDataMap.get("message"));
-													diagReq.setComponentName(component.getComponentName()+":"+component.getPort());
-													diagReq.setInfo(keySet.iterator().next());
-													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
-												}
-												if (diagnosisData!=null && diagnosisData.size()>0) {
-													historicalDataMap.put("diagnosisDataMetaData", diagReq);
-													historicalDataMap.put("diagnosisData", diagnosisData);
-												}else {
-													logger.info("No diagnosis data found for component {} test {} measure {} after retries, adding error info to output", 
-															component.getComponentName(), test, measureName);
-													//historicalDataMap.put("diagnosisDataMetaData", diagReq);
-													//historicalDataMap.put("diagnosisData", List.of(Map.of("Error", "No diagnosis data found after retries")));
-												}
-											}*/
+											}
 										}catch (ComponentNotAssociatedException e) {
 											outputMap.put("error", e.getMessage());
 											outputMap.put("metaData", historyBodyMap);
@@ -573,7 +562,7 @@ public class AlarmProcessingService {
 						);
 					};
 				} catch (Exception e) {
-					logger.error("Failed to fetch historical data for component {}", component.getComponentName(), e);
+					logger.error("Failed to fetch historical data/dd/thresh for component {}", component.getComponentName(), e);
 				}
 			}
 			logger.info("Saved CPU utilization data to {}", zipFileName);

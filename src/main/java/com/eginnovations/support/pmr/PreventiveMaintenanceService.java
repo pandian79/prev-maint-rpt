@@ -124,9 +124,14 @@ public class PreventiveMaintenanceService {
             
             int processedCount = 0;
             int skippedCount = 0;
+            int totalEntries = zip.size();
+            int entryIndex = 0;
             
             while (entries.hasMoreElements()) {
+            	entryIndex++;
+            	
                 ZipEntry entry = entries.nextElement();
+                System.out.println("Processing entry " + entryIndex + " / " + totalEntries + " : " + entry.getName());
                 
                 // Skip directories
                 if (entry.isDirectory()) {

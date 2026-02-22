@@ -33,7 +33,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 	@Autowired
 	private PreventiveMaintenanceService preventiveMaintenanceService;
 	@Autowired
-	private KPIComplianceReportService kpiComplianceReportService;
+	private PreventiveMaintenanceComplianceReportService kpiComplianceReportService;
 	@Autowired
 	Environment env;
 	
@@ -191,7 +191,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 		
 		// Process KPI Compliance Analysis from preventive maintenance ZIP files
 		if ("true".equalsIgnoreCase(env.getProperty("prepare.report.preventive.maintenance", "false"))) {
-			System.out.println("\n=== Starting KPI Compliance Analysis ===");
+			System.out.println("\n=== Starting Preventive Maintenance Analysis ===");
 			logger.info("KPI Compliance Analysis enabled");
 			
 			String currentDir = System.getProperty("user.dir");

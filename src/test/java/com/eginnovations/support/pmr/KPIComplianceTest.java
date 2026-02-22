@@ -25,7 +25,7 @@ public class KPIComplianceTest {
     private PreventiveMaintenanceService preventiveMaintenanceService;
     
     @Autowired
-    private KPIComplianceReportService reportService;
+    private PreventiveMaintenanceComplianceReportService reportService;
     
     /**
      * Test finding ZIP files

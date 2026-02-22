@@ -27,9 +27,9 @@ import com.eginnovations.support.pmr.model.KPIReportModel.KPIResultViewModel;
  * Service to generate HTML reports for KPI compliance analysis
  */
 @Service
-public class KPIComplianceReportService {
+public class PreventiveMaintenanceComplianceReportService {
     
-    private static final Logger logger = LoggerFactory.getLogger(KPIComplianceReportService.class);
+    private static final Logger logger = LoggerFactory.getLogger(PreventiveMaintenanceComplianceReportService.class);
     
     @Autowired
     private TemplateEngine templateEngine;
@@ -58,7 +58,7 @@ public class KPIComplianceReportService {
         context.setVariable("results", model.getResults());
         
         // Process the template
-        String html = templateEngine.process("kpi-compliance-report", context);
+        String html = templateEngine.process("preventive-maintenance-report", context);
         
         logger.info("Report generated successfully with {} KPIs", results.size());
         return html;
