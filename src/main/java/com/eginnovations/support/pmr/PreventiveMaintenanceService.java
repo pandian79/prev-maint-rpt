@@ -204,8 +204,12 @@ public class PreventiveMaintenanceService {
         }
         
         HistoricalDataRoot.HistoricalDataContent historicalData = root.getHistoricalData();
-        HistoricalDataRoot.MetaData metaData = historicalData.getMetaData();
+        if (historicalData == null) {
+			logger.warn("No historical data content found in: {}", entryName);
+			return null;
+		}
         
+        HistoricalDataRoot.MetaData metaData = historicalData.getMetaData();
         if (metaData == null) {
             logger.warn("No metadata found in: {}", entryName);
             return null;
@@ -213,6 +217,10 @@ public class PreventiveMaintenanceService {
         
         // Get measure help information as a Map (case-insensitive keys handled by helpers)
         Map<String, Object> measureHelpMap = getMeasureHelp(metaData.getTest(), metaData.getMeasure());
+        if (measureHelpMap == null) {
+			logger.warn("No measure help found for test: {}, measure: {} in entry: {}", 
+						metaData.getTest(), metaData.getMeasure(), entryName);
+		}
         
         // Build result object
         KPIComplianceResult result = new KPIComplianceResult();
@@ -236,7 +244,9 @@ public class PreventiveMaintenanceService {
         Object diagnosisData = historicalData.getDiagnosisData();
         if (diagnosisData != null) {
             result.setDiagnosisData(objectMapper.writeValueAsString(diagnosisData));
-        }
+        }else {
+			logger.info("No diagnosis data found for entry: {}", entryName);
+		}
         
         // Generate AI analysis
         String aiAnalysis = generateAIAnalysis(result, historicalData);

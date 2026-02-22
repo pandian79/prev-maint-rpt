@@ -180,7 +180,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 				System.out.println("Preventive maintenance report prepared successfully. Please check the output directory for the generated report.");
 			}
 		}
-		if (env.getProperty("prepare.alarm.analysis.report").equalsIgnoreCase("true")) {
+		if (env.getProperty("prepare.report.alarm.analysis").equalsIgnoreCase("true")) {
 			// Generate HTML reports from alarm analysis zip files
 			System.out.println("Generating HTML reports from alarm analysis data...");
 			this.htmlReportService.generateHtmlReports();
@@ -190,7 +190,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 		}
 		
 		// Process KPI Compliance Analysis from preventive maintenance ZIP files
-		if ("true".equalsIgnoreCase(env.getProperty("prepare.kpi.compliance.report", "false"))) {
+		if ("true".equalsIgnoreCase(env.getProperty("prepare.report.preventive.maintenance", "false"))) {
 			System.out.println("\n=== Starting KPI Compliance Analysis ===");
 			logger.info("KPI Compliance Analysis enabled");
 			
@@ -232,7 +232,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 				System.out.println("\n=== KPI Compliance Analysis Complete ===");
 			}
 		} else {
-			logger.info("KPI Compliance Analysis is disabled. Enable with prepare.kpi.compliance.report=true");
+			logger.info("KPI Compliance Analysis is disabled. Enable with prepare.report.preventive.maintenance=true");
 		}
 	}
 	
