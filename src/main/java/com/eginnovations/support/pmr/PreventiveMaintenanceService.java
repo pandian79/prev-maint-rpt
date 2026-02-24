@@ -13,6 +13,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -112,59 +119,111 @@ public class PreventiveMaintenanceService {
     }
     
     /**
-     * Process a single ZIP file and analyze all relevant entries
+     * Process a single ZIP file and analyze all relevant entries using a configurable thread pool.
+     * Thread pool size is controlled by the property: kpi.compliance.thread.pool.size
+     * Threads are named: kpiComplianceThread-1, kpiComplianceThread-2, ...
      */
     public List<KPIComplianceResult> processZipFile(File zipFile) throws IOException {
         List<KPIComplianceResult> results = new ArrayList<>();
-        
+
         logger.info("Processing ZIP file: {}", zipFile.getName());
-        
+
+        // Read thread pool size from application.properties (default: 5)
+        int poolSize = 5;
+        try {
+            String poolSizeStr = environment.getProperty("prepare.report.preventive.maintenance.thread.pool.size");
+            if (poolSizeStr != null && !poolSizeStr.isBlank()) {
+                poolSize = Integer.parseInt(poolSizeStr.trim());
+            }
+        } catch (NumberFormatException e) {
+            logger.warn("Invalid kpi.compliance.thread.pool.size, using default: {}", poolSize);
+        }
+        logger.info("Using thread pool size: {}", poolSize);
+
+        // Custom ThreadFactory to name threads kpiComplianceThread-1, -2, ...
+        final AtomicInteger threadCounter = new AtomicInteger(1);
+        ThreadFactory threadFactory = (Runnable r) -> {
+            Thread t = new Thread(r);
+            t.setName("pmAiThread-" + threadCounter.getAndIncrement());
+            return t;
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(poolSize, threadFactory);
+        List<Future<KPIComplianceResult>> futures = new ArrayList<>();
+
         try (ZipFile zip = new ZipFile(zipFile)) {
             Enumeration<? extends ZipEntry> entries = zip.entries();
-            
-            int processedCount = 0;
+
             int skippedCount = 0;
             int totalEntries = zip.size();
             int entryIndex = 0;
-            
+
+            // Submit each eligible entry as a Callable task to the thread pool
             while (entries.hasMoreElements()) {
-            	entryIndex++;
-            	
+                entryIndex++;
+
                 ZipEntry entry = entries.nextElement();
-                System.out.println("Processing entry " + entryIndex + " / " + totalEntries + " : " + entry.getName());
-                
+                logger.info("Submitting entry " + entryIndex + " / " + totalEntries + " : " + entry.getName());
+
                 // Skip directories
                 if (entry.isDirectory()) {
                     continue;
                 }
-                
+
                 String entryName = entry.getName();
-                
+
                 // Check if this entry should be processed based on fileCategoryMapping
                 if (!shouldProcessEntry(entryName)) {
                     skippedCount++;
                     logger.info("Skipping entry (not in category mapping): {}", entryName);
                     continue;
                 }
-                
-                logger.info("Processing entry: {}", entryName);
-                
+
+                logger.info("Submitting entry for parallel processing: {} [thread pool size={}]", entryName, poolSize);
+
+                // Capture for use inside lambda
+                final ZipEntry capturedEntry = entry;
+
+                Callable<KPIComplianceResult> task = new Callable<KPIComplianceResult>() {
+                    @Override
+                    public KPIComplianceResult call() {
+                        logger.info("[{}] Processing entry: {}", Thread.currentThread().getName(), capturedEntry.getName());
+                        try {
+                            return processZipEntry(zip, capturedEntry);
+                        } catch (Exception e) {
+                            logger.error("[{}] Error processing entry: {}", Thread.currentThread().getName(), capturedEntry.getName(), e);
+                            return null;
+                        }
+                    }
+                };
+				futures.add(executor.submit(task));
+            }
+
+            // Collect results from all submitted tasks
+            int processedCount = 0;
+            for (Future<KPIComplianceResult> future : futures) {
                 try {
-                    KPIComplianceResult result = processZipEntry(zip, entry);
+                    KPIComplianceResult result = future.get();
                     if (result != null) {
                         results.add(result);
                         processedCount++;
                     }
-                } catch (Exception e) {
-                    logger.error("Error processing entry: " + entryName, e);
-                    // Continue processing other entries
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    logger.error("Thread interrupted while waiting for result", e);
+                } catch (ExecutionException e) {
+                    logger.error("Error retrieving result from thread", e.getCause());
                 }
             }
-            
-            logger.info("Processed {} entries, skipped {} entries from {}", 
-                       processedCount, skippedCount, zipFile.getName());
+
+            logger.info("Processed {} entries, skipped {} entries from {}",
+                    processedCount, skippedCount, zipFile.getName());
+
+        } finally {
+            executor.shutdown();
+            logger.info("Thread pool shut down.");
         }
-        
+
         return results;
     }
     
