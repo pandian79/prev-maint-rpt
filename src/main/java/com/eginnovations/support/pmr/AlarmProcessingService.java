@@ -26,6 +26,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.eg.api.client.EgRequestHeader;
 import com.eg.api.client.dao.AlarmsRepository;
@@ -57,6 +58,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @Service
+@EnableConfigurationProperties
 public class AlarmProcessingService {
 	Logger logger = LoggerFactory.getLogger(AlarmProcessingService.class);
 	@Autowired
@@ -75,7 +77,7 @@ public class AlarmProcessingService {
 	void extractAlarms(EgRequestHeader egRequestHeader)
 			throws JsonMappingException, JsonProcessingException, InvalidRequestHeaderException, Exception {
 		AlarmHistoryRequestBody body = new AlarmHistoryRequestBody();
-		body.setTimeline(this.environment.getProperty("analysis.timeline", "24 hours"));
+		body.setTimeline(this.environment.getProperty("analysis.timeline"));
 		logger.info("Step 4: Fetch Alarm History");
 		System.out.println("Fetching alarm history for all components...");
 		AlarmHistory alarmsHistory = alarmsRepository.getAlarmsHistory(egRequestHeader, body);
@@ -352,7 +354,7 @@ public class AlarmProcessingService {
 					for (String test : enabledTests) {
 						System.out.println("Processing test: "+
 								enabledTests.indexOf(test)+1+"/"+
-								enabledTests.size()+
+								enabledDisabledTests.getEnabledTests().size()+
 								"for "+component.getComponentType()+" "+component.getComponentName());
 						logger.info("Enabled test for component {}: {}", component.getComponentName(), test);
 						
@@ -377,7 +379,7 @@ public class AlarmProcessingService {
 										}
 										
 										Map<String, String> historyBodyMap = new HashMap<>();
-										historyBodyMap.put("timeline", this.environment.getProperty("analysis.timeline", "24 hours"));
+										historyBodyMap.put("timeline", this.environment.getProperty("analysis.timeline"));
 										historyBodyMap.put("componentName", component.getComponentName()+":"+component.getPort());
 										historyBodyMap.put("componentType", component.getComponentType());
 										historyBodyMap.put("test", test);
@@ -436,7 +438,7 @@ public class AlarmProcessingService {
 												//Handling API inconsistency where where test/info as key.
 												//Assume the key is test name.
 												List<Map<String, String>> diagnosisData=null;
-												List<Map<String, Integer>> thresholdData=null;
+												Map<?, ?> thresholdData=null;
 												try {
 													diagnosisData = genericApiRepository.getDiagnosisData(diagReq, egRequestHeader);
 													thresholdData = this.thresholdRepository.getThresholdData(egRequestHeader, 
