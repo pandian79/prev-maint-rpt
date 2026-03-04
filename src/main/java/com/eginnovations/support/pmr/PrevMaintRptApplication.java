@@ -170,11 +170,12 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 			logger.info("Measure mapping size: {}", measureMapping.size());
 			
 			if (doAlarmAnalysis.equalsIgnoreCase("true")) {
-				System.out.println("Processing alarms and preparing preventive maintenance report...");
+				System.out.println("=== Processing alarms ===");
 				this.alarmProcessingService.extractAlarms(egRequestHeader);
-				System.out.println("Alarms extracted successfully. Preparing preventive maintenance report...");
+				System.out.println("Alarms extracted successfully. Please check the output directory for the generated report.");
 			}
 			if (doPm.equalsIgnoreCase("true")) {
+				System.out.println("=== Preparing preventive maintenance report ===");
 				this.alarmProcessingService.preparePreventiveMaintenance(egRequestHeader, selectedServers, testMapping,
 					measureMapping);
 				System.out.println("Preventive maintenance report prepared successfully. Please check the output directory for the generated report.");

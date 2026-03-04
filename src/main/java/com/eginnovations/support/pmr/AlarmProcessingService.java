@@ -352,10 +352,11 @@ public class AlarmProcessingService {
 					List<String> enabledTests = enabledDisabledTests.getEnabledTests();
 					logger.info("Enabled tests for component {}: {}", 
 							component.getComponentName(), enabledTests.size());
+					int size = enabledTests.size();
 					for (String test : enabledTests) {
 						System.out.println("Processing test: "+
 								enabledTests.indexOf(test)+1+"/"+
-								enabledDisabledTests.getEnabledTests().size()+
+								size+
 								"for "+component.getComponentType()+" "+component.getComponentName());
 						logger.info("Enabled test for component {}: {}", component.getComponentName(), test);
 						

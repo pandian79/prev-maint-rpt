@@ -6,7 +6,6 @@
     "Computer Asset",
     "Disk Activity",
     "Disk Space",
-    "GPU Adapter Details",
     "Handles Usage",
     "Hosts File Check",
     "Java Classes",
@@ -42,6 +41,7 @@
   ],
   "disabledTests": [
     "Agent Files Checksum",
+	"GPU Adapter Details",
     "Host Windows Services",
     "HTTP",
     "Java Installations",
