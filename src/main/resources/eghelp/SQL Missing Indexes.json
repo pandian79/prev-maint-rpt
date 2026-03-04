@@ -1,15 +1,49 @@
 [
   {
-    "measurement": "Missing indexes",
+    "measurement": "Number of Missing Indexes",
     "description": "Indicates the total number of missing indexes found in the queries that are currently executing on this database.",
     "unit": "Number",
-    "interpretation": "This measure counts optimizer suggestions for indexes that would improve the performance of currently executing queries. Detailed diagnosis can show the specific tables and columns for which indexes are missing, helping DBAs decide whether to create new indexes or instead tune queries to better use existing ones.[web:181][web:182][web:185]",
+    "interpretation": "The detailed diagnosis reveals the tables and specific columns missing indexes. Use this to decide if new indexes are needed or if queries should be optimized.",
     "troubleshootingSteps": [
-      "Review the detailed diagnosis or DMVs (such as sys.dm_db_missing_index_details and related views) to list missing index recommendations, including affected tables and key/included columns.[web:181][web:182][web:185]",
-      "Before creating any suggested index, compare recommendations against existing indexes on the same table to avoid redundant or overlapping indexes and to keep index count manageable.[web:181][web:183][web:187]",
-      "Prioritize missing index suggestions by estimated performance benefit or usage stats (for example, using group_stats DMVs or custom reports) so you implement the most impactful indexes first.[web:181][web:186][web:189]",
-      "For high-impact suggestions, craft and test tailored CREATE INDEX statements, possibly combining equality, inequality, and included columns into well-designed nonclustered indexes rather than blindly using auto-generated scripts.[web:181][web:182][web:183]",
-      "After adding or adjusting indexes, monitor query performance and missing-index DMVs again (or Query Store if enabled) to confirm that the recommendations decline and that query runtimes and I/O costs improve.[web:181][web:186][web:190]"
+      "Use 'Detailed Diagnosis' to identify specific tables and columns lacking indexes.",
+      "Evaluate the cost-benefit of creating a new index versus the overhead on DML operations (Insert/Update/Delete).",
+      "Check if existing indexes can be modified (e.g., adding INCLUDED columns) instead of creating entirely new ones.",
+      "Validate if the query can be rewritten to better utilize current indexing structures."
+    ]
+  },
+  {
+      "measurement": "Missing indexes",
+      "description": "Indicates the total number of missing indexes found in the queries that are currently executing on this database.",
+      "unit": "Number",
+      "interpretation": "This measure counts optimizer suggestions for indexes that would improve the performance of currently executing queries. Detailed diagnosis can show the specific tables and columns for which indexes are missing, helping DBAs decide whether to create new indexes or instead tune queries to better use existing ones.[web:181][web:182][web:185]",
+      "troubleshootingSteps": [
+        "Review the detailed diagnosis or DMVs (such as sys.dm_db_missing_index_details and related views) to list missing index recommendations, including affected tables and key/included columns.[web:181][web:182][web:185]",
+        "Before creating any suggested index, compare recommendations against existing indexes on the same table to avoid redundant or overlapping indexes and to keep index count manageable.[web:181][web:183][web:187]",
+        "Prioritize missing index suggestions by estimated performance benefit or usage stats (for example, using group_stats DMVs or custom reports) so you implement the most impactful indexes first.[web:181][web:186][web:189]",
+        "For high-impact suggestions, craft and test tailored CREATE INDEX statements, possibly combining equality, inequality, and included columns into well-designed nonclustered indexes rather than blindly using auto-generated scripts.[web:181][web:182][web:183]",
+        "After adding or adjusting indexes, monitor query performance and missing-index DMVs again (or Query Store if enabled) to confirm that the recommendations decline and that query runtimes and I/O costs improve.[web:181][web:186][web:190]"
+      ]
+    },
+  {
+    "measurement": "Missing indexes based on user seeks",
+    "description": "Indicates the number of times the missing indexes appeared in the result set of the queries based on user requests.",
+    "unit": "Number",
+    "interpretation": "Higher values suggest that users are frequently running queries that would benefit significantly from the missing indexes.",
+    "troubleshootingSteps": [
+      "Prioritize index creation for tables with high 'user seek' counts as they impact end-user experience directly.",
+      "Analyze the frequency of these requests to ensure the index is necessary for recurring workloads.",
+      "Use SQL Server Profiler or Extended Events to capture the exact query text causing these seeks."
+    ]
+  },
+  {
+    "measurement": "Missing indexes based on user impact",
+    "description": "Indicates the number of times the resources of the database server were impacted due to user queries when the indexes were missing.",
+    "unit": "Number",
+    "interpretation": "Reflects the potential performance gain for user queries if the suggested indexes are implemented.",
+    "troubleshootingSteps": [
+      "Identify queries with a high 'impact' score (often a percentage) which indicates a major reduction in query cost.",
+      "Correlate this data with CPU and I/O pressure metrics to see if missing indexes are the root cause of server-wide slowness.",
+      "Review execution plans for 'Index Scan' or 'Table Scan' operators that have high relative costs."
     ]
   }
 ]

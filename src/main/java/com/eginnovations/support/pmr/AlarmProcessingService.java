@@ -296,6 +296,7 @@ public class AlarmProcessingService {
 				if (
 						component.getComponentType().contains("eG Manager") 
 						|| component.getComponentType().contains("eG Agent")
+						|| component.getComponentType().contains("eG RUM Collector")
 						) {
 					selectedServers.add(component);
 				}else {

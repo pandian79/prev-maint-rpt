@@ -96,7 +96,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 			EgRequestHeader egRequestHeader = new EgRequestHeader(egMgr, user, password, apiKey);
 			AlarmsRepository alarmsRepository = new AlarmsRepository();
 			
-			logger.info("Step 1: Validating API credentials by fetching Alarm Count from EG Manager");
+			logger.info("===Step 1: Validating API credentials by fetching Alarm Count from EG Manager===");
 			logger.info("Fetching alarm count from EG Manager: {}", egMgr);
 			System.out.println("Validating credentials and connectivity to eG Manager...");
 			Map<String, Integer> alarmCount;
@@ -112,7 +112,7 @@ public class PrevMaintRptApplication implements CommandLineRunner {
 			} 
 			logger.info("Alarm Count: {}", alarmCount);
 			
-			logger.info("Step 2A: Collection of eG Databases");
+			logger.info("===Step 2A: Collection of eG Databases===");
 			Scanner scanner = new Scanner(System.in);
 			List<ManagedComponent> selectedServers = new ArrayList<ManagedComponent>();
 			while (true) {
